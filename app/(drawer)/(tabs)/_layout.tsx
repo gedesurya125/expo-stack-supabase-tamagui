@@ -1,6 +1,7 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 import { StyleSheet } from 'react-native';
+import { useTheme } from 'tamagui';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -10,11 +11,16 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+  const theme = useTheme();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: 'black',
+        tabBarStyle: {
+          backgroundColor: theme.orange9.val,
+        },
       }}>
       <Tabs.Screen
         name="index"

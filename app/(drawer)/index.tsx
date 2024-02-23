@@ -4,8 +4,8 @@ import EditScreenInfo from '../../components/edit-screen-info';
 
 const Page = () => {
   return (
-    <Theme name="light">
-      <YStack flex={1} alignItems="center" justifyContent="center">
+    <Theme>
+      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
         <H2>Home</H2>
         <Separator />
         <EditScreenInfo path="app/(tabs)/index.tsx" />

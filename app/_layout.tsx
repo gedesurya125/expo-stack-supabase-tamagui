@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { TamaguiProvider } from 'tamagui';
 
 import config from '../tamagui.config';
+import { SessionProvider } from '~/components/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,13 +29,15 @@ export default function RootLayout() {
   if (!loaded) return null;
 
   return (
-    <TamaguiProvider config={config}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack>
-          <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ title: 'Modal', presentation: 'modal' }} />
-        </Stack>
-      </GestureHandlerRootView>
-    </TamaguiProvider>
+    <SessionProvider>
+      <TamaguiProvider config={config} defaultTheme="dark">
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack>
+            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+            <Stack.Screen name="profile" options={{ title: 'Profile', presentation: 'modal' }} />
+          </Stack>
+        </GestureHandlerRootView>
+      </TamaguiProvider>
+    </SessionProvider>
   );
 }

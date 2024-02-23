@@ -116,22 +116,3 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
     </View>
   );
 }
-
-// const styles = StyleSheet.create({
-//   avatar: {
-//     borderRadius: 5,
-//     overflow: 'hidden',
-//     maxWidth: '100%',
-//   },
-//   image: {
-//     objectFit: 'cover',
-//     paddingTop: 0,
-//   },
-//   noImage: {
-//     backgroundColor: '#333',
-//     borderWidth: 1,
-//     borderStyle: 'solid',
-//     borderColor: 'rgb(200, 200, 200)',
-//     borderRadius: 5,
-//   },
-// });

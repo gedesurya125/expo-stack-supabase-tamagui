@@ -1,9 +1,9 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Button, Input, View, useTheme } from 'tamagui';
+import { Button, View, useTheme } from 'tamagui';
+
 import { TextInput } from './TextInput';
-import { Ionicons } from '@expo/vector-icons';
-import { Pressable } from 'react-native';
 
 export const DateTimePicker = () => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);

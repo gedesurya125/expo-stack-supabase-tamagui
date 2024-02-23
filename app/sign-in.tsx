@@ -21,12 +21,8 @@ export default function SignIn() {
     });
   }, []);
 
-  return session && session.user ? (
-    <Redirect href="/" />
-  ) : (
-    <View>
-      {/* {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />} */}
-      <Auth />
-    </View>
-  );
+  return session && session.user ? <Redirect href="/" /> : <Auth />;
+}
+{
+  /* {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />} */
 }

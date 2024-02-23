@@ -1,13 +1,10 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Ionicon from '@expo/vector-icons/Ionicons';
 import { Tabs } from 'expo-router';
 import { StyleSheet } from 'react-native';
 import { useTheme } from 'tamagui';
 
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={28} style={styles.tabBarIcon} {...props} />;
+function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicon>['name']; color: string }) {
+  return <Ionicon size={28} style={styles.tabBarIcon} {...props} />;
 }
 
 export default function TabLayout() {
@@ -17,23 +14,24 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: 'black',
+        tabBarActiveTintColor: theme.blue10.val,
+        tabBarInactiveTintColor: theme.color.val,
         tabBarStyle: {
-          backgroundColor: theme.orange9.val,
+          backgroundColor: theme.orange6.val,
         },
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Customers',
+          tabBarIcon: ({ color }) => <TabBarIcon name="people-circle-outline" color={color} />,
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Achievement',
+          tabBarIcon: ({ color }) => <TabBarIcon name="trophy-outline" color={color} />,
         }}
       />
     </Tabs>

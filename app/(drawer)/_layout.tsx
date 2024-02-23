@@ -20,8 +20,6 @@ const DrawerLayout = () => {
     return <Redirect href="/sign-in" />;
   }
 
-  console.log('this is the tamagui theme', theme.background.val);
-
   return (
     <Drawer
       screenOptions={{
@@ -35,18 +33,18 @@ const DrawerLayout = () => {
       <Drawer.Screen
         name="index"
         options={{
-          headerTitle: 'Home',
-          drawerLabel: 'Home',
+          headerTitle: 'Dashboard',
+          drawerLabel: 'Dashboard',
           drawerIcon: ({ size, color }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
+            <Ionicons name="bar-chart-outline" size={size} color={color} />
           ),
         }}
       />
       <Drawer.Screen
         name="(tabs)"
         options={{
-          headerTitle: 'Tabs',
-          drawerLabel: 'Tabs',
+          headerTitle: 'Make Order',
+          drawerLabel: 'Make Order',
           drawerIcon: ({ size, color }) => (
             <MaterialIcons name="border-bottom" size={size} color={color} />
           ),

@@ -2,7 +2,7 @@ import { useFonts } from 'expo-font';
 import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TamaguiProvider } from 'tamagui';
+import { TamaguiProvider, View, useTheme } from 'tamagui';
 
 import config from '../tamagui.config';
 import { SessionProvider } from '~/components/AuthContext';
@@ -31,13 +31,29 @@ export default function RootLayout() {
   return (
     <SessionProvider>
       <TamaguiProvider config={config} defaultTheme="dark">
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Stack>
-            <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-            <Stack.Screen name="profile" options={{ title: 'Profile', presentation: 'modal' }} />
-          </Stack>
-        </GestureHandlerRootView>
+        <Navigator />
       </TamaguiProvider>
     </SessionProvider>
   );
 }
+
+const Navigator = () => {
+  const theme = useTheme();
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: theme.background.val,
+          },
+          headerTitleStyle: {
+            color: theme.color.val,
+          },
+        }}>
+        <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+        <Stack.Screen name="profile" options={{ title: 'Profile', presentation: 'modal' }} />
+      </Stack>
+    </GestureHandlerRootView>
+  );
+};

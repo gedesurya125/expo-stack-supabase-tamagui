@@ -7,8 +7,8 @@ import { supabase } from '~/utils/supabase';
 
 export default function ProfileScreen() {
   return (
-    <Theme name="light">
-      <YStack flex={1} alignItems="center" justifyContent="center">
+    <Theme>
+      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
         <Paragraph>Modal</Paragraph>
         <Separator />

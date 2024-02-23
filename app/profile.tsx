@@ -1,8 +1,7 @@
 /* eslint-disable import/order */
 import { StatusBar } from 'expo-status-bar';
-import { YStack, Paragraph, Separator, Theme, Button, Input, View, Form } from 'tamagui';
+import { YStack, Theme, Button, Input, View, Form } from 'tamagui';
 
-import EditScreenInfo from '../components/edit-screen-info';
 import { supabase } from '~/utils/supabase';
 
 import { useState, useEffect } from 'react';

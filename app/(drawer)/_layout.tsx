@@ -52,10 +52,10 @@ const DrawerLayout = () => {
             <Link href="/profile" asChild>
               <Pressable>
                 {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
+                  <Ionicons
+                    name="person-circle-outline"
                     size={25}
-                    color="gray"
+                    color={theme.blue9.val}
                     style={[styles.headerRight, { opacity: pressed ? 0.5 : 1 }]}
                   />
                 )}

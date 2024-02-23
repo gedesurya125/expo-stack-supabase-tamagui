@@ -23,6 +23,3 @@ export default function SignIn() {
 
   return session && session.user ? <Redirect href="/" /> : <Auth />;
 }
-{
-  /* {session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />} */
-}

@@ -8,6 +8,7 @@ import { supabase } from '~/utils/supabase';
 import { useState, useEffect } from 'react';
 import { Alert, Platform } from 'react-native';
 import { useSession } from '~/components/AuthContext';
+import Avatar from '~/components/Avatar';
 
 export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
@@ -87,7 +88,15 @@ export default function ProfileScreen() {
     <Theme>
       <YStack flex={1} backgroundColor="$background" p="$4">
         <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-        <Form onSubmit={() => {}} gap="$4">
+        <Avatar
+          size={200}
+          url={avatarUrl}
+          onUpload={(url: string) => {
+            setAvatarUrl(url);
+            updateProfile({ username, website, avatar_url: url });
+          }}
+        />
+        <Form onSubmit={() => {}} gap="$4" marginTop="$7">
           <Input placeholder="Email" value={session?.user?.email} disabled />
           <Input
             placeholder="Username"

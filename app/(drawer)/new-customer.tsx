@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { H1, H2, YStack, Separator, Form, Input, Button, Spinner, useTheme } from 'tamagui';
+import { H1, H2, YStack, Separator, Form, Button, Spinner } from 'tamagui';
+import { DateTimePicker } from '~/components/DateTimePicker';
+import { TextInput } from '~/components/TextInput';
 
 export default function NewCustomer() {
   return (
@@ -28,6 +30,7 @@ const AddCustomerForm = () => {
       <TextInput placeholder="Last name" />
       <TextInput placeholder="Address" />
       <TextInput placeholder="City" />
+      <DateTimePicker />
       <Form.Trigger asChild disabled={status !== 'off'}>
         <Button
           icon={status === 'submitting' ? () => <Spinner /> : undefined}
@@ -36,19 +39,5 @@ const AddCustomerForm = () => {
         </Button>
       </Form.Trigger>
     </Form>
-  );
-};
-
-const TextInput = ({ ...props }) => {
-  const theme = useTheme();
-
-  return (
-    <Input
-      {...props}
-      borderColor="$orange6"
-      focusStyle={{
-        borderColor: theme.blue6,
-      }}
-    />
   );
 };

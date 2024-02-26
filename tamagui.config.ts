@@ -23,7 +23,7 @@ const animations = createAnimations({
     stiffness: 250,
     type: 'spring',
   },
-}) as any;
+});
 
 const headingFont = createInterFont();
 

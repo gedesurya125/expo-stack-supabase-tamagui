@@ -1,31 +1,89 @@
 import { createXentral } from './fetchXentral';
 
-export type CreateCustomerBody = {
-  type: 'company' | 'person';
-  general: {
-    title?: string | null;
-    name: string;
-    birthday?: string;
-    address: {
-      street: string;
-      zip: string;
-      city: string;
-      state: string | null;
-      country: string;
-      note: string;
-    };
-  };
-  contact: {
-    phone?: string | null;
-    fax?: string | null;
-    mobile?: string | null;
-    email: string;
-    website?: string | null;
-    marketingMails?: boolean;
+export type CompanyGeneralInformation = {
+  name: string;
+  address: {
+    street: string;
+    zip: string;
+    city: string;
+    state?: string;
+    country: string;
+    note: string;
   };
 };
 
+export type GeneralInformation = {
+  title?: string;
+  name: string;
+  birthday?: string;
+  address: {
+    street: string;
+    zip: string;
+    city: string;
+    state?: string;
+    country: string;
+    note: string;
+  };
+};
+
+export type CreateCustomerBody = {
+  type: 'company' | 'person';
+  general: GeneralInformation;
+  contact: {
+    phone?: string;
+    fax?: string;
+    mobile?: string;
+    email: string;
+    website?: string;
+    marketingMails?: boolean;
+    trackingMails?: boolean;
+  };
+};
+
+interface CreateCompanyCustomer extends Omit<CreateCustomerBody, 'general'> {
+  general: CompanyGeneralInformation;
+}
+
 export const createCustomer = async (data: CreateCustomerBody) => {
-  const result = await createXentral('/customers', JSON.stringify(data));
+  let dataToSend = data;
+
+  if (data.type === 'company') {
+    delete dataToSend.general.title;
+    delete dataToSend.general.birthday;
+  }
+  if (dataToSend.type === 'person') {
+    const birthday = new Date(dataToSend?.general?.birthday as string);
+    const validBirthDayDate = `${birthday.getFullYear()}-${birthday.getMonth() + 1}-${birthday.getDate()}`;
+    dataToSend = {
+      ...data,
+      general: {
+        ...data?.general,
+        birthday: validBirthDayDate
+      }
+    };
+  }
+
+  console.log('this is the data to send', JSON.stringify(dataToSend));
+
+  const result = await createXentral('/customers', JSON.stringify(dataToSend));
   return result;
 };
+
+// export const crateCompanyCustomer = async (data: CreateCustomerBody) => {
+//   const companyCustomerData: CreateCompanyCustomer = {
+//     type: 'company',
+//     general: {
+//       name: data.general.name,
+//       address: data.general.address,
+//     },
+//     contact: data.contact,
+//   };
+
+//   console.log('this is the company', {
+//     companyCustomerData,
+//     json: JSON.stringify(companyCustomerData),
+//     test: JSON.stringify([{ data: 'oke' }]),
+//   });
+
+//   // return await createCustomer(companyCustomerData);
+// };

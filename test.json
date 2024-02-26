@@ -1,0 +1,23 @@
+{
+  "type": "company",
+  "general": {
+    "address": {
+      "street": "dalung permai blok c3 no 11, Lingk Bumi Kertha, Kelurahan Kerobokan Kaja, Kecamatan Kuta Utara",
+      "zip": "80361",
+      "city": "Badung",
+      "state": "Bali",
+      "country": "Indonesia",
+      "note": "no note"
+    },
+    "name": "Surya"
+  },
+  "contact": {
+    "phone": "081246317320",
+    "fax": "03612837",
+    "mobile": "081246317320",
+    "email": "gedesurya125@gmail.com",
+    "website": "https://thepuzzlers.com",
+    "marketingMails": true,
+    "trackingMails": true
+  }
+}

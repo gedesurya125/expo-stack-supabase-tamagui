@@ -4,10 +4,17 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Button, View, useTheme } from 'tamagui';
 
 import { TextInput } from './TextInput';
+import { InputContainer } from './InputContainer';
 
-export const DateTimePicker = () => {
+interface DateTimePickerProps {
+  value: string;
+  handleChange: (e: any) => void;
+  onBlur: (e: any) => void;
+}
+
+export const DateTimePicker = ({ value, handleChange, onBlur }: DateTimePickerProps) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [value, setValue] = useState(new Date());
+  // const [value, setValue] = useState(new Date());
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -18,16 +25,17 @@ export const DateTimePicker = () => {
   };
 
   const handleConfirm = (date: Date) => {
-    setValue(date);
+    // setValue(date);
+    handleChange && handleChange(date.toISOString());
     hideDatePicker();
   };
 
   const theme = useTheme();
 
   return (
-    <View position="relative" flexDirection="row">
+    <View position="relative" flexDirection="row" onBlur={onBlur}>
       <TextInput
-        value={value.toLocaleDateString()}
+        value={new Date(value).toLocaleDateString()}
         onTouchStart={showDatePicker}
         borderTopRightRadius={0}
         borderBottomRightRadius={0}
@@ -48,5 +56,19 @@ export const DateTimePicker = () => {
         textColor={theme.color.val}
       />
     </View>
+  );
+};
+
+export const LabelledDateTimePicker = ({
+  label,
+  dateTimePickerProps,
+}: {
+  label: string;
+  dateTimePickerProps: React.ComponentProps<typeof DateTimePicker>;
+}) => {
+  return (
+    <InputContainer label={label}>
+      <DateTimePicker {...dateTimePickerProps} />
+    </InputContainer>
   );
 };

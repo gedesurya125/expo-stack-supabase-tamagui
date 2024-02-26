@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { ChangeEvent, Dispatch, useMemo, useState } from 'react';
 import { Adapt, Select, SelectProps, Sheet, YStack } from 'tamagui';
 import { LinearGradient } from 'tamagui/linear-gradient';
 import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
+import { InputContainer } from './InputContainer';
 
 export type SelectOption = {
   name: string;
@@ -11,7 +12,10 @@ interface SelectFieldProps extends SelectProps {
   options: SelectOption[];
   selectTitle: string;
   placeholder: string;
-  initialValue: string;
+  initialValue?: string;
+  value: string;
+  onValueChange: (e: string | ChangeEvent<any>) => void;
+  onBlur: (e: any) => void;
 }
 
 export function SelectField({
@@ -19,13 +23,14 @@ export function SelectField({
   selectTitle = 'Fruits',
   placeholder = 'Select Fruits',
   initialValue = 'apple',
+  value,
+  onValueChange,
+  onBlur,
   ...props
 }: SelectFieldProps) {
-  const [val, setVal] = useState(initialValue);
-
   return (
-    <Select value={val} onValueChange={setVal} disablePreventBodyScroll {...props}>
-      <Select.Trigger iconAfter={ChevronDown} borderColor="$primary">
+    <Select value={value} onValueChange={onValueChange} disablePreventBodyScroll {...props}>
+      <Select.Trigger iconAfter={ChevronDown} onBlur={onBlur} borderColor="$primary">
         <Select.Value placeholder={placeholder} />
       </Select.Trigger>
 
@@ -135,3 +140,17 @@ const items = [
   { name: 'Jackfruit' },
   { name: 'Durian' },
 ];
+
+export const LabelledSelectField = ({
+  label,
+  selectFieldProps,
+}: {
+  label: string;
+  selectFieldProps: React.ComponentProps<typeof SelectField>;
+}) => {
+  return (
+    <InputContainer label={label}>
+      <SelectField {...selectFieldProps} />
+    </InputContainer>
+  );
+};

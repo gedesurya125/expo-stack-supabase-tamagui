@@ -27,13 +27,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="people-circle-outline" color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Achievement',
-          tabBarIcon: ({ color }) => <TabBarIcon name="trophy-outline" color={color} />,
-        }}
-      />
     </Tabs>
   );
 }

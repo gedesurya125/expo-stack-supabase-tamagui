@@ -3,7 +3,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { useTheme } from 'tamagui';
+import { getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
 
 const DrawerLayout = () => {
@@ -56,11 +56,22 @@ const DrawerLayout = () => {
                     name="person-circle-outline"
                     size={25}
                     color={theme.blue9.val}
-                    style={[styles.headerRight, { opacity: pressed ? 0.5 : 1 }]}
+                    style={{
+                      marginRight: getToken('$3', 'space'),
+                    }}
                   />
                 )}
               </Pressable>
             </Link>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="two"
+        options={{
+          title: 'Achievement',
+          drawerIcon: ({ size, color }) => (
+            <Ionicons name="trophy-outline" size={size} color={color} />
           ),
         }}
       />

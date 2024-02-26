@@ -52,9 +52,12 @@ const AddCustomerForm = () => {
     <Formik
       initialValues={initialFormValue}
       onSubmit={async (values, props) => {
-        if (values.type === 'company') {
-          const result = await createCustomer(values);
-          console.log('this is the result', result);
+        console.log('from values', JSON.stringify(values));
+        const result = await createCustomer(values);
+        console.log('this is the result', result);
+        if (result?.ok) {
+          const text = await result.text();
+          console.log('customer crated', result.status, text);
         }
 
         props.setSubmitting(false);

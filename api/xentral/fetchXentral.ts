@@ -2,8 +2,8 @@ const fetchOption = {
   method: 'GET',
   headers: {
     accept: 'application/vnd.xentral.default.v1+json',
-    authorization: `Bearer ${process.env.EXPO_PUBLIC_XENTRAL_PERSONAL_ACCESS_TOKEN}`,
-  },
+    authorization: `Bearer ${process.env.EXPO_PUBLIC_XENTRAL_PERSONAL_ACCESS_TOKEN}`
+  }
 };
 
 export const fetchXentral = async (endPoint: string) => {
@@ -17,15 +17,17 @@ const createOptions = {
   headers: {
     accept: 'text/html',
     'content-type': 'application/vnd.xentral.default.v1+json',
-    authorization: `Bearer ${process.env.EXPO_PUBLIC_XENTRAL_PERSONAL_ACCESS_TOKEN}`,
-  },
+    authorization: `Bearer ${process.env.EXPO_PUBLIC_XENTRAL_PERSONAL_ACCESS_TOKEN}`
+  }
 };
 
 export const createXentral = async (endPoint: string, body: string) => {
+  console.log('xentral body', body);
+
   return await fetch(`${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`, {
     ...createOptions,
-    body,
+    body: body
   })
-    .then((response) => response?.json())
+    .then((response) => response)
     .catch((err) => console.error(err));
 };

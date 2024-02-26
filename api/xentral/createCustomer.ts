@@ -68,22 +68,3 @@ export const createCustomer = async (data: CreateCustomerBody) => {
   const result = await createXentral('/customers', JSON.stringify(dataToSend));
   return result;
 };
-
-// export const crateCompanyCustomer = async (data: CreateCustomerBody) => {
-//   const companyCustomerData: CreateCompanyCustomer = {
-//     type: 'company',
-//     general: {
-//       name: data.general.name,
-//       address: data.general.address,
-//     },
-//     contact: data.contact,
-//   };
-
-//   console.log('this is the company', {
-//     companyCustomerData,
-//     json: JSON.stringify(companyCustomerData),
-//     test: JSON.stringify([{ data: 'oke' }]),
-//   });
-
-//   // return await createCustomer(companyCustomerData);
-// };

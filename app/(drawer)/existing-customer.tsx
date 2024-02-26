@@ -30,15 +30,15 @@ const CustomerContext = React.createContext<CustomersContextValue>({
   setNameFilter: () => null,
   setCustomers: () => null,
   fetchNextPage: async () => {},
-  page: 1,
+  page: 0,
 });
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 14;
 
 const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [customers, setCustomers] = React.useState<XentralCustomer[]>([]);
   const [nameFilter, setNameFilter] = React.useState('');
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [isLast, setIsLast] = React.useState(false);
 
   const filterValue: CustomerFilter = {
@@ -71,15 +71,15 @@ const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNo
           console.log('from effect false');
           setIsLast(false);
         }
+        setPage(1);
       };
 
       fetchCustomer();
-      setPage(1);
     }
   }, [nameFilter]);
 
   const fetchNextPage = async () => {
-    if (isLast) return;
+    if (isLast || page === 0) return;
     const nextPageCustomers = await getCustomers({
       pageNumber: page + 1,
       pageSize: PAGE_SIZE,

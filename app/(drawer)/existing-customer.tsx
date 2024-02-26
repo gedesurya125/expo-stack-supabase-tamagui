@@ -1,7 +1,6 @@
-import React, { Dispatch, SetStateAction, useCallback } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import {
   YStack,
-  H2,
   Separator,
   Theme,
   ListItem,
@@ -9,11 +8,9 @@ import {
   Input,
   getTokenValue,
   View,
-  Button,
   useTheme,
 } from 'tamagui';
-import { styled } from '@tamagui/core';
-import { getCustomers } from '~/api/xentral';
+import { CustomerFilter, CustomerOrder, getCustomers } from '~/api/xentral';
 import { XentralCustomer } from '~/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +20,8 @@ type CustomersContextValue = {
   nameFilter: string;
   setNameFilter: Dispatch<SetStateAction<string>>;
   setCustomers: Dispatch<SetStateAction<XentralCustomer[]>>;
+  fetchNextPage: () => Promise<void>;
+  page: number;
 };
 
 const CustomerContext = React.createContext<CustomersContextValue>({
@@ -30,11 +29,73 @@ const CustomerContext = React.createContext<CustomersContextValue>({
   nameFilter: '',
   setNameFilter: () => null,
   setCustomers: () => null,
+  fetchNextPage: async () => {},
+  page: 1,
 });
+
+const PAGE_SIZE = 10;
 
 const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [customers, setCustomers] = React.useState<XentralCustomer[]>([]);
   const [nameFilter, setNameFilter] = React.useState('');
+  const [page, setPage] = React.useState(1);
+  const [isLast, setIsLast] = React.useState(false);
+
+  const filterValue: CustomerFilter = {
+    key: 'name',
+    op: 'contains',
+    value: nameFilter,
+  };
+
+  const orderValue: CustomerOrder = {
+    field: 'name',
+    direction: 'asc',
+  };
+
+  // ? reset the page to 1 when name filter change
+  React.useEffect(() => {
+    if (!isLast) {
+      const fetchCustomer = async () => {
+        const newCustomer = await getCustomers({
+          pageNumber: 1,
+          pageSize: PAGE_SIZE,
+          filter: filterValue,
+          order: orderValue,
+        });
+        setCustomers(newCustomer?.data);
+
+        if (newCustomer?.data?.length && newCustomer?.data?.length < PAGE_SIZE) {
+          console.log('from effect true');
+          setIsLast(true);
+        } else {
+          console.log('from effect false');
+          setIsLast(false);
+        }
+      };
+
+      fetchCustomer();
+      setPage(1);
+    }
+  }, [nameFilter]);
+
+  const fetchNextPage = async () => {
+    if (isLast) return;
+    const nextPageCustomers = await getCustomers({
+      pageNumber: page + 1,
+      pageSize: PAGE_SIZE,
+      filter: filterValue,
+      order: orderValue,
+    });
+    // if (nextPageCustomers?.data?.length > 0) {
+    setCustomers((state) => [...state, ...nextPageCustomers?.data]);
+    setPage((state) => state + 1);
+    // }
+    if (nextPageCustomers?.data?.length && nextPageCustomers?.data?.length < PAGE_SIZE) {
+      console.log('from trigger true');
+
+      setIsLast(true);
+    }
+  };
 
   return (
     <CustomerContext.Provider
@@ -43,6 +104,8 @@ const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNo
         nameFilter,
         setCustomers,
         setNameFilter,
+        fetchNextPage,
+        page,
       }}>
       {children}
     </CustomerContext.Provider>
@@ -50,7 +113,8 @@ const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNo
 };
 
 const useCustomerContext = () => React.useContext(CustomerContext);
-// ===========
+
+// =========== Main COmponent ===========
 
 export default function ExistingCustomer() {
   return (
@@ -65,24 +129,7 @@ export default function ExistingCustomer() {
 }
 
 const CustomerList = () => {
-  const { nameFilter, setCustomers, customers } = useCustomerContext();
-
-  React.useEffect(() => {
-    const fetchCustomer = async () => {
-      const newCustomer = await getCustomers({
-        pageNumber: 1,
-        pageSize: 20,
-        filter: {
-          key: 'name',
-          op: 'contains',
-          value: nameFilter,
-        },
-      });
-      setCustomers(newCustomer?.data);
-    };
-
-    fetchCustomer();
-  }, [nameFilter]);
+  const { customers, fetchNextPage, page } = useCustomerContext();
 
   // ? callback prevent re render the header
   const renderHeader = React.useCallback(() => <SearchBar />, []);
@@ -107,7 +154,14 @@ const CustomerList = () => {
       // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
       ListHeaderComponent={renderHeader}
       stickyHeaderIndices={[0]}
-      style={{}}
+      onEndReachedThreshold={0.1}
+      onEndReached={async () => {
+        console.log('fetching...', page);
+        await fetchNextPage();
+      }}
+      style={{
+        flex: 1,
+      }}
     />
   );
 };

@@ -1,10 +1,11 @@
 /* eslint-disable import/order */
 import React, { useState } from 'react';
-import { Alert, AppState } from 'react-native';
+import { AppState } from 'react-native';
 import { supabase } from '../utils/supabase';
 // import { Button, Input } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import { View, Button, useTheme, getToken } from 'tamagui';
+import { useSession } from './AuthContext';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -21,33 +22,7 @@ AppState.addEventListener('change', (state) => {
 export default function Auth() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  async function signInWithEmail() {
-    setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) Alert.alert(error.message);
-    setLoading(false);
-  }
-
-  async function signUpWithEmail() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert('Please check your inbox for email verification!');
-    setLoading(false);
-  }
+  const { signInWithEmail, signUpWithEmail, loading } = useSession();
 
   const theme = useTheme();
 
@@ -94,12 +69,15 @@ export default function Auth() {
         placeholder="Password"
         autoCapitalize="none"
       />
-      <Button disabled={loading} onPress={() => signInWithEmail()} backgroundColor="$orange6">
+      <Button
+        disabled={loading}
+        onPress={() => signInWithEmail({ email, password })}
+        backgroundColor="$orange6">
         Sign In
       </Button>
       <Button
         disabled={loading}
-        onPress={() => signUpWithEmail()}
+        onPress={() => signUpWithEmail({ email, password })}
         marginTop="$5"
         backgroundColor="$blue6">
         Sign Up

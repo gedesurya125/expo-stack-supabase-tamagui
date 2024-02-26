@@ -9,17 +9,7 @@ import { Redirect } from 'expo-router';
 
 export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
-  const { session, setSession } = useSession();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  const { session } = useSession();
 
   return session && session.user ? <Redirect href="/" /> : <Auth />;
 }

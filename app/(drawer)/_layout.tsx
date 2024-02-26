@@ -1,9 +1,9 @@
 /* eslint-disable import/order */
-import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { Text, useTheme } from 'tamagui';
+import { useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
 
 const DrawerLayout = () => {

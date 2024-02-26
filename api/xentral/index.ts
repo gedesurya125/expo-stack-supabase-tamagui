@@ -1,1 +1,1 @@
-export const getCustomerList = async () => {};
+export * from './getCustomers';

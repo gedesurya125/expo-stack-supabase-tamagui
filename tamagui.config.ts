@@ -66,7 +66,19 @@ const config = createTamagui({
     body: bodyFont,
     heading: headingFont,
   },
-  themes,
+  themes: {
+    ...themes,
+    dark: {
+      ...themes.dark,
+      primary: tokens.color.orange6Dark.val,
+      secondary: tokens.color.blue6Dark.val,
+    },
+    light: {
+      ...themes.light,
+      primary: tokens.color.orange6Light.val,
+      secondary: tokens.color.blue6Light.val,
+    },
+  },
   tokens,
   media: createMedia({
     xs: { maxWidth: 660 },

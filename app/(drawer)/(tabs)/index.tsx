@@ -25,13 +25,13 @@ const OptionsButton = () => {
     <YStack>
       <Button
         icon={<Ionicons name="people-outline" size={22} />}
-        backgroundColor="$orange6"
+        backgroundColor="$primary"
         marginTop="$5">
         Existing Customer
       </Button>
       <Button
         icon={<Ionicons name="person-add-outline" size={21} />}
-        backgroundColor="$blue6"
+        backgroundColor="$secondary"
         marginTop="$4"
         onPress={() => {
           navigation.navigate('new-customer' as never);

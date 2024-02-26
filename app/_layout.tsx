@@ -30,6 +30,7 @@ export default function RootLayout() {
 
   return (
     <SessionProvider>
+      {/* At the moment we just use dark */}
       <TamaguiProvider config={config} defaultTheme="dark">
         <Navigator />
       </TamaguiProvider>

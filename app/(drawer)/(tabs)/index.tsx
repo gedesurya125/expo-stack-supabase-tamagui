@@ -26,7 +26,10 @@ const OptionsButton = () => {
       <Button
         icon={<Ionicons name="people-outline" size={22} />}
         backgroundColor="$primary"
-        marginTop="$5">
+        marginTop="$5"
+        onPress={() => {
+          navigation.navigate('existing-customer' as never);
+        }}>
         Existing Customer
       </Button>
       <Button

@@ -85,6 +85,16 @@ const DrawerLayout = () => {
           },
         }}
       />
+      <Drawer.Screen
+        name="existing-customer"
+        options={{
+          headerTitle: 'Existing Customer',
+          drawerLabel: 'Existing Customer',
+          drawerItemStyle: {
+            display: 'none',
+          },
+        }}
+      />
     </Drawer>
   );
 };

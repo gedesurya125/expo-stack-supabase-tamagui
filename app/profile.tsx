@@ -1,6 +1,7 @@
 /* eslint-disable import/order */
 import { StatusBar } from 'expo-status-bar';
 import { YStack, Theme, Button, Input, View, Form } from 'tamagui';
+import { Redirect, router } from 'expo-router';
 
 import { supabase } from '~/utils/supabase';
 
@@ -15,6 +16,9 @@ export default function ProfileScreen() {
   const [website, setWebsite] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const { session } = useSession();
+
+  const isModalOpen = router.canGoBack();
+  console.log('this is the modal presentation', isModalOpen);
 
   useEffect(() => {
     if (session) getProfile();
@@ -81,6 +85,11 @@ export default function ProfileScreen() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!session?.user && isModalOpen) {
+    //? go back
+    return <Redirect href="../" />;
   }
 
   return (

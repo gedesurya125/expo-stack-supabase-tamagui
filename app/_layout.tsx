@@ -56,6 +56,10 @@ const Navigator = () => {
           }}>
           <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
           <Stack.Screen name="profile" options={{ title: 'Profile', presentation: 'modal' }} />
+          <Stack.Screen
+            name="customer-detail-modal"
+            options={{ title: 'Customer Detail', presentation: 'modal' }}
+          />
         </Stack>
       </GestureHandlerRootView>
     </ExistingCustomerContextProvider>

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import {
   YStack,
   Separator,
@@ -8,30 +8,32 @@ import {
   Input,
   getTokenValue,
   View,
-  useTheme
+  useTheme,
+  XStack,
+  Button
 } from 'tamagui';
-import { CustomerFilter, CustomerOrder, getCustomers } from '~/api/xentral';
-import { XentralCustomer } from '~/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import { ExistingCustomerContextProvider, useCustomerContext } from '~/context/CustomersContext';
+import { useCustomerContext } from '~/context/CustomersContext';
+import { StyledButton } from '~/components/StyledButton';
+import { Pressable } from 'react-native';
+import { Link } from 'expo-router';
 
 // =========== Main COmponent ===========
 
 export default function ExistingCustomer() {
   return (
-    // <ExistingCustomerContextProvider>
     <Theme>
       <YStack flex={1} backgroundColor="$background">
         <CustomerList />
       </YStack>
     </Theme>
-    // </ExistingCustomerContextProvider>
   );
 }
 
 const CustomerList = () => {
   const { customers, fetchNextPage, page } = useCustomerContext();
+  const theme = useTheme();
 
   // ? callback prevent re render the header
   const renderHeader = React.useCallback(() => <SearchBar />, []);
@@ -44,10 +46,26 @@ const CustomerList = () => {
           <ListItem
             color="$color"
             backgroundColor="$background"
-            flexDirection="column"
+            flexDirection="row"
             alignItems="flex-start">
-            <Text color="$color">{item.general.name}</Text>
-            <Text color="$color">{item.general.email}</Text>
+            <YStack flex={1}>
+              <Text color="$color">{item.general.name}</Text>
+              <Text color="$color" mt="$2">
+                {item.general.email}
+              </Text>
+            </YStack>
+            <Link
+              href={{
+                pathname: '/customer-detail-modal',
+                params: {
+                  id: item.id
+                }
+              }}
+              asChild>
+              <Pressable>
+                <Ionicons name="information-circle-outline" size={25} color={theme.blue10.val} />
+              </Pressable>
+            </Link>
           </ListItem>
         );
       }}

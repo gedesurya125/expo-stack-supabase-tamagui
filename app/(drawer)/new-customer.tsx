@@ -1,14 +1,14 @@
 import { Formik } from 'formik';
-import React, { useState, useEffect } from 'react';
-import { H1, H2, YStack, Separator, Form, Button, Spinner, Text, ScrollView } from 'tamagui';
+import React from 'react';
+import { H2, YStack, Separator, Form, Button, Spinner, Text, ScrollView } from 'tamagui';
 import {
   CreateCustomerBody,
   // crateCompanyCustomer,
   createCustomer
 } from '~/api/xentral/createCustomer';
-import { LabelledSelectField, LabelledSwitch, SelectField } from '~/components';
-import { DateTimePicker, LabelledDateTimePicker } from '~/components/DateTimePicker';
-import { LabelledTextInput, TextInput } from '~/components/TextInput';
+import { LabelledSelectField, LabelledSwitch } from '~/components';
+import { LabelledDateTimePicker } from '~/components/DateTimePicker';
+import { LabelledTextInput } from '~/components/TextInput';
 
 export default function NewCustomer() {
   return (
@@ -52,12 +52,15 @@ const AddCustomerForm = () => {
     <Formik
       initialValues={initialFormValue}
       onSubmit={async (values, props) => {
-        console.log('from values', JSON.stringify(values));
+        console.log('formik values', JSON.stringify(values));
         const result = await createCustomer(values);
         console.log('this is the result', result);
         if (result?.ok) {
           const text = await result.text();
           console.log('customer crated', result.status, text);
+        } else {
+          const text = await result?.text();
+          console.log('customer not created', result, result?.status, text);
         }
 
         props.setSubmitting(false);

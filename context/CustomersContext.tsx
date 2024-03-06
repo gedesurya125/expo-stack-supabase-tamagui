@@ -51,10 +51,8 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
       setCustomers(newCustomer?.data);
 
       if (newCustomer?.data?.length && newCustomer?.data?.length < PAGE_SIZE) {
-        console.log('from effect true');
         setIsLast(true);
       } else {
-        console.log('from effect false');
         setIsLast(false);
       }
       setPage(1);

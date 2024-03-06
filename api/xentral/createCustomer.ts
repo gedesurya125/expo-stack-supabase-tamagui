@@ -40,10 +40,6 @@ export type CreateCustomerBody = {
   };
 };
 
-interface CreateCompanyCustomer extends Omit<CreateCustomerBody, 'general'> {
-  general: CompanyGeneralInformation;
-}
-
 export const createCustomer = async (data: CreateCustomerBody) => {
   let dataToSend = data;
 
@@ -63,7 +59,7 @@ export const createCustomer = async (data: CreateCustomerBody) => {
     };
   }
 
-  console.log('this is the data to send', JSON.stringify(dataToSend));
+  console.log('CREATE CUSTOMER DATA TO SEND:', JSON.stringify(dataToSend));
 
   const result = await createXentral('/customers', JSON.stringify(dataToSend));
   return result;

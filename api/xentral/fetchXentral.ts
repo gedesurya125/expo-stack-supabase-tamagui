@@ -22,8 +22,6 @@ const createOptions = {
 };
 
 export const createXentral = async (endPoint: string, body: string) => {
-  console.log('xentral body', body);
-
   return await fetch(`${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`, {
     ...createOptions,
     body: body

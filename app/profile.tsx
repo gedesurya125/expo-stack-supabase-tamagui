@@ -18,7 +18,6 @@ export default function ProfileScreen() {
   const { session } = useSession();
 
   const isModalOpen = router.canGoBack();
-  console.log('this is the modal presentation', isModalOpen);
 
   useEffect(() => {
     if (session) getProfile();
@@ -55,7 +54,7 @@ export default function ProfileScreen() {
   async function updateProfile({
     username,
     website,
-    avatar_url,
+    avatar_url
   }: {
     username: string;
     website: string;
@@ -70,7 +69,7 @@ export default function ProfileScreen() {
         username,
         website,
         avatar_url,
-        updated_at: new Date(),
+        updated_at: new Date()
       };
 
       const { error } = await supabase.from('profiles').upsert(updates);

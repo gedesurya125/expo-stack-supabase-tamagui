@@ -8,123 +8,25 @@ import {
   Input,
   getTokenValue,
   View,
-  useTheme,
+  useTheme
 } from 'tamagui';
 import { CustomerFilter, CustomerOrder, getCustomers } from '~/api/xentral';
 import { XentralCustomer } from '~/types';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-
-type CustomersContextValue = {
-  customers: XentralCustomer[];
-  nameFilter: string;
-  setNameFilter: Dispatch<SetStateAction<string>>;
-  setCustomers: Dispatch<SetStateAction<XentralCustomer[]>>;
-  fetchNextPage: () => Promise<void>;
-  page: number;
-};
-
-const CustomerContext = React.createContext<CustomersContextValue>({
-  customers: [],
-  nameFilter: '',
-  setNameFilter: () => null,
-  setCustomers: () => null,
-  fetchNextPage: async () => {},
-  page: 0,
-});
-
-const PAGE_SIZE = 14;
-
-const ExistingCustomerContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [customers, setCustomers] = React.useState<XentralCustomer[]>([]);
-  const [nameFilter, setNameFilter] = React.useState('');
-  const [page, setPage] = React.useState(0);
-  const [isLast, setIsLast] = React.useState(false);
-
-  const filterValue: CustomerFilter = {
-    key: 'name',
-    op: 'contains',
-    value: nameFilter,
-  };
-
-  const orderValue: CustomerOrder = {
-    field: 'name',
-    direction: 'asc',
-  };
-
-  // ? reset the page to 1 when name filter change
-  React.useEffect(() => {
-    if (!isLast) {
-      const fetchCustomer = async () => {
-        const newCustomer = await getCustomers({
-          pageNumber: 1,
-          pageSize: PAGE_SIZE,
-          filter: filterValue,
-          order: orderValue,
-        });
-        setCustomers(newCustomer?.data);
-
-        if (newCustomer?.data?.length && newCustomer?.data?.length < PAGE_SIZE) {
-          console.log('from effect true');
-          setIsLast(true);
-        } else {
-          console.log('from effect false');
-          setIsLast(false);
-        }
-        setPage(1);
-      };
-
-      fetchCustomer();
-    }
-  }, [nameFilter]);
-
-  const fetchNextPage = async () => {
-    if (isLast || page === 0) return;
-    const nextPageCustomers = await getCustomers({
-      pageNumber: page + 1,
-      pageSize: PAGE_SIZE,
-      filter: filterValue,
-      order: orderValue,
-    });
-    // if (nextPageCustomers?.data?.length > 0) {
-    setCustomers((state) => [...state, ...nextPageCustomers?.data]);
-    setPage((state) => state + 1);
-    // }
-    if (nextPageCustomers?.data?.length && nextPageCustomers?.data?.length < PAGE_SIZE) {
-      console.log('from trigger true');
-
-      setIsLast(true);
-    }
-  };
-
-  return (
-    <CustomerContext.Provider
-      value={{
-        customers,
-        nameFilter,
-        setCustomers,
-        setNameFilter,
-        fetchNextPage,
-        page,
-      }}>
-      {children}
-    </CustomerContext.Provider>
-  );
-};
-
-const useCustomerContext = () => React.useContext(CustomerContext);
+import { ExistingCustomerContextProvider, useCustomerContext } from '~/context/CustomersContext';
 
 // =========== Main COmponent ===========
 
 export default function ExistingCustomer() {
   return (
-    <ExistingCustomerContextProvider>
-      <Theme>
-        <YStack flex={1} backgroundColor="$background">
-          <CustomerList />
-        </YStack>
-      </Theme>
-    </ExistingCustomerContextProvider>
+    // <ExistingCustomerContextProvider>
+    <Theme>
+      <YStack flex={1} backgroundColor="$background">
+        <CustomerList />
+      </YStack>
+    </Theme>
+    // </ExistingCustomerContextProvider>
   );
 }
 
@@ -160,7 +62,7 @@ const CustomerList = () => {
         await fetchNextPage();
       }}
       style={{
-        flex: 1,
+        flex: 1
       }}
     />
   );
@@ -192,7 +94,7 @@ const SearchBar = () => {
           style={{
             position: 'absolute',
             zIndex: 1,
-            left: getTokenValue('$3', 'space'),
+            left: getTokenValue('$3', 'space')
           }}
         />
         <Input

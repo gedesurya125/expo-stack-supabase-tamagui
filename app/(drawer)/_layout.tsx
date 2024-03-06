@@ -3,7 +3,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { getToken, useTheme } from 'tamagui';
+import { Text, getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
 
 const DrawerLayout = () => {
@@ -24,11 +24,27 @@ const DrawerLayout = () => {
     <Drawer
       screenOptions={{
         headerStyle: {
-          backgroundColor: theme.background.val,
+          backgroundColor: theme.background.val
         },
         headerTitleStyle: {
-          color: theme.color.val,
+          color: theme.color.val
         },
+        headerRight: () => (
+          <Link href="/profile" asChild>
+            <Pressable>
+              {({ pressed }) => (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={25}
+                  color={theme.blue9.val}
+                  style={{
+                    marginRight: getToken('$3', 'space')
+                  }}
+                />
+              )}
+            </Pressable>
+          </Link>
+        )
       }}>
       <Drawer.Screen
         name="index"
@@ -37,7 +53,7 @@ const DrawerLayout = () => {
           drawerLabel: 'Dashboard',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="bar-chart-outline" size={size} color={color} />
-          ),
+          )
         }}
       />
       <Drawer.Screen
@@ -47,23 +63,7 @@ const DrawerLayout = () => {
           drawerLabel: 'Make Order',
           drawerIcon: ({ size, color }) => (
             <MaterialIcons name="border-bottom" size={size} color={color} />
-          ),
-          headerRight: () => (
-            <Link href="/profile" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <Ionicons
-                    name="person-circle-outline"
-                    size={25}
-                    color={theme.blue9.val}
-                    style={{
-                      marginRight: getToken('$3', 'space'),
-                    }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          )
         }}
       />
       <Drawer.Screen
@@ -72,7 +72,7 @@ const DrawerLayout = () => {
           title: 'Achievement',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="trophy-outline" size={size} color={color} />
-          ),
+          )
         }}
       />
       <Drawer.Screen
@@ -81,8 +81,9 @@ const DrawerLayout = () => {
           headerTitle: 'new customer',
           drawerLabel: 'new customer',
           drawerItemStyle: {
-            display: 'none',
+            display: 'none'
           },
+          headerLeft: BackToMakeOrderScreen
         }}
       />
       <Drawer.Screen
@@ -91,18 +92,34 @@ const DrawerLayout = () => {
           headerTitle: 'Existing Customer',
           drawerLabel: 'Existing Customer',
           drawerItemStyle: {
-            display: 'none',
+            display: 'none'
           },
+          headerLeft: BackToMakeOrderScreen
         }}
       />
     </Drawer>
   );
 };
 
-const styles = StyleSheet.create({
-  headerRight: {
-    marginRight: 15,
-  },
-});
-
 export default DrawerLayout;
+
+const BackToMakeOrderScreen = (props: any) => {
+  const theme = useTheme();
+
+  return (
+    <Link href="/(drawer)/(tabs)" asChild>
+      <Pressable>
+        {({ pressed }) => (
+          <Ionicons
+            name="arrow-back"
+            size={25}
+            color={theme.blue9.val}
+            style={{
+              marginLeft: getToken('$3', 'space')
+            }}
+          />
+        )}
+      </Pressable>
+    </Link>
+  );
+};

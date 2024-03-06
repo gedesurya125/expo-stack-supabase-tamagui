@@ -17,14 +17,14 @@ export default function TabLayout() {
         tabBarActiveTintColor: theme.blue10.val,
         tabBarInactiveTintColor: theme.color.val,
         tabBarStyle: {
-          backgroundColor: theme.orange6.val,
-        },
+          backgroundColor: theme.orange6.val
+        }
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Customers',
-          tabBarIcon: ({ color }) => <TabBarIcon name="people-circle-outline" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="people-circle-outline" color={color} />
         }}
       />
     </Tabs>
@@ -33,6 +33,6 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBarIcon: {
-    marginBottom: -3,
-  },
+    marginBottom: -3
+  }
 });

@@ -7,6 +7,8 @@ const fetchOption = {
 };
 
 export const fetchXentral = async (endPoint: string) => {
+  console.log('this is the url', `${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`);
+
   return await fetch(`${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`, fetchOption)
     .then((response) => response?.json())
     .catch((err) => console.error(err));

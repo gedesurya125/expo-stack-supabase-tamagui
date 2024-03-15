@@ -57,7 +57,7 @@ const DrawerLayout = () => {
         }}
       />
       <Drawer.Screen
-        name="(tabs)"
+        name="make-order"
         options={{
           headerTitle: 'Make Order',
           drawerLabel: 'Make Order',
@@ -107,7 +107,7 @@ const BackToMakeOrderScreen = (props: any) => {
   const theme = useTheme();
 
   return (
-    <Link href="/(drawer)/(tabs)" asChild>
+    <Link href="/make-order" asChild>
       <Pressable>
         {({ pressed }) => (
           <Ionicons
@@ -123,3 +123,5 @@ const BackToMakeOrderScreen = (props: any) => {
     </Link>
   );
 };
+
+//? this group is not used, it moved to /(drawer)/make-order

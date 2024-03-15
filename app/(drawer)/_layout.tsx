@@ -120,6 +120,17 @@ const DrawerLayout = () => {
           headerLeft: BackToMakeOrderScreen
         }}
       />
+      <Drawer.Screen
+        name="search-new-customer-mapbox"
+        options={{
+          headerTitle: 'Search New Customer Mapbox',
+          drawerLabel: 'Search New Customer Mapbox',
+          drawerItemStyle: {
+            display: 'none'
+          },
+          headerLeft: BackToMakeOrderScreen
+        }}
+      />
     </Drawer>
   );
 };

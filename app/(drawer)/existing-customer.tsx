@@ -41,34 +41,7 @@ const CustomerList = () => {
   return (
     <FlatList
       data={customers}
-      renderItem={({ item }) => {
-        return (
-          <ListItem
-            color="$color"
-            backgroundColor="$background"
-            flexDirection="row"
-            alignItems="flex-start">
-            <YStack flex={1}>
-              <Text color="$color">{item.general.name}</Text>
-              <Text color="$color" mt="$2">
-                {item.general.email}
-              </Text>
-            </YStack>
-            <Link
-              href={{
-                pathname: '/customer-detail-modal',
-                params: {
-                  id: item.id
-                }
-              }}
-              asChild>
-              <Pressable>
-                <Ionicons name="information-circle-outline" size={25} color={theme.blue10.val} />
-              </Pressable>
-            </Link>
-          </ListItem>
-        );
-      }}
+      renderItem={({ item }) => <CustomerItem item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={Separator}
       // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
@@ -86,12 +59,43 @@ const CustomerList = () => {
   );
 };
 
+export const CustomerItem = ({ item }: { item: any }) => {
+  const theme = useTheme();
+
+  return (
+    <ListItem
+      color="$color"
+      backgroundColor="$background"
+      flexDirection="row"
+      alignItems="flex-start">
+      <YStack flex={1}>
+        <Text color="$color">{item.general.name}</Text>
+        <Text color="$color" mt="$2">
+          {item.general.email}
+        </Text>
+      </YStack>
+      <Link
+        href={{
+          pathname: '/customer-detail-modal',
+          params: {
+            id: item.id
+          }
+        }}
+        asChild>
+        <Pressable>
+          <Ionicons name="information-circle-outline" size={25} color={theme.blue10.val} />
+        </Pressable>
+      </Link>
+    </ListItem>
+  );
+};
+
 const SearchBar = () => {
   const { setNameFilter } = useCustomerContext();
 
   const [value, setValue] = React.useState('');
 
-  const theme = useTheme();
+  // const theme = useTheme();
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -101,6 +105,18 @@ const SearchBar = () => {
       clearTimeout(timeout);
     };
   }, [value]);
+
+  return <ListSearchBar currentValue={value} setValue={setValue} />;
+};
+
+export const ListSearchBar = ({
+  currentValue,
+  setValue
+}: {
+  currentValue: any;
+  setValue: (value: any) => any;
+}) => {
+  const theme = useTheme();
 
   return (
     <View paddingTop="$4" backgroundColor="$background" paddingHorizontal="$4" paddingBottom="$2">
@@ -118,7 +134,7 @@ const SearchBar = () => {
         <Input
           placeholder="search..."
           paddingLeft="$8"
-          value={value}
+          value={currentValue}
           onChangeText={(value) => {
             setValue(value);
           }}

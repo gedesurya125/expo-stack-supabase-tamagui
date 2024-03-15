@@ -109,6 +109,17 @@ const DrawerLayout = () => {
           headerLeft: BackToMakeOrderScreen
         }}
       />
+      <Drawer.Screen
+        name="search-new-customer"
+        options={{
+          headerTitle: 'Search New Customer',
+          drawerLabel: 'Search New Customer',
+          drawerItemStyle: {
+            display: 'none'
+          },
+          headerLeft: BackToMakeOrderScreen
+        }}
+      />
     </Drawer>
   );
 };

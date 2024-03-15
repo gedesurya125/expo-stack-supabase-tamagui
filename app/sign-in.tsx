@@ -11,5 +11,5 @@ export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
   const { session } = useSession();
 
-  return session && session.user ? <Redirect href="/" /> : <Auth />;
+  return session && session.user ? <Redirect href="/(drawer)/" /> : <Auth />;
 }

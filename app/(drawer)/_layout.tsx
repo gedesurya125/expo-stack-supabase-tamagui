@@ -97,6 +97,18 @@ const DrawerLayout = () => {
           headerLeft: BackToMakeOrderScreen
         }}
       />
+      {/* //? not showing up for now */}
+      <Drawer.Screen
+        name="(tabs)"
+        options={{
+          headerTitle: 'Existing Customer',
+          drawerLabel: 'Existing Customer',
+          drawerItemStyle: {
+            display: 'none'
+          },
+          headerLeft: BackToMakeOrderScreen
+        }}
+      />
     </Drawer>
   );
 };

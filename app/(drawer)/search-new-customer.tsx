@@ -1,41 +1,100 @@
 import React from 'react';
 import {
-  H1,
   H2,
   Input,
   Separator,
   Stack,
-  Text,
   YStack,
   styled,
   useTheme,
   View,
-  getTokenValue
+  getTokenValue,
+  Text,
+  Button
 } from 'tamagui';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import { StyleSheet } from 'react-native';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FlatList } from 'react-native-gesture-handler';
 import { CustomerItem } from './existing-customer';
 import { Ionicons } from '@expo/vector-icons';
+import * as Location from 'expo-location';
+import { StyledButton } from '~/components/StyledButton';
+
+const MAP_WIDTH = 600;
+const MAP_HEIGHT = 650;
+
+const ASPECT_RATIO = MAP_WIDTH / MAP_HEIGHT;
+
+const LATITUDE_DELTA = 0.02;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+const INITIAL_LAT = 28.46252;
+const INITIAL_LNG = -81.397272;
 
 export default function SearchNewCustomer() {
-  const MAP_WIDTH = 600;
-  const MAP_HEIGHT = 650;
+  // const [location, setLocation] = React.useState<Location.LocationObject | null>(null);
+  const [searchText, setSearchText] = React.useState('');
 
-  const ASPECT_RATIO = MAP_WIDTH / MAP_HEIGHT;
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
 
-  const LATITUDE_DELTA = 0.02;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-  const INITIAL_LAT = 28.46254;
-  const INITIAL_LNG = -81.397272;
-
-  const INITIAL_POSITION = {
-    latitude: INITIAL_LAT,
-    longitude: INITIAL_LNG,
+  const [location, setLocation] = React.useState<Region | undefined>();
+  const INITIAL_LOCATION = {
+    latitude: INITIAL_LAT || 0,
+    longitude: INITIAL_LNG || 0,
     latitudeDelta: LATITUDE_DELTA,
     longitudeDelta: LONGITUDE_DELTA
   };
+
+  React.useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      // setLocation(location);
+      setLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA
+      });
+    })();
+  }, []);
+
+  let regionSetDelay: ReturnType<typeof setTimeout>;
+
+  const handleOnLocationChange = (region: Region) => {
+    if (regionSetDelay) {
+      clearTimeout(regionSetDelay);
+    }
+    regionSetDelay = setTimeout(() => {
+      setLocation(region);
+    }, 500);
+  };
+
+  const searchPlaces = async () => {
+    const searchTextInput = searchText.trim().length;
+
+    console.log('this is the input', searchTextInput);
+    if (!searchTextInput) return null;
+    const googleApisUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
+    const input = searchText.trim();
+    const currentLocation = `${location?.latitude},${location?.longitude}&radius=2000`;
+    const url = `${googleApisUrl}?query=${input}&location=${currentLocation}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`;
+
+    try {
+      const res = await fetch(url);
+      const json = await res.json();
+      console.log('place', json);
+      console.log('searchText', searchText);
+    } catch (error) {
+      console.log('error search place', error);
+    }
+  };
+
+  console.log('this is the search text', searchText);
 
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$6" paddingVertical="$6">
@@ -47,15 +106,28 @@ export default function SearchNewCustomer() {
         }}>
         <Stack flex={1} paddingRight="$5">
           <H2>Select customer near you</H2>
-          <SearchInput />
+          {errorMsg && <Text>error: {errorMsg}</Text>}
+          {/* <SearchInput /> */}
+          <ListSearchBar currentValue={searchText} setValue={setSearchText} />
+          <Button onPress={searchPlaces}>Search</Button>
           <CustomerList />
         </Stack>
         <StyledMapView
           width={MAP_WIDTH}
           height={MAP_HEIGHT}
           provider={PROVIDER_GOOGLE}
-          initialRegion={INITIAL_POSITION}
-        />
+          initialRegion={INITIAL_LOCATION}
+          region={location}
+          onRegionChange={handleOnLocationChange}>
+          <Marker
+            coordinate={{
+              latitude: location?.latitude || 0,
+              longitude: location?.longitude || 0
+            }}
+            title={'your location'}
+            description={'your location detail'}
+          />
+        </StyledMapView>
       </Stack>
     </YStack>
   );

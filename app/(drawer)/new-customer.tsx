@@ -7,7 +7,7 @@ import {
   createCustomer
 } from '~/api/xentral/createCustomer';
 import { LabelledSelectField, LabelledSwitch } from '~/components';
-import { LabelledDateTimePicker } from '~/components/DateTimePicker';
+// import { LabelledDateTimePicker } from '~/components/DateTimePicker';
 import { LabelledTextInput } from '~/components/TextInput';
 
 export default function NewCustomer() {
@@ -97,7 +97,7 @@ const AddCustomerForm = () => {
                 onBlur: handleBlur('general.name')
               }}
             />
-
+            {/* 
             <LabelledDateTimePicker
               label="Birth Date"
               dateTimePickerProps={{
@@ -105,7 +105,7 @@ const AddCustomerForm = () => {
                 handleChange: handleChange('general.birthday'),
                 onBlur: handleBlur('general.birthday')
               }}
-            />
+            /> */}
 
             <GroupLabel>Address Information</GroupLabel>
 

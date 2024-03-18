@@ -6,3 +6,7 @@
     "@tamagui/themes": "1.74.8",
     "tamagui": "1.74.8"
     "@tamagui/babel-plugin": "1.74.8",
+
+#IOS INCOMPATIBLE LIBRARY
+"react-native-modal-datetime-picker": "^17.1.0",
+"@react-native-community/datetimepicker": "7.6.1",

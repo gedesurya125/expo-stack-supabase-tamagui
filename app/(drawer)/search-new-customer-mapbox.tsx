@@ -10,91 +10,48 @@ import {
   View,
   getTokenValue,
   Text,
-  Button
+  Button,
+  ListItem
 } from 'tamagui';
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FlatList } from 'react-native-gesture-handler';
-import { CustomerItem } from './existing-customer';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { StyledButton } from '~/components/StyledButton';
 
-const MAP_WIDTH = 600;
-const MAP_HEIGHT = 650;
+import Mapbox, { Camera, LocationPuck, UserTrackingMode } from '@rnmapbox/maps';
+import { MapboxExample } from '~/components/MapboxExample';
+import { Link } from 'expo-router';
+import { Pressable } from 'react-native';
+import { Box, Building2 } from '@tamagui/lucide-icons';
 
-const ASPECT_RATIO = MAP_WIDTH / MAP_HEIGHT;
-
-const LATITUDE_DELTA = 0.02;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-const INITIAL_LAT = 28.46252;
-const INITIAL_LNG = -81.397272;
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_TOKEN as string);
 
 export default function SearchNewCustomer() {
   // const [location, setLocation] = React.useState<Location.LocationObject | null>(null);
   const [searchText, setSearchText] = React.useState('');
+  const [searchPlaces, setSearchPlaces] = React.useState<any[]>([]);
 
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
+  const [location, setLocation] = React.useState<any>();
 
-  const [location, setLocation] = React.useState<Region | undefined>();
-  const INITIAL_LOCATION = {
-    latitude: INITIAL_LAT || 0,
-    longitude: INITIAL_LNG || 0,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA
-  };
-
-  React.useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      // setLocation(location);
-      setLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      });
-    })();
-  }, []);
-
-  let regionSetDelay: ReturnType<typeof setTimeout>;
-
-  const handleOnLocationChange = (region: Region) => {
-    if (regionSetDelay) {
-      clearTimeout(regionSetDelay);
-    }
-    regionSetDelay = setTimeout(() => {
-      setLocation(region);
-    }, 500);
-  };
-
-  const searchPlaces = async () => {
+  const handleSearchPlaces = async () => {
     const searchTextInput = searchText.trim().length;
-
     console.log('this is the input', searchTextInput);
-    if (!searchTextInput) return null;
-    const googleApisUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
-    const input = searchText.trim();
-    const currentLocation = `${location?.latitude},${location?.longitude}&radius=2000`;
-    const url = `${googleApisUrl}?query=${input}&location=${currentLocation}&key=${process.env.EXPO_PUBLIC_GOOGLE_API_KEY}`;
+    // source: https://docs.mapbox.com/api/search/geocoding
+    const places = await fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchText}.json?access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&proximity=${location.coords.longitude},${location?.coords?.latitude}&limit=10`
+    ).then((res) => res.json());
 
-    try {
-      const res = await fetch(url);
-      const json = await res.json();
-      console.log('place', json);
-      console.log('searchText', searchText);
-    } catch (error) {
-      console.log('error search place', error);
+    console.log('this is the original place', places);
+
+    if (places?.features) {
+      setSearchPlaces(places?.features);
     }
   };
 
   console.log('this is the search text', searchText);
+  console.log('this is the location', location);
+  console.log('this is the search place result', searchPlaces);
 
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$6" paddingVertical="$6">
@@ -105,27 +62,55 @@ export default function SearchNewCustomer() {
           flexDirection: 'row'
         }}>
         <Stack flex={1} paddingRight="$5">
-          <H2>Select customer near you</H2>
-          {errorMsg && <Text>error: {errorMsg}</Text>}
-          {/* <SearchInput /> */}
+          <H2>Select customer near you HEllo</H2>
           <ListSearchBar currentValue={searchText} setValue={setSearchText} />
-          <Button onPress={searchPlaces}>Search</Button>
-          <CustomerList />
+          <StyledButton colorStyle="primary" onPress={handleSearchPlaces}>
+            Search
+          </StyledButton>
+          <PlaceList searchPlaces={searchPlaces} />
         </Stack>
-        <StyledMapView
-          width={MAP_WIDTH}
-          height={MAP_HEIGHT}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={INITIAL_LOCATION}
-          region={location}
-          onRegionChange={handleOnLocationChange}>
-          <Marker
-            coordinate={{
-              latitude: location?.latitude || 0,
-              longitude: location?.longitude || 0
+        <StyledMapView width="50%">
+          <Camera
+            defaultSettings={{
+              centerCoordinate: [-77.036086, 38.910233],
+              zoomLevel: 10
             }}
-            title={'your location'}
-            description={'your location detail'}
+            followUserLocation={true}
+            followUserMode={UserTrackingMode.Follow}
+            followZoomLevel={10}
+          />
+          {searchPlaces.map((data, index) => {
+            return (
+              <StyledMarker
+                id={`map-marker-${index}`}
+                key={index}
+                // @ts-ignore
+                coordinate={data.geometry?.coordinates}
+                allowOverlapWithPuck={false}
+                anchor={{
+                  x: 0.5,
+                  y: 0.5
+                }}
+                allowOverlap={false}
+                isSelected={false}>
+                <AnnotationContent text={data.text} />
+              </StyledMarker>
+            );
+          })}
+          {/* <LocationPuck
+            topImage="topImage"
+            visible={true}
+            scale={['interpolate', ['linear'], ['zoom'], 10, 1.0, 20, 4.0]}
+            pulsing={{
+              isEnabled: true,
+              color: 'teal',
+              radius: 50.0
+            }}
+          /> */}
+          <Mapbox.UserLocation
+            onUpdate={(newLocation) => {
+              setLocation(newLocation as any);
+            }}
           />
         </StyledMapView>
       </Stack>
@@ -133,43 +118,44 @@ export default function SearchNewCustomer() {
   );
 }
 
-const StyledMapView = styled(MapView, {
+const AnnotationContent = ({ text }: { text: string }) => (
+  <Stack alignItems="center" position="relative">
+    <Building2 color="$secondary" size="$2" />
+    <Text
+      color="$secondary"
+      textAlign="center"
+      mt="$2"
+      fontSize="$5"
+      width="$10"
+      position="absolute"
+      top="100%">
+      {text}
+    </Text>
+  </Stack>
+);
+
+const StyledMarker = ({ coordinate, ...props }: React.ComponentProps<typeof Mapbox.MarkerView>) => {
+  const StyledMapMarker = styled(Mapbox.MarkerView, {
+    name: 'StyledMapMarker'
+  });
+
+  console.log('this is the coordinate', coordinate);
+
+  return <StyledMapMarker coordinate={coordinate} {...props} />;
+};
+
+const StyledMapView = styled(Mapbox.MapView, {
   name: 'StyledMapView'
 });
 
-const CustomerList = () => {
+const PlaceList = ({ searchPlaces }: { searchPlaces: any }) => {
   // ? callback prevent re render the header
   // const renderHeader = React.useCallback(() => <SearchInput />, []);
 
   return (
     <FlatList
-      data={[
-        {
-          id: '100',
-          general: {
-            name: 'Test'
-          }
-        },
-        {
-          id: '101',
-          general: {
-            name: 'Test'
-          }
-        },
-        {
-          id: '102',
-          general: {
-            name: 'Test'
-          }
-        },
-        {
-          id: '103',
-          general: {
-            name: 'Test'
-          }
-        }
-      ]}
-      renderItem={({ item }) => <CustomerItem item={item} />}
+      data={searchPlaces || []}
+      renderItem={({ item }) => <PlaceItem item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={Separator}
       // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
@@ -188,10 +174,35 @@ const CustomerList = () => {
   );
 };
 
-const SearchInput = () => {
-  const [value, setValue] = React.useState('');
+export const PlaceItem = ({ item }: { item: any }) => {
+  const theme = useTheme();
 
-  return <ListSearchBar currentValue={value} setValue={setValue} />;
+  return (
+    <ListItem
+      color="$color"
+      backgroundColor="$background"
+      flexDirection="row"
+      alignItems="flex-start">
+      <YStack flex={1}>
+        <Text color="$color">{item.text}</Text>
+        <Text color="$color" mt="$2">
+          {item.place_name}
+        </Text>
+      </YStack>
+      <Link
+        href={{
+          pathname: '/customer-detail-modal',
+          params: {
+            id: item.id
+          }
+        }}
+        asChild>
+        <Pressable>
+          <Ionicons name="information-circle-outline" size={25} color={theme.blue10.val} />
+        </Pressable>
+      </Link>
+    </ListItem>
+  );
 };
 
 export const ListSearchBar = ({

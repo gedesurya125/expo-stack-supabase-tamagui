@@ -3,7 +3,6 @@
     "name": "expo-stack-supabase-tamagui",
     "slug": "expo-stack-supabase-tamagui",
     "version": "1.0.0",
-
     "scheme": "expo-stack-supabase-tamagui",
     "web": {
       "bundler": "metro",
@@ -15,7 +14,8 @@
       [
         "expo-location",
         {
-          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
+          "locationWhenInUsePermission": "Show current location on map."
         }
       ],
       [
@@ -27,10 +27,8 @@
     ],
     "experiments": {
       "typedRoutes": true,
-
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -41,13 +39,19 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gedesurya125.expostacksupabasetamagui"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
+      "package": "com.gedesurya125.expostacksupabasetamagui"
     }
   }
 }

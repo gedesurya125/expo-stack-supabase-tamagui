@@ -78,6 +78,8 @@ export default function SearchNewCustomer() {
     const searchTextInput = searchText.trim().length;
 
     console.log('this is the input', searchTextInput);
+    console.log('this is the key', process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
+
     if (!searchTextInput) return null;
     const googleApisUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
     const input = searchText.trim();
@@ -119,6 +121,8 @@ export default function SearchNewCustomer() {
           initialRegion={INITIAL_LOCATION}
           region={location}
           onRegionChange={handleOnLocationChange}>
+          {/* //TODO region change should not display the marker */}
+          {/* //TODO the user marker should detected by different way */}
           <Marker
             coordinate={{
               latitude: location?.latitude || 0,

@@ -49,10 +49,6 @@ export default function SearchNewCustomer() {
     }
   };
 
-  console.log('this is the search text', searchText);
-  console.log('this is the location', location);
-  console.log('this is the search place result', searchPlaces);
-
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$6" paddingVertical="$6">
       <Stack
@@ -62,7 +58,7 @@ export default function SearchNewCustomer() {
           flexDirection: 'row'
         }}>
         <Stack flex={1} paddingRight="$5">
-          <H2>Select customer near you HEllo</H2>
+          <H2>Select customer near you</H2>
           <ListSearchBar currentValue={searchText} setValue={setSearchText} />
           <StyledButton colorStyle="primary" onPress={handleSearchPlaces}>
             Search
@@ -139,8 +135,6 @@ const StyledMarker = ({ coordinate, ...props }: React.ComponentProps<typeof Mapb
     name: 'StyledMapMarker'
   });
 
-  console.log('this is the coordinate', coordinate);
-
   return <StyledMapMarker coordinate={coordinate} {...props} />;
 };
 
@@ -158,14 +152,6 @@ const PlaceList = ({ searchPlaces }: { searchPlaces: any }) => {
       renderItem={({ item }) => <PlaceItem item={item} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={Separator}
-      // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
-      // ListHeaderComponent={renderHeader}
-      // stickyHeaderIndices={[0]}
-      // onEndReachedThreshold={0.1}
-      // onEndReached={async () => {
-      //   console.log('fetching...', page);
-      //   await fetchNextPage();
-      // }}
       style={{
         flex: 1,
         marginTop: 20

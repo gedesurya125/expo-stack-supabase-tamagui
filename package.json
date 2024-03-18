@@ -8,7 +8,8 @@
     "dev": "expo start -c",
     "start": "expo start",
     "web": "expo start --web",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prebuild:clean": "expo prebuild --clean"
   },
   "dependencies": {
     "@dev-plugins/react-query": "^0.0.5",
@@ -46,7 +47,6 @@
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-maps": "1.10.0",
-    "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-reanimated": "~3.6.2",
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "~3.29.0",

@@ -10,20 +10,17 @@ import {
   View,
   getTokenValue,
   Text,
-  Button,
   ListItem
 } from 'tamagui';
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
 import { StyledButton } from '~/components/StyledButton';
 
-import Mapbox, { Camera, LocationPuck, UserTrackingMode } from '@rnmapbox/maps';
-import { MapboxExample } from '~/components/MapboxExample';
+import Mapbox, { Camera, UserTrackingMode } from '@rnmapbox/maps';
 import { Link } from 'expo-router';
 import { Pressable } from 'react-native';
-import { Box, Building2 } from '@tamagui/lucide-icons';
+import { Building2 } from '@tamagui/lucide-icons';
+import { getForwardSearchPlaces, getGeoCodingPlaces, getSuggestionPlaces } from '~/api/mapbox';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_TOKEN as string);
 
@@ -36,13 +33,16 @@ export default function SearchNewCustomer() {
 
   const handleSearchPlaces = async () => {
     const searchTextInput = searchText.trim().length;
-    console.log('this is the input', searchTextInput);
-    // source: https://docs.mapbox.com/api/search/geocoding
-    const places = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchText}.json?access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&proximity=${location.coords.longitude},${location?.coords?.latitude}&limit=10`
-    ).then((res) => res.json());
+    if (!searchTextInput) return null;
 
-    console.log('this is the original place', places);
+    const places = await getGeoCodingPlaces({ searchText, currentLocation: location.coords });
+
+    // const suggestionPlace = await getSuggestionPlaces({
+    //   searchText,
+    //   currentLocation: location.coords
+    // });
+
+    // console.log('this is the suggested place', suggestionPlace);
 
     if (places?.features) {
       setSearchPlaces(places?.features);

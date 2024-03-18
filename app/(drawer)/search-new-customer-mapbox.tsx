@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   H2,
   Input,
@@ -28,6 +28,7 @@ export default function SearchNewCustomer() {
   // const [location, setLocation] = React.useState<Location.LocationObject | null>(null);
   const [searchText, setSearchText] = React.useState('');
   const [searchPlaces, setSearchPlaces] = React.useState<any[]>([]);
+  const camera = useRef<Camera>(null);
 
   const [location, setLocation] = React.useState<any>();
 
@@ -49,6 +50,16 @@ export default function SearchNewCustomer() {
     }
   };
 
+  React.useEffect(() => {
+    console.log('this is the camera', camera);
+    camera?.current?.setCamera({
+      centerCoordinate: [location.coords.longitude, location.coords.latitude],
+      zoomLevel: 12
+    });
+  }, []);
+
+  console.log('this is the location', location);
+
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$6" paddingVertical="$6">
       <Stack
@@ -63,18 +74,20 @@ export default function SearchNewCustomer() {
           <StyledButton colorStyle="primary" onPress={handleSearchPlaces}>
             Search
           </StyledButton>
-          <PlaceList searchPlaces={searchPlaces} />
+          <PlaceList searchPlaces={searchPlaces} camera={camera?.current} />
         </Stack>
         <StyledMapView width="50%">
           <Camera
+            ref={camera}
             defaultSettings={{
               centerCoordinate: [-77.036086, 38.910233],
-              zoomLevel: 10
+              zoomLevel: 12
             }}
-            followUserLocation={true}
+            // followUserLocation={true}
             followUserMode={UserTrackingMode.Follow}
-            followZoomLevel={10}
+            followZoomLevel={12}
           />
+          <Camera />
           {searchPlaces.map((data, index) => {
             return (
               <StyledMarker
@@ -142,14 +155,14 @@ const StyledMapView = styled(Mapbox.MapView, {
   name: 'StyledMapView'
 });
 
-const PlaceList = ({ searchPlaces }: { searchPlaces: any }) => {
+const PlaceList = ({ searchPlaces, camera }: { searchPlaces: any; camera: Camera | null }) => {
   // ? callback prevent re render the header
   // const renderHeader = React.useCallback(() => <SearchInput />, []);
 
   return (
     <FlatList
       data={searchPlaces || []}
-      renderItem={({ item }) => <PlaceItem item={item} />}
+      renderItem={({ item }) => <PlaceItem item={item} camera={camera} />}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={Separator}
       style={{
@@ -160,7 +173,7 @@ const PlaceList = ({ searchPlaces }: { searchPlaces: any }) => {
   );
 };
 
-export const PlaceItem = ({ item }: { item: any }) => {
+export const PlaceItem = ({ item, camera }: { item: any; camera?: Camera | null }) => {
   const theme = useTheme();
 
   return (
@@ -168,7 +181,15 @@ export const PlaceItem = ({ item }: { item: any }) => {
       color="$color"
       backgroundColor="$background"
       flexDirection="row"
-      alignItems="flex-start">
+      alignItems="flex-start"
+      onPress={() => {
+        console.log('hello i am pressed');
+        if (camera) {
+          camera?.setCamera({
+            centerCoordinate: item?.geometry?.coordinates
+          });
+        }
+      }}>
       <YStack flex={1}>
         <Text color="$color">{item.text}</Text>
         <Text color="$color" mt="$2">

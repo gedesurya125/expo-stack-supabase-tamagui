@@ -51,11 +51,12 @@ export default function SearchNewCustomer() {
   };
 
   React.useEffect(() => {
-    console.log('this is the camera', camera);
-    camera?.current?.setCamera({
-      centerCoordinate: [location.coords.longitude, location.coords.latitude],
-      zoomLevel: 12
-    });
+    if (camera?.current) {
+      camera?.current?.setCamera({
+        centerCoordinate: [location.coords.longitude, location.coords.latitude],
+        zoomLevel: 12
+      });
+    }
   }, []);
 
   console.log('this is the location', location);

@@ -41,7 +41,7 @@ const OptionsButton = () => {
         }}>
         New Customer
       </Button>
-      <Button
+      {/* <Button
         icon={<Ionicons name="map-outline" size={21} />}
         backgroundColor="$secondary"
         marginTop="$4"
@@ -49,7 +49,7 @@ const OptionsButton = () => {
           navigation.navigate('search-new-customer' as never);
         }}>
         Search New Customer
-      </Button>
+      </Button> */}
       <Button
         icon={<Ionicons name="map-outline" size={21} />}
         backgroundColor="$secondary"

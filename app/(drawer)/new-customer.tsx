@@ -24,6 +24,9 @@ export default function NewCustomer() {
 }
 const AddCustomerForm = () => {
   const { clearExistingCustomer } = useCustomerContext();
+
+  const [errorMessage, setErrorMessage] = React.useState('');
+
   const initialFormValue: CreateCustomerBody = {
     type: 'company',
     general: {
@@ -61,9 +64,11 @@ const AddCustomerForm = () => {
           const text = await result.text();
           clearExistingCustomer();
           console.log('customer crated', result.status, text);
+          setErrorMessage('');
         } else {
           const text = await result?.text();
-          console.log('customer not created', result, result?.status, text);
+          console.log('customer not created', text);
+          setErrorMessage(JSON.stringify(text, null, 2));
         }
 
         props.setSubmitting(false);
@@ -230,7 +235,7 @@ const AddCustomerForm = () => {
               }}
               onBlur={handleBlur('contact.marketingMails')}
             />
-
+            {errorMessage && <Text>{errorMessage}</Text>}
             <Form.Trigger asChild disabled={isSubmitting}>
               <Button
                 icon={isSubmitting ? () => <Spinner /> : undefined}

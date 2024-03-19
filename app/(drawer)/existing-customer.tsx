@@ -33,7 +33,6 @@ export default function ExistingCustomer() {
 
 const CustomerList = () => {
   const { customers, fetchNextPage, page } = useCustomerContext();
-  const theme = useTheme();
 
   // ? callback prevent re render the header
   const renderHeader = React.useCallback(() => <SearchBar />, []);
@@ -42,7 +41,7 @@ const CustomerList = () => {
     <FlatList
       data={customers}
       renderItem={({ item }) => <CustomerItem item={item} />}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => `${index}`}
       ItemSeparatorComponent={Separator}
       // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
       ListHeaderComponent={renderHeader}

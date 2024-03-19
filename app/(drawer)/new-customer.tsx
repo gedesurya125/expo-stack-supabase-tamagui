@@ -7,8 +7,9 @@ import {
   createCustomer
 } from '~/api/xentral/createCustomer';
 import { LabelledSelectField, LabelledSwitch } from '~/components';
-// import { LabelledDateTimePicker } from '~/components/DateTimePicker';
+import { LabelledDateTimePicker } from '~/components/DateTimePicker';
 import { LabelledTextInput } from '~/components/TextInput';
+import { useCustomerContext } from '~/context/CustomersContext';
 
 export default function NewCustomer() {
   return (
@@ -22,6 +23,7 @@ export default function NewCustomer() {
   );
 }
 const AddCustomerForm = () => {
+  const { clearExistingCustomer } = useCustomerContext();
   const initialFormValue: CreateCustomerBody = {
     type: 'company',
     general: {
@@ -57,6 +59,7 @@ const AddCustomerForm = () => {
         console.log('this is the result', result);
         if (result?.ok) {
           const text = await result.text();
+          clearExistingCustomer();
           console.log('customer crated', result.status, text);
         } else {
           const text = await result?.text();
@@ -76,7 +79,8 @@ const AddCustomerForm = () => {
                 placeholder: 'Select Type',
                 onValueChange: handleChange('type'),
                 value: values.type,
-                onBlur: handleBlur('type')
+                onBlur: handleBlur('type'),
+                initialValue: 'company'
               }}
             />
             <LabelledTextInput
@@ -97,7 +101,7 @@ const AddCustomerForm = () => {
                 onBlur: handleBlur('general.name')
               }}
             />
-            {/* 
+
             <LabelledDateTimePicker
               label="Birth Date"
               dateTimePickerProps={{
@@ -105,7 +109,7 @@ const AddCustomerForm = () => {
                 handleChange: handleChange('general.birthday'),
                 onBlur: handleBlur('general.birthday')
               }}
-            /> */}
+            />
 
             <GroupLabel>Address Information</GroupLabel>
 

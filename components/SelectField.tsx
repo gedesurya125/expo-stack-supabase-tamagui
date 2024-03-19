@@ -34,7 +34,7 @@ export function SelectField({
         <Select.Value placeholder={placeholder} />
       </Select.Trigger>
 
-      <Adapt when="sm" platform="touch">
+      <Adapt platform="touch">
         <Sheet
           native={!!props.native}
           modal
@@ -43,7 +43,7 @@ export function SelectField({
             type: 'spring',
             damping: 30,
             mass: 1,
-            stiffness: 350,
+            stiffness: 350
           }}>
           <Sheet.Frame>
             <Sheet.ScrollView>
@@ -138,12 +138,12 @@ const items = [
   { name: 'Orange' },
   { name: 'Grape' },
   { name: 'Jackfruit' },
-  { name: 'Durian' },
+  { name: 'Durian' }
 ];
 
 export const LabelledSelectField = ({
   label,
-  selectFieldProps,
+  selectFieldProps
 }: {
   label: string;
   selectFieldProps: React.ComponentProps<typeof SelectField>;

@@ -8,6 +8,7 @@ type CustomersContextValue = {
   setNameFilter: Dispatch<SetStateAction<string>>;
   setCustomers: Dispatch<SetStateAction<XentralCustomer[]>>;
   fetchNextPage: () => Promise<void>;
+  clearExistingCustomer: () => void;
   page: number;
 };
 
@@ -17,6 +18,7 @@ const CustomerContext = React.createContext<CustomersContextValue>({
   setNameFilter: () => null,
   setCustomers: () => null,
   fetchNextPage: async () => {},
+  clearExistingCustomer: () => {},
   page: 0
 });
 
@@ -41,6 +43,7 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
 
   // ? reset the page to 1 when name filter change
   React.useEffect(() => {
+    console.log('hi i am called');
     const fetchCustomer = async () => {
       const newCustomer = await getCustomers({
         pageNumber: 1,
@@ -48,38 +51,34 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
         filter: filterValue,
         order: orderValue
       });
-      setCustomers(newCustomer?.data);
-
-      if (newCustomer?.data?.length && newCustomer?.data?.length < PAGE_SIZE) {
-        setIsLast(true);
-      } else {
-        setIsLast(false);
+      if (newCustomer?.data?.length > 0) {
+        setCustomers(newCustomer?.data);
+        setPage(1);
       }
-      setPage(1);
     };
 
     fetchCustomer();
   }, [nameFilter]);
 
   const fetchNextPage = async () => {
-    if (isLast || page === 0) return;
     const nextPageCustomers = await getCustomers({
       pageNumber: page + 1,
       pageSize: PAGE_SIZE,
       filter: filterValue,
       order: orderValue
     });
-    // if (nextPageCustomers?.data?.length > 0) {
-    setCustomers((state) => [...state, ...nextPageCustomers?.data]);
-    setPage((state) => state + 1);
-    // }
-    if (nextPageCustomers?.data?.length && nextPageCustomers?.data?.length < PAGE_SIZE) {
-      console.log('from trigger true');
-
-      setIsLast(true);
+    if (nextPageCustomers?.data?.length > 0) {
+      setCustomers((state) => [...state, ...nextPageCustomers?.data]);
+      setPage((state) => state + 1);
     }
   };
 
+  console.log('current page', page);
+
+  const clearExistingCustomer = () => {
+    setPage(0);
+    setCustomers([]);
+  };
   return (
     <CustomerContext.Provider
       value={{
@@ -88,6 +87,7 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
         setCustomers,
         setNameFilter,
         fetchNextPage,
+        clearExistingCustomer,
         page
       }}>
       {children}

@@ -3,12 +3,14 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { Text, getToken, useTheme } from 'tamagui';
+import { Text, XStack, getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
+import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 const DrawerLayout = () => {
   const { session } = useSession();
   const theme = useTheme();
+  const { customerInfo } = useSelectedCustomerContext();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
 
@@ -30,20 +32,45 @@ const DrawerLayout = () => {
           color: theme.color.val
         },
         headerRight: () => (
-          <Link href="/profile" asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <Ionicons
-                  name="person-circle-outline"
-                  size={25}
-                  color={theme.blue9.val}
-                  style={{
-                    marginRight: getToken('$3', 'space')
-                  }}
-                />
-              )}
-            </Pressable>
-          </Link>
+          <XStack>
+            <Link href="/profile" asChild>
+              <Pressable>
+                {({ pressed }) => (
+                  <Ionicons
+                    name="person-circle-outline"
+                    size={25}
+                    color={theme.blue9.val}
+                    style={{
+                      marginRight: getToken('$3', 'space')
+                    }}
+                  />
+                )}
+              </Pressable>
+            </Link>
+            {customerInfo?.id && (
+              <Link
+                href={{
+                  pathname: '/customer-detail-modal',
+                  params: {
+                    id: customerInfo.id
+                  }
+                }}
+                asChild>
+                <Pressable>
+                  {({ pressed }) => (
+                    <Ionicons
+                      name="newspaper-outline"
+                      size={25}
+                      color={theme.orange9.val}
+                      style={{
+                        marginRight: getToken('$3', 'space')
+                      }}
+                    />
+                  )}
+                </Pressable>
+              </Link>
+            )}
+          </XStack>
         )
       }}>
       <Drawer.Screen

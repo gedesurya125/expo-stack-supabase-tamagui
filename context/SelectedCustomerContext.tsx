@@ -23,6 +23,7 @@ export const SelectedCustomerContextProvider = ({
 }: SelectedCustomerContextProviderProps) => {
   const [customerInfo, setCustomerInfo] = useState(null);
 
+  // TODO: notify to change current customer
   const handleSetCustomerInfo = (customerInfo: any) => {
     setCustomerInfo(customerInfo);
   };

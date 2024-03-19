@@ -43,7 +43,6 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
 
   // ? reset the page to 1 when name filter change
   React.useEffect(() => {
-    console.log('hi i am called');
     const fetchCustomer = async () => {
       const newCustomer = await getCustomers({
         pageNumber: 1,
@@ -72,8 +71,6 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
       setPage((state) => state + 1);
     }
   };
-
-  console.log('current page', page);
 
   const clearExistingCustomer = () => {
     setPage(0);

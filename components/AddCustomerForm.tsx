@@ -123,9 +123,7 @@ export const AddCustomerForm = ({
       initialValues={formInitValue}
       enableReinitialize
       onSubmit={async (values, props) => {
-        console.log('formik values', JSON.stringify(values));
         const result = await createCustomer(values);
-        console.log('this is the result', result);
         if (result?.ok) {
           const text = await result.text();
           clearExistingCustomer();

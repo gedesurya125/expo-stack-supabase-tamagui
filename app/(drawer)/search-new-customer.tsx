@@ -77,9 +77,6 @@ export default function SearchNewCustomer() {
   const searchPlaces = async () => {
     const searchTextInput = searchText.trim().length;
 
-    console.log('this is the input', searchTextInput);
-    console.log('this is the key', process.env.EXPO_PUBLIC_GOOGLE_API_KEY);
-
     if (!searchTextInput) return null;
     const googleApisUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/json';
     const input = searchText.trim();

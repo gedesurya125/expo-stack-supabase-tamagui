@@ -12,27 +12,6 @@ export type NewCustomerParams = {
 export default function NewCustomer() {
   const params = useLocalSearchParams<NewCustomerParams>();
 
-  console.log('this i is the params', params);
-
-  // let customerBasicInfo: CustomerBasicInfo;
-
-  // if (params?.address && typeof params?.address === 'string') {
-  //   const customerInfo = params?.address?.split(',').map((text) => text.trim());
-  //   console.log('this is the customer info', customerInfo);
-
-  //   const customerZipNumber = customerInfo[3].match(/\d*$/);
-
-  //   customerBasicInfo = {
-  //     name: customerInfo[0],
-  //     address: customerInfo[1],
-  //     city: customerInfo[2],
-  //     state: customerInfo[3].replace(/\s{1}\d*$/, ''),
-  //     country: customerInfo[4],
-  //     zip: customerZipNumber ? customerZipNumber[0] : ''
-  //   };
-  //   console.log('NEW customer basic info', customerBasicInfo);
-  // }
-
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">
       <ScrollView>

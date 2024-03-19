@@ -41,13 +41,6 @@ export default function SearchNewCustomer() {
 
     const places = await getGeoCodingPlaces({ searchText, currentLocation: location.coords });
 
-    // const suggestionPlace = await getSuggestionPlaces({
-    //   searchText,
-    //   currentLocation: location.coords
-    // });
-
-    // console.log('this is the suggested place', suggestionPlace);
-
     if (places?.features) {
       setSearchPlaces(places?.features);
     }
@@ -63,8 +56,6 @@ export default function SearchNewCustomer() {
   };
 
   React.useEffect(() => {
-    console.log('hi i map initial setup called');
-
     focusToUserLocation();
   }, [camera?.current]);
 
@@ -204,8 +195,6 @@ export const PlaceItem = ({
 }) => {
   const theme = useTheme();
 
-  console.log('this is the item', item);
-
   return (
     <ListItem
       color="$color"
@@ -215,7 +204,6 @@ export const PlaceItem = ({
       flexDirection="row"
       alignItems="center"
       onPress={() => {
-        console.log('hello i am pressed');
         if (camera) {
           camera?.setCamera({
             centerCoordinate: item?.geometry?.coordinates

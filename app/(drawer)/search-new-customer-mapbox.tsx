@@ -180,7 +180,9 @@ const PlaceList = ({ searchPlaces, camera }: { searchPlaces: any; camera: Camera
   return (
     <FlatList
       data={searchPlaces || []}
-      renderItem={({ item }) => <PlaceItem item={item} camera={camera} />}
+      renderItem={({ item, index }) => (
+        <PlaceItem item={item} camera={camera} isOdd={index % 2 !== 0} />
+      )}
       keyExtractor={(item) => item.id}
       ItemSeparatorComponent={Separator}
       style={{
@@ -191,15 +193,25 @@ const PlaceList = ({ searchPlaces, camera }: { searchPlaces: any; camera: Camera
   );
 };
 
-export const PlaceItem = ({ item, camera }: { item: any; camera?: Camera | null }) => {
+export const PlaceItem = ({
+  item,
+  camera,
+  isOdd
+}: {
+  item: any;
+  camera?: Camera | null;
+  isOdd: boolean;
+}) => {
   const theme = useTheme();
 
   return (
     <ListItem
       color="$color"
-      backgroundColor="$background"
+      backgroundColor={isOdd ? '$backgroundStrong' : '$background'}
+      py="$5"
+      borderRadius="$4"
       flexDirection="row"
-      alignItems="flex-start"
+      alignItems="center"
       onPress={() => {
         console.log('hello i am pressed');
         if (camera) {
@@ -214,18 +226,10 @@ export const PlaceItem = ({ item, camera }: { item: any; camera?: Camera | null 
           {item.place_name}
         </Text>
       </YStack>
-      <Link
-        href={{
-          pathname: '/customer-detail-modal',
-          params: {
-            id: item.id
-          }
-        }}
-        asChild>
-        <Pressable>
-          <Ionicons name="information-circle-outline" size={25} color={theme.blue10.val} />
-        </Pressable>
-      </Link>
+
+      <ButtonIcon>
+        <Ionicons name="add-outline" size={30} color={theme.blue10.val} />
+      </ButtonIcon>
     </ListItem>
   );
 };

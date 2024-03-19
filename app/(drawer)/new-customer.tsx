@@ -1,13 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { H2, YStack, Separator, ScrollView } from 'tamagui';
-import { AddCustomerForm } from '~/components/AddCustomerForm';
-
-export type NewCustomerParams = {
-  name: string;
-  address: string;
-  id: string;
-};
+import { AddCustomerForm, NewCustomerParams } from '~/components/AddCustomerForm';
 
 export default function NewCustomer() {
   const params = useLocalSearchParams<NewCustomerParams>();
@@ -22,29 +16,3 @@ export default function NewCustomer() {
     </YStack>
   );
 }
-
-export type CustomerBasicInfo = {
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  zip: string;
-};
-
-export const getCustomerBasicInfo = (address: string): CustomerBasicInfo => {
-  const customerInfo = address?.split(',').map((text) => text.trim());
-
-  const customerZipNumber = customerInfo[3].match(/\d*$/);
-
-  const customerBasicInfo = {
-    name: customerInfo[0],
-    address: customerInfo[1],
-    city: customerInfo[2],
-    state: customerInfo[3].replace(/\s{1}\d*$/, ''),
-    country: customerInfo[4],
-    zip: customerZipNumber ? customerZipNumber[0] : ''
-  };
-
-  return customerBasicInfo;
-};

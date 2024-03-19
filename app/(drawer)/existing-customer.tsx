@@ -17,7 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCustomerContext } from '~/context/CustomersContext';
 import { StyledButton } from '~/components/StyledButton';
 import { Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
+import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 // =========== Main COmponent ===========
 
@@ -60,6 +61,8 @@ const CustomerList = () => {
 
 export const CustomerItem = ({ item }: { item: any }) => {
   const theme = useTheme();
+  const navigation = useNavigation();
+  const { handleSetCustomerInfo } = useSelectedCustomerContext();
 
   return (
     <ListItem
@@ -67,12 +70,20 @@ export const CustomerItem = ({ item }: { item: any }) => {
       backgroundColor="$background"
       flexDirection="row"
       alignItems="flex-start">
-      <YStack flex={1}>
-        <Text color="$color">{item.general.name}</Text>
-        <Text color="$color" mt="$2">
-          {item.general.email}
-        </Text>
-      </YStack>
+      <Pressable
+        style={{ flex: 1 }}
+        onPress={() => {
+          console.log('customer tobe  save', item);
+          handleSetCustomerInfo(item);
+          navigation.navigate('index' as never);
+        }}>
+        <YStack flex={1}>
+          <Text color="$color">{item.general.name}</Text>
+          <Text color="$color" mt="$2">
+            {item.general.email}
+          </Text>
+        </YStack>
+      </Pressable>
       <Link
         href={{
           pathname: '/customer-detail-modal',

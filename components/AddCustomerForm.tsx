@@ -8,11 +8,38 @@ import { LabelledDateTimePicker } from '~/components/DateTimePicker';
 import { LabelledTextInput } from '~/components/TextInput';
 import { useCustomerContext } from '~/context/CustomersContext';
 import { getCurrentPositionAsync } from 'expo-location';
-import {
-  CustomerBasicInfo,
-  NewCustomerParams,
-  getCustomerBasicInfo
-} from '~/app/(drawer)/new-customer';
+
+export type NewCustomerParams = {
+  name: string;
+  address: string;
+  id: string;
+};
+
+export type CustomerBasicInfo = {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  zip: string;
+};
+
+export const getCustomerBasicInfo = (address: string): CustomerBasicInfo => {
+  const customerInfo = address?.split(',').map((text) => text.trim());
+
+  const customerZipNumber = customerInfo[3].match(/\d*$/);
+
+  const customerBasicInfo = {
+    name: customerInfo[0],
+    address: customerInfo[1],
+    city: customerInfo[2],
+    state: customerInfo[3].replace(/\s{1}\d*$/, ''),
+    country: customerInfo[4],
+    zip: customerZipNumber ? customerZipNumber[0] : ''
+  };
+
+  return customerBasicInfo;
+};
 
 const initialFormValue: CreateCustomerBody = {
   type: 'company',

@@ -204,6 +204,8 @@ export const PlaceItem = ({
 }) => {
   const theme = useTheme();
 
+  console.log('this is the item', item);
+
   return (
     <ListItem
       color="$color"
@@ -227,9 +229,20 @@ export const PlaceItem = ({
         </Text>
       </YStack>
 
-      <ButtonIcon>
-        <Ionicons name="add-outline" size={30} color={theme.blue10.val} />
-      </ButtonIcon>
+      <Link
+        asChild
+        href={{
+          pathname: '/new-customer',
+          params: {
+            name: item.text,
+            address: item.place_name,
+            id: item?.id
+          }
+        }}>
+        <Pressable>
+          <Ionicons name="add-outline" size={30} color={theme.blue10.val} />
+        </Pressable>
+      </Link>
     </ListItem>
   );
 };

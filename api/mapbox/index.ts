@@ -1,9 +1,10 @@
 interface GeoCodingProps {
-  searchText: string;
+  searchText?: string;
   currentLocation: {
     longitude: number;
     latitude: number;
   };
+  id?: string;
 }
 
 const MAP_BOX_API_BASE_URL = 'https://api.mapbox.com';
@@ -28,6 +29,16 @@ export const getSuggestionPlaces = async ({ searchText, currentLocation }: GeoCo
     `${MAP_BOX_API_BASE_URL}/search/searchbox/v1/suggest?q=${searchText}&access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&session_token=${process.env.EXPO_PUBLIC_MAPBOX_SESSION_TOKEN}&proximity=${currentLocation.longitude},${currentLocation.latitude}&origin=${currentLocation.longitude},${currentLocation.latitude}&limit=10`
   ).then((res) => res.json());
   return places;
+};
+export const getPlacesDetails = async ({ id, currentLocation }: GeoCodingProps) => {
+  const placeDetails = await fetch(
+    `${MAP_BOX_API_BASE_URL}/search/searchbox/v1/retrieve/${id}?access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&session_token=${process.env.EXPO_PUBLIC_MAPBOX_SESSION_TOKEN}`
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      console.log('error fetching company details', err);
+    });
+  return placeDetails;
 };
 export const getForwardSearchPlaces = async ({ searchText, currentLocation }: GeoCodingProps) => {
   const url = `${MAP_BOX_API_BASE_URL}/search/searchbox/v1/forward?q=${searchText}&access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&proximity=${currentLocation.longitude},${currentLocation.latitude}&limit=10&types=place`;

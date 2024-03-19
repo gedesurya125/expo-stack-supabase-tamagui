@@ -1,46 +1,127 @@
 import { Formik } from 'formik';
 import React from 'react';
 import { Form, Button, Spinner, Text } from 'tamagui';
+import { getPlacesDetails, getSuggestionPlaces } from '~/api/mapbox';
 import { CreateCustomerBody, createCustomer } from '~/api/xentral/createCustomer';
 import { LabelledSelectField, LabelledSwitch } from '~/components';
 import { LabelledDateTimePicker } from '~/components/DateTimePicker';
 import { LabelledTextInput } from '~/components/TextInput';
 import { useCustomerContext } from '~/context/CustomersContext';
+import { getCurrentPositionAsync } from 'expo-location';
+import {
+  CustomerBasicInfo,
+  NewCustomerParams,
+  getCustomerBasicInfo
+} from '~/app/(drawer)/new-customer';
 
-export const AddCustomerForm = () => {
+const initialFormValue: CreateCustomerBody = {
+  type: 'company',
+  general: {
+    title: '',
+    name: '',
+    birthday: new Date().toISOString(),
+    address: {
+      street: '',
+      zip: '',
+      city: '',
+      state: '',
+      country: '',
+      note: ''
+    }
+  },
+  contact: {
+    phone: '',
+    fax: '',
+    mobile: '',
+    email: '',
+    website: '',
+    marketingMails: false,
+    trackingMails: false
+  }
+};
+
+export const AddCustomerForm = ({
+  mapboxLocationId,
+  params
+}: {
+  mapboxLocationId: string;
+  params: NewCustomerParams;
+}) => {
   const { clearExistingCustomer } = useCustomerContext();
 
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [formInitValue, setFormInitvalue] = React.useState<CreateCustomerBody>(initialFormValue);
 
-  const initialFormValue: CreateCustomerBody = {
-    type: 'company',
-    general: {
-      title: '',
-      name: '',
-      birthday: new Date().toISOString(),
-      address: {
-        street: '',
-        zip: '',
-        city: '',
-        state: '',
-        country: '',
-        note: ''
-      }
-    },
-    contact: {
-      phone: '',
-      fax: '',
-      mobile: '',
-      email: '',
-      website: '',
-      marketingMails: false,
-      trackingMails: false
+  React.useEffect(() => {
+    if (mapboxLocationId) {
+      const initFormValueBasedOnMapboxLocationId = async () => {
+        const currentUserLocation = await getCurrentPositionAsync({});
+        const suggestedCompany = await getSuggestionPlaces({
+          searchText: mapboxLocationId,
+          currentLocation: currentUserLocation.coords
+        });
+        const companyMapboxId = suggestedCompany?.suggestions[0]?.mapbox_id;
+
+        if (companyMapboxId) {
+          const companyDetails = await getPlacesDetails({
+            id: companyMapboxId,
+            currentLocation: currentUserLocation?.coords
+          });
+
+          const priorityCustomerBasicInfo = companyDetails?.features[0];
+          const fallBackCustomerBasicInfo = getCustomerBasicInfo(params?.address);
+
+          const customerBasicInfo: CustomerBasicInfo = {
+            name: priorityCustomerBasicInfo?.properties?.name || fallBackCustomerBasicInfo?.name,
+            address:
+              priorityCustomerBasicInfo?.properties?.address || fallBackCustomerBasicInfo?.address,
+            city: priorityCustomerBasicInfo?.context?.district || fallBackCustomerBasicInfo?.city,
+            state:
+              priorityCustomerBasicInfo?.context?.region?.name || fallBackCustomerBasicInfo?.state,
+            country:
+              priorityCustomerBasicInfo?.context?.country?.name ||
+              fallBackCustomerBasicInfo?.country,
+            zip:
+              priorityCustomerBasicInfo?.context?.postcode?.name || fallBackCustomerBasicInfo?.zip
+          };
+
+          if (customerBasicInfo) {
+            setFormInitvalue({
+              type: 'company',
+              general: {
+                title: '',
+                name: customerBasicInfo.name,
+                birthday: new Date().toISOString(),
+                address: {
+                  street: customerBasicInfo?.address,
+                  zip: customerBasicInfo?.zip,
+                  city: customerBasicInfo?.city,
+                  state: customerBasicInfo?.state,
+                  country: customerBasicInfo?.country,
+                  note: ''
+                }
+              },
+              contact: {
+                phone: '',
+                fax: '',
+                mobile: '',
+                email: '',
+                website: '',
+                marketingMails: false,
+                trackingMails: false
+              }
+            });
+          }
+        }
+      };
+      initFormValueBasedOnMapboxLocationId();
     }
-  };
+  }, [mapboxLocationId]);
 
   return (
     <Formik
-      initialValues={initialFormValue}
+      initialValues={formInitValue}
+      enableReinitialize
       onSubmit={async (values, props) => {
         console.log('formik values', JSON.stringify(values));
         const result = await createCustomer(values);

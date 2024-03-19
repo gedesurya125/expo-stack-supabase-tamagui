@@ -12,6 +12,9 @@ export const StyledButton = styled(Button, {
       primary: {
         backgroundColor: '$primary'
       },
+      secondary: {
+        backgroundColor: '$secondary'
+      },
       danger: {
         backgroundColor: '$red6'
       }

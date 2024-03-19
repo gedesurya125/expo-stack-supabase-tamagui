@@ -73,6 +73,13 @@ const Navigator = () => {
                   name="customer-detail-modal"
                   options={{ title: 'Customer Detail', presentation: 'modal' }}
                 />
+                <Stack.Screen
+                  name="cart-detail-modal"
+                  options={{
+                    title: 'Cart Detail',
+                    presentation: 'modal'
+                  }}
+                />
               </Stack>
             </GestureHandlerRootView>
           </ShopifyContextProvider>

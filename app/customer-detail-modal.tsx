@@ -1,20 +1,31 @@
 import React from 'react';
 import { YStack, Theme, Text, XStack, Header, Heading } from 'tamagui';
 
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { getCustomerById, useCustomer } from '~/api/xentral/useCustomer';
 import { StyledButton } from '~/components/StyledButton';
+import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ModalScreen() {
   const params = useLocalSearchParams();
+  const { customerInfo: currentSelectedCustomerInfo } = useSelectedCustomerContext();
 
   const { status, data, error, isFetching } = useCustomer(params?.id as string);
 
   const customerData = data?.data;
 
+  const displayShopProps = currentSelectedCustomerInfo?.id === params?.id;
+
+  console.log('is current selected customer shop props', displayShopProps);
+
   return (
     <Theme>
-      {status === 'pending' ? <LoadingView /> : <CustomerInfo customerData={customerData} />}
+      {status === 'pending' ? (
+        <LoadingView />
+      ) : (
+        <CustomerInfo customerData={customerData} displayShopProps={displayShopProps} />
+      )}
     </Theme>
   );
 }
@@ -27,7 +38,15 @@ const LoadingView = () => {
   );
 };
 
-const CustomerInfo = ({ customerData }: { customerData: any }) => {
+const CustomerInfo = ({
+  customerData,
+  displayShopProps
+}: {
+  customerData: any;
+  displayShopProps: boolean;
+}) => {
+  const navigation = useNavigation();
+
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$4" paddingVertical="$4">
       <Heading>Basic Info: </Heading>
@@ -44,8 +63,24 @@ const CustomerInfo = ({ customerData }: { customerData: any }) => {
       <CustomerInfoItem label="zip" value={customerData?.general?.address.zip} />
 
       <XStack gap="$3" mt="$8" justifyContent="center">
-        <StyledButton colorStyle="primary">Edit</StyledButton>
-        <StyledButton colorStyle="danger">Delete</StyledButton>
+        <StyledButton colorStyle="primary" icon={<Ionicons name="pencil-outline" size={18} />}>
+          Edit
+        </StyledButton>
+        {displayShopProps && (
+          <StyledButton
+            colorStyle="secondary"
+            onPress={() => {
+              navigation.navigate('cart-detail-modal' as never);
+            }}
+            icon={<Ionicons name="cart-outline" size={20} />}>
+            Cart
+          </StyledButton>
+        )}
+        {!displayShopProps && (
+          <StyledButton colorStyle="danger" icon={<Ionicons name="trash-outline" size={19} />}>
+            Delete
+          </StyledButton>
+        )}
       </XStack>
     </YStack>
   );

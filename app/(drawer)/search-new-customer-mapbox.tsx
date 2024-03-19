@@ -10,7 +10,9 @@ import {
   View,
   getTokenValue,
   Text,
-  ListItem
+  ListItem,
+  ButtonIcon,
+  Button
 } from 'tamagui';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +21,7 @@ import { StyledButton } from '~/components/StyledButton';
 import Mapbox, { Camera, UserTrackingMode } from '@rnmapbox/maps';
 import { Link } from 'expo-router';
 import { Pressable } from 'react-native';
-import { Building2 } from '@tamagui/lucide-icons';
+import { Building2, LocateFixed, MapPin, Pointer } from '@tamagui/lucide-icons';
 import { getForwardSearchPlaces, getGeoCodingPlaces, getSuggestionPlaces } from '~/api/mapbox';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_TOKEN as string);
@@ -29,6 +31,7 @@ export default function SearchNewCustomer() {
   const [searchText, setSearchText] = React.useState('');
   const [searchPlaces, setSearchPlaces] = React.useState<any[]>([]);
   const camera = useRef<Camera>(null);
+  const [followUserLocation, setFollowUserLocation] = React.useState(false);
 
   const [location, setLocation] = React.useState<any>();
 
@@ -50,16 +53,20 @@ export default function SearchNewCustomer() {
     }
   };
 
-  React.useEffect(() => {
+  const focusToUserLocation = () => {
     if (camera?.current) {
       camera?.current?.setCamera({
         centerCoordinate: [location.coords.longitude, location.coords.latitude],
-        zoomLevel: 12
+        zoomLevel: 11
       });
     }
-  }, []);
+  };
 
-  console.log('this is the location', location);
+  React.useEffect(() => {
+    console.log('hi i map initial setup called');
+
+    focusToUserLocation();
+  }, [camera?.current]);
 
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$6" paddingVertical="$6">
@@ -84,7 +91,7 @@ export default function SearchNewCustomer() {
               centerCoordinate: [-77.036086, 38.910233],
               zoomLevel: 12
             }}
-            // followUserLocation={true}
+            followUserLocation={followUserLocation}
             followUserMode={UserTrackingMode.Follow}
             followZoomLevel={12}
           />
@@ -122,6 +129,16 @@ export default function SearchNewCustomer() {
               setLocation(newLocation as any);
             }}
           />
+          <ButtonIcon>
+            <LocateFixed
+              size="$4"
+              color={'$background'}
+              position="absolute"
+              top="$1"
+              right="$1"
+              onPress={focusToUserLocation}
+            />
+          </ButtonIcon>
         </StyledMapView>
       </Stack>
     </YStack>

@@ -17,6 +17,9 @@ export const StyledButton = styled(Button, {
       },
       danger: {
         backgroundColor: '$red6'
+      },
+      clear: {
+        backgroundColor: 'transparent'
       }
     }
   }

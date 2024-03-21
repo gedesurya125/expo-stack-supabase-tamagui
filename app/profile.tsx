@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 import { StatusBar } from 'expo-status-bar';
-import { YStack, Theme, Button, Input, View, Form } from 'tamagui';
+import { YStack, Theme, Button, Input, View, Form, ScrollView } from 'tamagui';
 import { Redirect, router } from 'expo-router';
 
 import { supabase } from '~/utils/supabase';
@@ -14,6 +14,9 @@ export default function ProfileScreen() {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [website, setWebsite] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [pin, setPin] = useState<number>();
+
   const [avatarUrl, setAvatarUrl] = useState('');
   const { session } = useSession();
 
@@ -30,7 +33,7 @@ export default function ProfileScreen() {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select(`username, website, avatar_url, full_name, pin`)
         .eq('id', session?.user.id)
         .single();
       if (error && status !== 406) {
@@ -38,9 +41,12 @@ export default function ProfileScreen() {
       }
 
       if (data) {
+        console.log('this is the profile data', data);
         setUsername(data.username);
         setWebsite(data.website);
         setAvatarUrl(data.avatar_url);
+        setFullName(data.full_name);
+        setPin(data.pin);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -54,11 +60,15 @@ export default function ProfileScreen() {
   async function updateProfile({
     username,
     website,
-    avatar_url
+    avatar_url,
+    fullName,
+    pin
   }: {
     username: string;
     website: string;
     avatar_url: string;
+    fullName?: string;
+    pin?: number;
   }) {
     try {
       setLoading(true);
@@ -67,10 +77,14 @@ export default function ProfileScreen() {
       const updates = {
         id: session?.user.id,
         username,
+        full_name: fullName,
         website,
         avatar_url,
+        pin,
         updated_at: new Date()
       };
+
+      console.log('this is the updates', updates);
 
       const { error } = await supabase.from('profiles').upsert(updates);
 
@@ -93,46 +107,72 @@ export default function ProfileScreen() {
 
   return (
     <Theme>
-      <YStack flex={1} backgroundColor="$background" p="$4">
-        <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-        <Avatar
-          size={200}
-          url={avatarUrl}
-          onUpload={(url: string) => {
-            setAvatarUrl(url);
-            updateProfile({ username, website, avatar_url: url });
-          }}
-        />
-        <Form onSubmit={() => {}} gap="$4" marginTop="$7">
-          <Input placeholder="Email" value={session?.user?.email} disabled />
-          <Input
-            placeholder="Username"
-            value={username || ''}
-            onChangeText={(text) => setUsername(text)}
+      <ScrollView backgroundColor="$background">
+        <YStack paddingHorizontal="$4" paddingTop="$4" paddingBottom="$7">
+          <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+          <Avatar
+            size={200}
+            url={avatarUrl}
+            onUpload={(url: string) => {
+              setAvatarUrl(url);
+              updateProfile({ username, website, avatar_url: url, fullName, pin });
+            }}
           />
-          <Input
-            placeholder="Website"
-            value={website || ''}
-            onChangeText={(text) => setWebsite(text)}
-          />
+          <Form onSubmit={() => {}} gap="$4" marginTop="$7">
+            <Input placeholder="Email" value={session?.user?.email} disabled />
+            <Input
+              placeholder="Username"
+              value={username || ''}
+              onChangeText={(text) => setUsername(text)}
+            />
+            <Input
+              placeholder="Full Name"
+              value={fullName || ''}
+              onChangeText={(text) => setFullName(text)}
+            />
+
+            <Input
+              placeholder="Website"
+              value={website || ''}
+              onChangeText={(text) => setWebsite(text)}
+            />
+
+            <Input
+              placeholder="Pin"
+              keyboardType="number-pad"
+              inputMode="decimal"
+              dataDetectorTypes="none"
+              value={`${pin || ''}`}
+              onChangeText={(text) => {
+                if (Number(text)) {
+                  setPin(Number(text));
+                }
+                if (text === '') {
+                  setPin(undefined);
+                }
+              }}
+            />
+
+            <Button
+              onPress={() =>
+                updateProfile({ username, website, fullName, pin, avatar_url: avatarUrl })
+              }
+              disabled={loading}
+              backgroundColor="$orange6">
+              {loading ? 'Loading ...' : 'Update'}
+            </Button>
+          </Form>
 
           <Button
-            onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
-            disabled={loading}
-            backgroundColor="$orange6">
-            {loading ? 'Loading ...' : 'Update'}
+            onPress={() => {
+              supabase.auth.signOut();
+            }}
+            marginTop="$4"
+            backgroundColor="$red6">
+            SignOut
           </Button>
-        </Form>
-
-        <Button
-          onPress={() => {
-            supabase.auth.signOut();
-          }}
-          marginTop="$10"
-          backgroundColor="$red6">
-          SignOut
-        </Button>
-      </YStack>
+        </YStack>
+      </ScrollView>
     </Theme>
   );
 }

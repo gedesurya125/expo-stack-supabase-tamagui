@@ -19,7 +19,12 @@ AppState.addEventListener('change', (state) => {
   }
 });
 
-export default function Auth() {
+interface AuthProps extends React.ComponentProps<typeof View> {
+  hideSignInButton?: boolean;
+  hideSignUpButton?: boolean;
+}
+
+export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: AuthProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { signInWithEmail, signUpWithEmail, loading } = useSession();
@@ -32,18 +37,19 @@ export default function Auth() {
       backgroundColor="$background"
       flex={1}
       justifyContent="center"
-      paddingBottom="$20">
+      paddingBottom="$20"
+      {...props}>
       <Input
         label="Email"
         leftIcon={{
           type: 'font-awesome',
           name: 'envelope',
           color: theme.orange6.val,
-          size: getToken('$1', 'size'),
+          size: getToken('$1', 'size')
         }}
         inputStyle={{
           marginLeft: getToken('$2'),
-          color: theme.color.val,
+          color: theme.color.val
         }}
         leftIconContainerStyle={{}}
         onChangeText={(text) => setEmail(text)}
@@ -57,11 +63,11 @@ export default function Auth() {
           type: 'font-awesome',
           name: 'lock',
           color: theme.orange6.val,
-          size: getToken('$2', 'size'),
+          size: getToken('$2', 'size')
         }}
         inputStyle={{
           marginLeft: getToken('$2'),
-          color: theme.color.val,
+          color: theme.color.val
         }}
         onChangeText={(text) => setPassword(text)}
         value={password}
@@ -69,19 +75,23 @@ export default function Auth() {
         placeholder="Password"
         autoCapitalize="none"
       />
-      <Button
-        disabled={loading}
-        onPress={() => signInWithEmail({ email, password })}
-        backgroundColor="$orange6">
-        Sign In
-      </Button>
-      <Button
-        disabled={loading}
-        onPress={() => signUpWithEmail({ email, password })}
-        marginTop="$5"
-        backgroundColor="$blue6">
-        Sign Up
-      </Button>
+      {!hideSignInButton && (
+        <Button
+          disabled={loading}
+          onPress={() => signInWithEmail({ email, password })}
+          backgroundColor="$orange6">
+          Sign In
+        </Button>
+      )}
+      {!hideSignUpButton && (
+        <Button
+          disabled={loading}
+          onPress={() => signUpWithEmail({ email, password })}
+          marginTop="$5"
+          backgroundColor="$blue6">
+          Sign Up
+        </Button>
+      )}
     </View>
   );
 }

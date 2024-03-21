@@ -27,7 +27,7 @@ const AuthContext = React.createContext<{
   signUpWithEmail: () => null,
   signOut: () => null,
   session: null,
-  loading: false,
+  loading: false
 });
 
 // This hook can be used to access the user info.
@@ -50,7 +50,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({
       email,
-      password,
+      password
     });
 
     if (error) Alert.alert(error.message);
@@ -61,10 +61,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
     setLoading(true);
     const {
       data: { session },
-      error,
+      error
     } = await supabase.auth.signUp({
       email,
-      password,
+      password
     });
 
     if (error) Alert.alert(error.message);
@@ -91,7 +91,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
           supabase.auth.signOut();
         },
         session,
-        loading,
+        loading
       }}>
       {props.children}
     </AuthContext.Provider>

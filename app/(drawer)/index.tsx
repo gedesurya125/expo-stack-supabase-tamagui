@@ -1,26 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import {
-  YStack,
-  H2,
-  Separator,
-  Theme,
-  Text,
-  XStack,
-  View,
-  H3,
-  H4,
-  ScrollView,
-  Image,
-  Card
-} from 'tamagui';
+import { YStack, H2, Theme, Text, XStack, View, H4, ScrollView, Image, Card } from 'tamagui';
 import { ProductCard } from '~/components/ProductCard';
 import { useShopifyContext } from '~/context/ShopifyContext';
 import { dashboardData } from '~/data/dashboardData';
 
 const Page = () => {
-  const { products } = useShopifyContext();
-
   return (
     <Theme>
       <YStack

@@ -3,8 +3,10 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, Redirect } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { Text, XStack, getToken, useTheme } from 'tamagui';
+import { Text, View, XStack, getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
+import { SearchBar } from '~/components/SearchBar';
+import { StyledPressable } from '~/components/StyledPressable';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 const DrawerLayout = () => {
@@ -31,8 +33,38 @@ const DrawerLayout = () => {
         headerTitleStyle: {
           color: theme.color.val
         },
+        headerTitleAlign: 'left',
         headerRight: () => (
-          <XStack>
+          <XStack alignItems="center" paddingBottom="$3" width="100%" justifyContent="flex-end">
+            <SearchBar
+              currentValue=""
+              setValue={() => {}}
+              mr="$4"
+              flex={1 / 2}
+              placeholder="Search for product"
+            />
+            <Link href="/achievement" asChild>
+              <Pressable>
+                <View flexDirection="row" alignItems="center">
+                  <Text
+                    backgroundColor="$blue4"
+                    paddingVertical="$2"
+                    paddingRight="$7"
+                    paddingLeft="$3"
+                    mr="$-4">
+                    3500pts
+                  </Text>
+                  <Ionicons
+                    name="trophy-outline"
+                    size={25}
+                    color={theme.blue10.val}
+                    style={{
+                      marginRight: getToken('$3', 'space')
+                    }}
+                  />
+                </View>
+              </Pressable>
+            </Link>
             <Link href="/profile" asChild>
               <Pressable>
                 {({ pressed }) => (
@@ -76,8 +108,8 @@ const DrawerLayout = () => {
       <Drawer.Screen
         name="index"
         options={{
-          headerTitle: 'Dashboard',
-          drawerLabel: 'Dashboard',
+          headerTitle: 'Catalogue',
+          drawerLabel: 'Catalogue',
           drawerIcon: ({ size, color }) => (
             <Ionicons name="bar-chart-outline" size={size} color={color} />
           )
@@ -94,7 +126,7 @@ const DrawerLayout = () => {
         }}
       />
       <Drawer.Screen
-        name="two"
+        name="achievement"
         options={{
           title: 'Achievement',
           drawerIcon: ({ size, color }) => (

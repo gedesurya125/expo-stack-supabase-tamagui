@@ -1,7 +1,22 @@
+import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { YStack, H2, Separator, Theme, Text, XStack, View } from 'tamagui';
+import {
+  YStack,
+  H2,
+  Separator,
+  Theme,
+  Text,
+  XStack,
+  View,
+  H3,
+  H4,
+  ScrollView,
+  Image,
+  Card
+} from 'tamagui';
 import { ProductCard } from '~/components/ProductCard';
 import { useShopifyContext } from '~/context/ShopifyContext';
+import { dashboardData } from '~/data/dashboardData';
 
 const Page = () => {
   const { products } = useShopifyContext();
@@ -10,12 +25,12 @@ const Page = () => {
     <Theme>
       <YStack
         flex={1}
-        alignItems="center"
-        justifyContent="center"
+        // alignItems="center"
+        // justifyContent="center"
         backgroundColor="$background"
         padding="$4">
+        <SpecialDeals />
         <H2>Dashboard</H2>
-        <Separator />
         <Text color="$color" fontSize="$5" marginTop="$4">
           Here will contain, announcement, rewards, target, notification etc
         </Text>
@@ -38,5 +53,46 @@ const ProductDisplay = () => {
         })}
       </View>
     </View>
+  );
+};
+
+const SpecialDeals = () => {
+  const { specialDeals, achievements } = dashboardData;
+
+  return (
+    <YStack width="100%">
+      <H4>{specialDeals.title}</H4>
+      <XStack>
+        <ScrollView horizontal columnGap="$5">
+          {specialDeals.list.map((item, index) => {
+            return (
+              <Card
+                key={index}
+                height={165}
+                width={400}
+                borderColor="$primary"
+                borderWidth="$1"
+                ml={index !== 0 ? '$4' : 0}>
+                <Card.Background justifyContent="center" alignItems="center">
+                  <Image
+                    resizeMode="contain"
+                    source={{
+                      width: 400,
+                      height: 400,
+                      uri: item.imageUri
+                    }}
+                  />
+                </Card.Background>
+              </Card>
+            );
+          })}
+        </ScrollView>
+      </XStack>
+      <Card>
+        <Card.Header>
+          <Ionicons />
+        </Card.Header>
+      </Card>
+    </YStack>
   );
 };

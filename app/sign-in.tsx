@@ -12,6 +12,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import { useCurrentUser } from '~/utils/useCurrentUser';
 import { supabase } from '~/utils/supabase';
 import { Session } from '@supabase/supabase-js';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
 export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
@@ -47,30 +48,43 @@ const SignInView = ({ isSessionExist }: { isSessionExist: boolean }) => {
     }
   }, [isSessionExist]);
 
+  // ?: source https://reactnative.dev/docs/keyboardavoidingview
   return (
-    <View flex={1} backgroundColor="$background" justifyContent="center" alignItems="center">
-      {step === 1 && (
-        <EmailInput
-          value={email}
-          setValue={setEmail}
-          handleButtonClick={() => {
-            setStep(2);
-          }}
-        />
-      )}
-      {step === 2 && (
-        <PinOrPasswordInput
-          value={pin}
-          setValue={setPin}
-          password={password}
-          setPassword={setPassword}
-          handleButtonClick={handleSignIn}
-          email={email}
-          isSessionExist={isSessionExist}
-          hasPin={hasPin}
-        />
-      )}
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{
+        flex: 1
+      }}>
+      <ScrollView
+        backgroundColor="$background"
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+        {step === 1 && (
+          <EmailInput
+            value={email}
+            setValue={setEmail}
+            handleButtonClick={() => {
+              setStep(2);
+            }}
+          />
+        )}
+        {step === 2 && (
+          <PinOrPasswordInput
+            value={pin}
+            setValue={setPin}
+            password={password}
+            setPassword={setPassword}
+            handleButtonClick={handleSignIn}
+            email={email}
+            isSessionExist={isSessionExist}
+            hasPin={hasPin}
+          />
+        )}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -95,7 +109,7 @@ const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => 
       : 'Hi, welcome to Ambratect app';
 
   return (
-    <>
+    <View justifyContent="center" alignItems="center">
       <H2>{welcomeMessage}</H2>
       <TextInput
         autoCapitalize="none"
@@ -127,7 +141,7 @@ const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => 
           Sign Up
         </StyledButton>
       )}
-    </>
+    </View>
   );
 };
 

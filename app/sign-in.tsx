@@ -4,31 +4,34 @@ import React from 'react';
 
 import { useSession } from '~/components/AuthContext';
 import { Redirect, useNavigation } from 'expo-router';
-import { H1, H2, H3, Text, View, useCurrentColor, useTheme } from 'tamagui';
+import { H1, H2, H3, ScrollView, Text, View, useCurrentColor, useTheme } from 'tamagui';
 import { TextInput } from '~/components/TextInput';
 import { StyledButton } from '~/components/StyledButton';
 // @ts-ignore
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import { useCurrentUser } from '~/utils/useCurrentUser';
 import { supabase } from '~/utils/supabase';
+import { Session } from '@supabase/supabase-js';
 
 export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
-  const { session, inSessionLoginInfo } = useSession();
+  const { session, inSessionLoginInfo, isSessionExist } = useSession();
 
   return session && session.user && inSessionLoginInfo.email && inSessionLoginInfo.pin ? (
     <Redirect href="/(drawer)/" />
   ) : (
-    <SignInView />
+    <SignInView isSessionExist={isSessionExist} />
   );
 }
 
-const SignInView = () => {
+const SignInView = ({ isSessionExist }: { isSessionExist: boolean }) => {
+  console.log('is sesstion exist', isSessionExist);
   const [step, setStep] = React.useState(1);
 
   const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [pin, setPin] = React.useState(''); // currently pin can be as password
-  const { signInWithEmail, loading, isSessionExist } = useSession();
+  const { signInWithEmail, loading, session } = useSession();
   const { hasPin } = useCurrentUser();
 
   console.log('this is the pin', { pin });
@@ -36,6 +39,13 @@ const SignInView = () => {
   const handleSignIn = ({ email, password }: { email: string; password: string }) => {
     signInWithEmail({ email, password });
   };
+
+  React.useEffect(() => {
+    if (isSessionExist && session && session?.user.email) {
+      setEmail(session.user.email);
+      setStep(2);
+    }
+  }, [isSessionExist]);
 
   return (
     <View flex={1} backgroundColor="$background" justifyContent="center" alignItems="center">
@@ -52,6 +62,8 @@ const SignInView = () => {
         <PinOrPasswordInput
           value={pin}
           setValue={setPin}
+          password={password}
+          setPassword={setPassword}
           handleButtonClick={handleSignIn}
           email={email}
           isSessionExist={isSessionExist}
@@ -126,6 +138,8 @@ interface CredentialInputProps {
   email: string;
   isSessionExist: boolean;
   hasPin: boolean;
+  password: string;
+  setPassword: any;
 }
 const PinOrPasswordInput = ({
   value,
@@ -133,7 +147,9 @@ const PinOrPasswordInput = ({
   handleButtonClick,
   email,
   isSessionExist,
-  hasPin
+  hasPin,
+  password,
+  setPassword
 }: CredentialInputProps) => {
   return (
     <>
@@ -148,16 +164,16 @@ const PinOrPasswordInput = ({
             secureTextEntry
             minWidth={350}
             mt="$4"
-            value={value}
+            value={password}
             onChangeText={(text) => {
-              setValue(text);
+              setPassword(text);
             }}
           />
           <StyledButton
             colorStyle="primary"
             mt="$4"
             onPress={() => {
-              handleButtonClick({ email, password: value });
+              handleButtonClick({ email, password });
             }}>
             Proceed Login
           </StyledButton>

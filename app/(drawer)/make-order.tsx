@@ -41,24 +41,6 @@ const OptionsButton = () => {
         }}>
         New Customer
       </Button>
-      {/* <Button
-        icon={<Ionicons name="map-outline" size={21} />}
-        backgroundColor="$secondary"
-        marginTop="$4"
-        onPress={() => {
-          navigation.navigate('search-new-customer' as never);
-        }}>
-        Search New Customer
-      </Button> */}
-      <Button
-        icon={<Ionicons name="map-outline" size={21} />}
-        backgroundColor="$secondary"
-        marginTop="$4"
-        onPress={() => {
-          navigation.navigate('search-new-customer-mapbox' as never);
-        }}>
-        Search New Customer Mapbox
-      </Button>
     </YStack>
   );
 };

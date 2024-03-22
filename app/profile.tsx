@@ -15,7 +15,7 @@ export default function ProfileScreen() {
   const [username, setUsername] = useState('');
   const [website, setWebsite] = useState('');
   const [fullName, setFullName] = useState('');
-  const [pin, setPin] = useState<number>();
+  const [pin, setPin] = useState<string>();
 
   const [avatarUrl, setAvatarUrl] = useState('');
   const { session } = useSession();
@@ -68,7 +68,7 @@ export default function ProfileScreen() {
     website: string;
     avatar_url: string;
     fullName?: string;
-    pin?: number;
+    pin?: string;
   }) {
     try {
       setLoading(true);
@@ -80,7 +80,7 @@ export default function ProfileScreen() {
         full_name: fullName,
         website,
         avatar_url,
-        pin,
+        pin: pin || null,
         updated_at: new Date()
       };
 
@@ -147,10 +147,10 @@ export default function ProfileScreen() {
               value={`${pin || ''}`}
               onChangeText={(text) => {
                 if (Number(text)) {
-                  setPin(Number(text));
+                  setPin(text);
                 }
                 if (text === '') {
-                  setPin(undefined);
+                  setPin('');
                 }
               }}
             />

@@ -4,12 +4,13 @@ import React from 'react';
 
 import { useSession } from '~/components/AuthContext';
 import { Redirect, useNavigation } from 'expo-router';
-import { H1, H2, Text, View, useCurrentColor, useTheme } from 'tamagui';
+import { H1, H2, H3, Text, View, useCurrentColor, useTheme } from 'tamagui';
 import { TextInput } from '~/components/TextInput';
 import { StyledButton } from '~/components/StyledButton';
 // @ts-ignore
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 import { useCurrentUser } from '~/utils/useCurrentUser';
+import { supabase } from '~/utils/supabase';
 
 export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
@@ -136,20 +137,19 @@ const PinOrPasswordInput = ({
     <>
       <H1>{isSessionExist ? 'Pin' : 'Password'}</H1>
       {isSessionExist && (
-        <PinCodeInput
-          value={value}
-          onTextChange={(value) => setValue(value)}
-          onFulFill={(value) => {
-            console.log('thi si the pin value', { value, userPin: currentUser?.pin });
-
-            if (currentUser?.pin.toString() === value) {
-              handleInSessionLogin({ email, pin: value });
-            } else {
-              setError('Pin is not match');
-            }
-          }}
-          errorText={error}
-        />
+        <PinVerification value={value} setValue={setValue} email={email} />
+        // <PinCodeInput
+        //   value={value}
+        //   onTextChange={(value) => setValue(value)}
+        //   onFulFill={(value) => {
+        //     if (currentUser?.pin.toString() === value) {
+        //       handleInSessionLogin({ email, pin: value });
+        //     } else {
+        //       setError('Pin is not match');
+        //     }
+        //   }}
+        //   errorText={error}
+        // />
       )}
 
       {!isSessionExist && (
@@ -179,16 +179,83 @@ const PinOrPasswordInput = ({
 
 // Reused components
 
+const PinVerification = ({
+  value,
+  setValue,
+  email
+}: {
+  value: string;
+  setValue: any;
+  email: string;
+}) => {
+  const { handleInSessionLogin, session } = useSession();
+  const navigation = useNavigation();
+
+  const { currentUser, hasPin } = useCurrentUser();
+  const [error, setError] = React.useState('');
+
+  console.log('the user has pin? ', hasPin);
+
+  const updateUserPin = async (pin: string) => {
+    const updates = {
+      id: session?.user.id,
+      username: currentUser?.username,
+      full_name: currentUser?.full_name,
+      website: currentUser?.website,
+      avatar_url: currentUser?.avatar_url,
+      pin,
+      updated_at: new Date()
+    };
+    try {
+      const { error } = await supabase.from('profiles').upsert(updates);
+      if (error) {
+        throw error;
+      } else {
+        handleInSessionLogin({ email, pin });
+        navigation.navigate('(drawer)' as never);
+      }
+    } catch (err) {
+      console.log('error update pin', err);
+    }
+  };
+
+  return hasPin ? (
+    <PinCodeInput
+      value={value}
+      onTextChange={(value) => setValue(value)}
+      onFulFill={(value) => {
+        if (currentUser?.pin.toString() === value) {
+          handleInSessionLogin({ email, pin: value });
+        } else {
+          setError('Pin is not match');
+        }
+      }}
+      errorText={error}
+      mask="⭑"
+    />
+  ) : (
+    <>
+      <H3>Create New</H3>
+      <PinCodeInput value={value} onTextChange={(value) => setValue(value)} errorText={error} />
+      <StyledButton colorStyle="primary" mt="$6" onPress={async () => await updateUserPin(value)}>
+        Confirm Pin
+      </StyledButton>
+    </>
+  );
+};
+
 const PinCodeInput = ({
   value,
   onFulFill,
   onTextChange,
-  errorText
+  errorText,
+  mask
 }: {
   value: any;
-  onFulFill: (value: string) => void;
+  onFulFill?: (value: string) => void;
   onTextChange: (value: string) => void;
   errorText?: string;
+  mask?: string;
 }) => {
   const theme = useTheme();
 
@@ -196,7 +263,7 @@ const PinCodeInput = ({
     <View mt="$4" alignItems="center">
       <SmoothPinCodeInput
         password
-        mask="⭑"
+        mask={mask}
         codeLength={6}
         cellSize={50}
         cellStyle={{

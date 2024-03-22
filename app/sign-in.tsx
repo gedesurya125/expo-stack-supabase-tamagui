@@ -28,7 +28,8 @@ const SignInView = () => {
 
   const [email, setEmail] = React.useState('');
   const [pin, setPin] = React.useState(''); // currently pin can be as password
-  const { signInWithEmail, loading } = useSession();
+  const { signInWithEmail, loading, isSessionExist } = useSession();
+  const { hasPin } = useCurrentUser();
 
   console.log('this is the pin', { pin });
 
@@ -53,6 +54,8 @@ const SignInView = () => {
           setValue={setPin}
           handleButtonClick={handleSignIn}
           email={email}
+          isSessionExist={isSessionExist}
+          hasPin={hasPin}
         />
       )}
     </View>
@@ -121,35 +124,22 @@ interface CredentialInputProps {
   setValue: any;
   handleButtonClick: any;
   email: string;
+  isSessionExist: boolean;
+  hasPin: boolean;
 }
 const PinOrPasswordInput = ({
   value,
   setValue,
   handleButtonClick,
-  email
+  email,
+  isSessionExist,
+  hasPin
 }: CredentialInputProps) => {
-  const { isSessionExist, handleInSessionLogin } = useSession();
-
-  const { currentUser } = useCurrentUser();
-  const [error, setError] = React.useState('');
-
   return (
     <>
       <H1>{isSessionExist ? 'Pin' : 'Password'}</H1>
       {isSessionExist && (
-        <PinVerification value={value} setValue={setValue} email={email} />
-        // <PinCodeInput
-        //   value={value}
-        //   onTextChange={(value) => setValue(value)}
-        //   onFulFill={(value) => {
-        //     if (currentUser?.pin.toString() === value) {
-        //       handleInSessionLogin({ email, pin: value });
-        //     } else {
-        //       setError('Pin is not match');
-        //     }
-        //   }}
-        //   errorText={error}
-        // />
+        <PinVerification value={value} setValue={setValue} email={email} hasPin={hasPin} />
       )}
 
       {!isSessionExist && (
@@ -182,19 +172,19 @@ const PinOrPasswordInput = ({
 const PinVerification = ({
   value,
   setValue,
-  email
+  email,
+  hasPin
 }: {
   value: string;
   setValue: any;
   email: string;
+  hasPin: boolean;
 }) => {
   const { handleInSessionLogin, session } = useSession();
   const navigation = useNavigation();
 
-  const { currentUser, hasPin } = useCurrentUser();
+  const { currentUser } = useCurrentUser();
   const [error, setError] = React.useState('');
-
-  console.log('the user has pin? ', hasPin);
 
   const updateUserPin = async (pin: string) => {
     const updates = {

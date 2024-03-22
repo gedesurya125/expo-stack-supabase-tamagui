@@ -14,12 +14,14 @@ const Page = () => {
         // justifyContent="center"
         backgroundColor="$background"
         padding="$4">
-        <SpecialDeals />
-        <H2>Dashboard</H2>
-        <Text color="$color" fontSize="$5" marginTop="$4">
-          Here will contain, announcement, rewards, target, notification etc
-        </Text>
-        <ProductDisplay />
+        <ScrollView>
+          <SpecialDeals />
+          <H2>Dashboard</H2>
+          <Text color="$color" fontSize="$5" marginTop="$4">
+            Here will contain, announcement, rewards, target, notification etc
+          </Text>
+          <ProductDisplay />
+        </ScrollView>
       </YStack>
     </Theme>
   );

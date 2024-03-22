@@ -17,20 +17,23 @@ export const useCurrentUser = () => {
 
   React.useEffect(() => {
     const getAndSetCurrentUserIfExist = async () => {
-      if (!session?.user) throw new Error('No user on the session!');
+      if (!session?.user) {
+        return;
+        // throw new Error('No user on the session!');
+      }
 
-      const { data, error, status } = await supabase
+      const response = await supabase
         .from('profiles')
         .select(`username, website, avatar_url, full_name, pin`)
         .eq('id', session?.user.id)
         .single();
-      if (error && status !== 406) {
-        throw error;
+      if (response?.error && response?.status !== 406) {
+        throw response?.error;
       }
-      setCurrentUser(data);
+      setCurrentUser(response?.data);
     };
     getAndSetCurrentUserIfExist();
-  }, []);
+  }, [session]);
 
   return { currentUser, hasPin: !!currentUser?.pin };
 };

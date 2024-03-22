@@ -4,7 +4,7 @@ import React from 'react';
 
 import { useSession } from '~/components/AuthContext';
 import { Redirect, useNavigation } from 'expo-router';
-import { H1, Text, View, useCurrentColor, useTheme } from 'tamagui';
+import { H1, H2, Text, View, useCurrentColor, useTheme } from 'tamagui';
 import { TextInput } from '~/components/TextInput';
 import { StyledButton } from '~/components/StyledButton';
 // @ts-ignore
@@ -68,13 +68,19 @@ interface LoginInputProps {
 const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => {
   const navigation = useNavigation();
   const { isSessionExist, session } = useSession();
+  const { currentUser } = useCurrentUser();
 
   const isEmailMatch = isSessionExist && session?.user.email === value;
   const isButtonDisabled = isSessionExist ? !isEmailMatch : false;
 
+  const welcomeMessage =
+    isSessionExist && currentUser?.full_name
+      ? `Hi ${currentUser?.full_name}, welcome back!!`
+      : 'Hi, welcome to Ambratect app';
+
   return (
     <>
-      <H1>Login</H1>
+      <H2>{welcomeMessage}</H2>
       <TextInput
         autoCapitalize="none"
         placeholder="john@emai.com"
@@ -121,12 +127,30 @@ const PinOrPasswordInput = ({
   handleButtonClick,
   email
 }: CredentialInputProps) => {
-  const { isSessionExist } = useSession();
+  const { isSessionExist, handleInSessionLogin } = useSession();
+
+  const { currentUser } = useCurrentUser();
+  const [error, setError] = React.useState('');
 
   return (
     <>
       <H1>{isSessionExist ? 'Pin' : 'Password'}</H1>
-      {isSessionExist && <PinCodeInput value={value} setValue={setValue} email={email} />}
+      {isSessionExist && (
+        <PinCodeInput
+          value={value}
+          onTextChange={(value) => setValue(value)}
+          onFulFill={(value) => {
+            console.log('thi si the pin value', { value, userPin: currentUser?.pin });
+
+            if (currentUser?.pin.toString() === value) {
+              handleInSessionLogin({ email, pin: value });
+            } else {
+              setError('Pin is not match');
+            }
+          }}
+          errorText={error}
+        />
+      )}
 
       {!isSessionExist && (
         <>
@@ -149,19 +173,24 @@ const PinOrPasswordInput = ({
           </StyledButton>
         </>
       )}
-
-      {/* <StyledButton colorStyle="secondary" mt="$4" onPress={handleTogglePinOrPasswordInput}>
-        {pinLogin ? 'Deprecated: Login With Password Instead' : 'Use Pin instead'}
-      </StyledButton> */}
     </>
   );
 };
 
-const PinCodeInput = ({ value, setValue, email }: { value: any; setValue: any; email: string }) => {
+// Reused components
+
+const PinCodeInput = ({
+  value,
+  onFulFill,
+  onTextChange,
+  errorText
+}: {
+  value: any;
+  onFulFill: (value: string) => void;
+  onTextChange: (value: string) => void;
+  errorText?: string;
+}) => {
   const theme = useTheme();
-  const { handleInSessionLogin } = useSession();
-  const { currentUser } = useCurrentUser();
-  const [error, setError] = React.useState('');
 
   return (
     <View mt="$4" alignItems="center">
@@ -183,20 +212,12 @@ const PinCodeInput = ({ value, setValue, email }: { value: any; setValue: any; e
         }}
         textStyleFocused={{}}
         value={value}
-        onTextChange={(value: any) => setValue(value)}
-        onFulfill={(value: any) => {
-          console.log('thi si the pin value', { value, userPin: currentUser?.pin });
-
-          if (currentUser?.pin.toString() === value) {
-            handleInSessionLogin({ email, pin: value });
-          } else {
-            setError('Pin is not match');
-          }
-        }}
+        onTextChange={onTextChange}
+        onFulfill={onFulFill}
       />
-      {error && (
+      {errorText && (
         <Text mt="$4" color="red">
-          {error}
+          {errorText}
         </Text>
       )}
     </View>

@@ -8,6 +8,11 @@ interface SignProps {
   password: string;
 }
 
+interface InSessionLoginInfoProps {
+  email: string;
+  pin: string;
+}
+
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
     supabase.auth.startAutoRefresh();
@@ -22,12 +27,21 @@ const AuthContext = React.createContext<{
   signOut: () => void;
   session?: Session | null;
   loading: boolean;
+  inSessionLoginInfo: {
+    email: string;
+    pin: string;
+  };
+  handleInSessionLogin: ({ email, pin }: InSessionLoginInfoProps) => void;
+  isSessionExist: boolean;
 }>({
   signInWithEmail: () => null,
   signUpWithEmail: () => null,
   signOut: () => null,
   session: null,
-  loading: false
+  loading: false,
+  inSessionLoginInfo: { email: '', pin: '' },
+  handleInSessionLogin: () => {},
+  isSessionExist: false
 });
 
 // This hook can be used to access the user info.
@@ -45,6 +59,10 @@ export function useSession() {
 export function SessionProvider(props: React.PropsWithChildren) {
   const [loading, setLoading] = React.useState(false);
   const [session, setSession] = React.useState<Session | null>(null);
+  const [inSessionLoginInfo, setInSessionLoginInfo] = React.useState({
+    email: '',
+    pin: ''
+  });
 
   async function signInWithEmail({ email, password }: SignProps) {
     setLoading(true);
@@ -72,6 +90,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
     setLoading(false);
   }
 
+  const handleInSessionLogin = ({ email, pin }: InSessionLoginInfoProps) => {
+    setInSessionLoginInfo({ email, pin });
+  };
+
   React.useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -91,7 +113,10 @@ export function SessionProvider(props: React.PropsWithChildren) {
           supabase.auth.signOut();
         },
         session,
-        loading
+        loading,
+        inSessionLoginInfo,
+        handleInSessionLogin,
+        isSessionExist: !!session && !!session?.user
       }}>
       {props.children}
     </AuthContext.Provider>

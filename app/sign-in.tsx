@@ -4,17 +4,22 @@ import React from 'react';
 
 import { useSession } from '~/components/AuthContext';
 import { Redirect, useNavigation } from 'expo-router';
-import { H1, View, useTheme } from 'tamagui';
+import { H1, Text, View, useCurrentColor, useTheme } from 'tamagui';
 import { TextInput } from '~/components/TextInput';
 import { StyledButton } from '~/components/StyledButton';
 // @ts-ignore
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import { useCurrentUser } from '~/utils/useCurrentUser';
 
 export default function SignIn() {
   // const [session, setSession] = useState<Session | null>(null);
-  const { session } = useSession();
+  const { session, inSessionLoginInfo } = useSession();
 
-  return session && session.user ? <Redirect href="/(drawer)/" /> : <SignInView />;
+  return session && session.user && inSessionLoginInfo.email && inSessionLoginInfo.pin ? (
+    <Redirect href="/(drawer)/" />
+  ) : (
+    <SignInView />
+  );
 }
 
 const SignInView = () => {
@@ -24,7 +29,7 @@ const SignInView = () => {
   const [pin, setPin] = React.useState(''); // currently pin can be as password
   const { signInWithEmail, loading } = useSession();
 
-  console.log('this is the pin', pin);
+  console.log('this is the pin', { pin });
 
   const handleSignIn = ({ email, password }: { email: string; password: string }) => {
     signInWithEmail({ email, password });
@@ -42,7 +47,12 @@ const SignInView = () => {
         />
       )}
       {step === 2 && (
-        <PinInput value={pin} setValue={setPin} handleButtonClick={handleSignIn} email={email} />
+        <PinOrPasswordInput
+          value={pin}
+          setValue={setPin}
+          handleButtonClick={handleSignIn}
+          email={email}
+        />
       )}
     </View>
   );
@@ -57,6 +67,10 @@ interface LoginInputProps {
 
 const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => {
   const navigation = useNavigation();
+  const { isSessionExist, session } = useSession();
+
+  const isEmailMatch = isSessionExist && session?.user.email === value;
+  const isButtonDisabled = isSessionExist ? !isEmailMatch : false;
 
   return (
     <>
@@ -71,18 +85,26 @@ const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputProps) => 
           setValue(text);
         }}
       />
-      <StyledButton colorStyle="primary" minWidth="$15" mt="$5" onPress={handleButtonClick}>
-        Login
-      </StyledButton>
       <StyledButton
-        colorStyle="clear"
+        colorStyle="primary"
         minWidth="$15"
         mt="$5"
-        onPress={() => {
-          navigation.navigate('sign-up' as never);
-        }}>
-        Sign Up
+        onPress={handleButtonClick}
+        disabled={isButtonDisabled}
+        backgroundColor={isButtonDisabled ? 'gray' : '$primary'}>
+        Login
       </StyledButton>
+      {!isSessionExist && (
+        <StyledButton
+          colorStyle="clear"
+          minWidth="$15"
+          mt="$5"
+          onPress={() => {
+            navigation.navigate('sign-up' as never);
+          }}>
+          Sign Up
+        </StyledButton>
+      )}
     </>
   );
 };
@@ -93,26 +115,20 @@ interface CredentialInputProps {
   handleButtonClick: any;
   email: string;
 }
-const PinInput = ({ value, setValue, handleButtonClick, email }: CredentialInputProps) => {
-  const [pinLogin, setPinLogin] = React.useState(true);
-
-  const handleTogglePinInput = () => {
-    setPinLogin((state) => !state);
-  };
+const PinOrPasswordInput = ({
+  value,
+  setValue,
+  handleButtonClick,
+  email
+}: CredentialInputProps) => {
+  const { isSessionExist } = useSession();
 
   return (
     <>
-      <H1>{pinLogin ? 'Pin' : 'Password'}</H1>
-      {pinLogin && (
-        <PinCodeInput
-          value={value}
-          setValue={setValue}
-          handleLogin={handleButtonClick}
-          email={email}
-        />
-      )}
+      <H1>{isSessionExist ? 'Pin' : 'Password'}</H1>
+      {isSessionExist && <PinCodeInput value={value} setValue={setValue} email={email} />}
 
-      {!pinLogin && (
+      {!isSessionExist && (
         <>
           <TextInput
             secureTextEntry
@@ -123,34 +139,32 @@ const PinInput = ({ value, setValue, handleButtonClick, email }: CredentialInput
               setValue(text);
             }}
           />
-          <StyledButton colorStyle="primary" mt="$4" onPress={handleButtonClick}>
+          <StyledButton
+            colorStyle="primary"
+            mt="$4"
+            onPress={() => {
+              handleButtonClick({ email, password: value });
+            }}>
             Proceed Login
           </StyledButton>
         </>
       )}
 
-      <StyledButton colorStyle="secondary" mt="$4" onPress={handleTogglePinInput}>
+      {/* <StyledButton colorStyle="secondary" mt="$4" onPress={handleTogglePinOrPasswordInput}>
         {pinLogin ? 'Deprecated: Login With Password Instead' : 'Use Pin instead'}
-      </StyledButton>
+      </StyledButton> */}
     </>
   );
 };
 
-const PinCodeInput = ({
-  value,
-  setValue,
-  handleLogin,
-  email
-}: {
-  value: any;
-  setValue: any;
-  handleLogin: any;
-  email: string;
-}) => {
+const PinCodeInput = ({ value, setValue, email }: { value: any; setValue: any; email: string }) => {
   const theme = useTheme();
+  const { handleInSessionLogin } = useSession();
+  const { currentUser } = useCurrentUser();
+  const [error, setError] = React.useState('');
 
   return (
-    <View mt="$4">
+    <View mt="$4" alignItems="center">
       <SmoothPinCodeInput
         password
         mask="⭑"
@@ -171,10 +185,20 @@ const PinCodeInput = ({
         value={value}
         onTextChange={(value: any) => setValue(value)}
         onFulfill={(value: any) => {
-          console.log('thi si the pin value', value);
-          handleLogin({ email, password: value });
+          console.log('thi si the pin value', { value, userPin: currentUser?.pin });
+
+          if (currentUser?.pin.toString() === value) {
+            handleInSessionLogin({ email, pin: value });
+          } else {
+            setError('Pin is not match');
+          }
         }}
       />
+      {error && (
+        <Text mt="$4" color="red">
+          {error}
+        </Text>
+      )}
     </View>
   );
 };

@@ -124,6 +124,7 @@ export default function ProfileScreen() {
               placeholder="Username"
               value={username || ''}
               onChangeText={(text) => setUsername(text)}
+              autoCapitalize="none"
             />
             <Input
               placeholder="Full Name"
@@ -135,6 +136,7 @@ export default function ProfileScreen() {
               placeholder="Website"
               value={website || ''}
               onChangeText={(text) => setWebsite(text)}
+              autoCapitalize="none"
             />
 
             <Input

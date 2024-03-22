@@ -10,7 +10,7 @@ import { StyledPressable } from '~/components/StyledPressable';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 const DrawerLayout = () => {
-  const { session } = useSession();
+  const { session, inSessionLoginInfo } = useSession();
   const theme = useTheme();
   const { customerInfo } = useSelectedCustomerContext();
 
@@ -18,7 +18,7 @@ const DrawerLayout = () => {
 
   // Only require authentication within the (app) group's layout as users
   // need to be able to access the (auth) group and sign in again.
-  if (!session) {
+  if (!session || !inSessionLoginInfo.email || !inSessionLoginInfo.pin) {
     // On web, static rendering will stop here as the user is not authenticated
     // in the headless Node process that the pages are rendered in.
     return <Redirect href="/sign-in" />;

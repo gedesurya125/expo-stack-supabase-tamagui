@@ -6,6 +6,7 @@
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
     "ios": "expo run:ios --device",
     "dev": "expo start -c",
+    "dev:go": "expo start -c --go",
     "start": "expo start",
     "web": "expo start --web",
     "lint": "eslint .",

@@ -1,19 +1,16 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { YStack, H2, Theme, Text, XStack, View, H4, ScrollView, Image, Card } from 'tamagui';
+import { YStack, H2, Theme, Text, XStack, View, H4, ScrollView, Image, Card, H3 } from 'tamagui';
+import { useProductCategories } from '~/api/xentral/useProductCategory';
 import { ProductCard } from '~/components/ProductCard';
 import { useShopifyContext } from '~/context/ShopifyContext';
 import { dashboardData } from '~/data/dashboardData';
+import { imagePlaceholder } from '~/images/placeholder';
 
 const Page = () => {
   return (
     <Theme>
-      <YStack
-        flex={1}
-        // alignItems="center"
-        // justifyContent="center"
-        backgroundColor="$background"
-        padding="$4">
+      <YStack flex={1} backgroundColor="$background" padding="$4">
         <ScrollView>
           <SpecialDeals />
           <H2>Dashboard</H2>
@@ -21,6 +18,7 @@ const Page = () => {
             Here will contain, announcement, rewards, target, notification etc
           </Text>
           <ProductDisplay />
+          <ProductCategories />
         </ScrollView>
       </YStack>
     </Theme>
@@ -81,5 +79,43 @@ const SpecialDeals = () => {
         </Card.Header>
       </Card>
     </YStack>
+  );
+};
+
+const ProductCategories = () => {
+  const { data } = useProductCategories();
+
+  return (
+    <View alignItems="center" mt="$12">
+      <H2>Product Categories:</H2>
+      <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
+        {data?.data?.map((productCategory: any, index: number) => {
+          return <ProductCategoryCard key={index} data={productCategory} />;
+        })}
+      </View>
+    </View>
+  );
+};
+
+const ProductCategoryCard = ({ data }: { data: any }) => {
+  return (
+    <Card
+      width={`${100 / 3}%`}
+      padding="$3"
+      backgroundColor="transparent"
+      display="flex"
+      flexDirection="row"
+      alignItems="center">
+      <View borderColor="$primary" borderWidth="$0.5" borderRadius="$10" overflow="hidden">
+        <Image
+          source={{
+            height: 50,
+            width: 50,
+            uri: imagePlaceholder
+          }}
+        />
+      </View>
+      <H3 ml="$5">{data.name}</H3>
+    </Card>
   );
 };

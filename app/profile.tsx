@@ -6,7 +6,7 @@ import { Redirect, router } from 'expo-router';
 import { supabase } from '~/utils/supabase';
 
 import { useState, useEffect } from 'react';
-import { Alert, Platform } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useSession } from '~/components/AuthContext';
 import Avatar from '~/components/Avatar';
 
@@ -107,74 +107,80 @@ export default function ProfileScreen() {
 
   return (
     <Theme>
-      <ScrollView backgroundColor="$background">
-        <YStack paddingHorizontal="$4" paddingTop="$4" paddingBottom="$7">
-          <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-          <Avatar
-            size={200}
-            url={avatarUrl}
-            onUpload={(url: string) => {
-              setAvatarUrl(url);
-              updateProfile({ username, website, avatar_url: url, fullName, pin });
-            }}
-          />
-          <Form onSubmit={() => {}} gap="$4" marginTop="$7">
-            <Input placeholder="Email" value={session?.user?.email} disabled />
-            <Input
-              placeholder="Username"
-              value={username || ''}
-              onChangeText={(text) => setUsername(text)}
-              autoCapitalize="none"
-            />
-            <Input
-              placeholder="Full Name"
-              value={fullName || ''}
-              onChangeText={(text) => setFullName(text)}
-            />
-
-            <Input
-              placeholder="Website"
-              value={website || ''}
-              onChangeText={(text) => setWebsite(text)}
-              autoCapitalize="none"
-            />
-
-            <Input
-              placeholder="Pin"
-              keyboardType="number-pad"
-              inputMode="decimal"
-              dataDetectorTypes="none"
-              value={`${pin || ''}`}
-              onChangeText={(text) => {
-                if (Number(text)) {
-                  setPin(text);
-                }
-                if (text === '') {
-                  setPin('');
-                }
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{
+          flex: 1
+        }}>
+        <ScrollView backgroundColor="$background">
+          <YStack paddingHorizontal="$4" paddingTop="$4" paddingBottom="$7">
+            <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
+            <Avatar
+              size={200}
+              url={avatarUrl}
+              onUpload={(url: string) => {
+                setAvatarUrl(url);
+                updateProfile({ username, website, avatar_url: url, fullName, pin });
               }}
             />
+            <Form onSubmit={() => {}} gap="$4" marginTop="$7">
+              <Input placeholder="Email" value={session?.user?.email} disabled />
+              <Input
+                placeholder="Username"
+                value={username || ''}
+                onChangeText={(text) => setUsername(text)}
+                autoCapitalize="none"
+              />
+              <Input
+                placeholder="Full Name"
+                value={fullName || ''}
+                onChangeText={(text) => setFullName(text)}
+              />
+
+              <Input
+                placeholder="Website"
+                value={website || ''}
+                onChangeText={(text) => setWebsite(text)}
+                autoCapitalize="none"
+              />
+
+              <Input
+                placeholder="Pin"
+                keyboardType="number-pad"
+                inputMode="decimal"
+                dataDetectorTypes="none"
+                value={`${pin || ''}`}
+                onChangeText={(text) => {
+                  if (Number(text)) {
+                    setPin(text);
+                  }
+                  if (text === '') {
+                    setPin('');
+                  }
+                }}
+              />
+
+              <Button
+                onPress={() =>
+                  updateProfile({ username, website, fullName, pin, avatar_url: avatarUrl })
+                }
+                disabled={loading}
+                backgroundColor="$orange6">
+                {loading ? 'Loading ...' : 'Update'}
+              </Button>
+            </Form>
 
             <Button
-              onPress={() =>
-                updateProfile({ username, website, fullName, pin, avatar_url: avatarUrl })
-              }
-              disabled={loading}
-              backgroundColor="$orange6">
-              {loading ? 'Loading ...' : 'Update'}
+              onPress={() => {
+                supabase.auth.signOut();
+              }}
+              marginTop="$4"
+              backgroundColor="$red6">
+              SignOut
             </Button>
-          </Form>
-
-          <Button
-            onPress={() => {
-              supabase.auth.signOut();
-            }}
-            marginTop="$4"
-            backgroundColor="$red6">
-            SignOut
-          </Button>
-        </YStack>
-      </ScrollView>
+          </YStack>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Theme>
   );
 }

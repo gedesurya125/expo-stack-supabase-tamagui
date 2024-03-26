@@ -2,10 +2,12 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { YStack, H2, Theme, Text, XStack, View, H4, ScrollView, Image, Card, H3 } from 'tamagui';
 import { useProductCategories } from '~/api/xentral/useProductCategory';
+import { XentralProductData, useProducts } from '~/api/xentral/useProducts';
 import { ProductCard } from '~/components/ProductCard';
 import { useShopifyContext } from '~/context/ShopifyContext';
 import { dashboardData } from '~/data/dashboardData';
 import { imagePlaceholder } from '~/images/placeholder';
+import { Image as ExpoImage } from 'expo-image';
 
 const Page = () => {
   return (
@@ -18,6 +20,7 @@ const Page = () => {
             Here will contain, announcement, rewards, target, notification etc
           </Text>
           <ProductDisplay />
+          <XentralProducts />
           <ProductCategories />
         </ScrollView>
       </YStack>
@@ -89,6 +92,7 @@ const ProductCategories = () => {
     <View alignItems="center" mt="$12">
       <H2>Product Categories:</H2>
       <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
+        {/* @ts-ignore */}
         {data?.data?.map((productCategory: any, index: number) => {
           return <ProductCategoryCard key={index} data={productCategory} />;
         })}
@@ -116,6 +120,54 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
         />
       </View>
       <H3 ml="$5">{data.name}</H3>
+    </Card>
+  );
+};
+
+const XentralProducts = () => {
+  const { data } = useProducts();
+
+  return (
+    <View mt="$16">
+      <H3>Recommended Products: (Xentral Products)</H3>
+      <View>
+        {data?.data.map((productData, index) => {
+          return <XentralProductCard key={index} data={productData} />;
+        })}
+      </View>
+    </View>
+  );
+};
+
+export const XentralProductCard = ({ data }: { data: XentralProductData }) => {
+  console.log('this is the products', data);
+  const blurhash =
+    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+
+  return (
+    <Card>
+      <View>
+        {/* <ExpoImage
+          style={{
+            width: 100,
+            height: 100
+          }}
+          source="https://picsum.photos/seed/696/3000/2000"
+          placeholder={blurhash}
+          contentFit="cover"
+          transition={1000}
+        /> */}
+        <Image
+          source={{
+            uri: 'https://65f3ab65c1ff4.demo.xentral.com/index.php?module=artikel&action=thumbnail&id=1&bildvorschau=53_100_100',
+            width: 100,
+            height: 100
+          }}
+        />
+      </View>
+      <H3>{data.name}</H3>
+      <Text>{data.description.replace(/<br\s\/>/gi, '\n')}</Text>
+      <Text>{data.stockCount} items available</Text>
     </Card>
   );
 };

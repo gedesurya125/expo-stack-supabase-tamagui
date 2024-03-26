@@ -6,7 +6,7 @@ const fetchOption = {
   }
 };
 
-export const fetchXentral = async (endPoint: string) => {
+export const fetchXentral = async <T>(endPoint: string): Promise<T> => {
   console.log('this is the url', `${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`);
 
   return await fetch(`${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`, fetchOption)

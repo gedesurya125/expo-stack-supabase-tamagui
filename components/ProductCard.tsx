@@ -1,6 +1,6 @@
 import React from 'react';
 import type { CardProps } from 'tamagui';
-import { Button, Card, H2, Image, Paragraph, XStack } from 'tamagui';
+import { Button, Card, H2, Image, Paragraph, View, XStack } from 'tamagui';
 import { imagePlaceholder } from '~/images/placeholder';
 
 interface ProductCardProps extends CardProps {

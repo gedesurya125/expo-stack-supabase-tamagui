@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { getProductsByCursor } from '~/api/shopify/getAllProdurcts';
 
@@ -7,13 +7,21 @@ interface ShopifyContextProviderValue {
   handleIncreasePageIndex: () => void;
   handleDecreasePageIndex: () => void;
   pageIndex: number;
+  refetch: ({
+    thrownError,
+    cancelRefetch
+  }: {
+    thrownError: boolean;
+    cancelRefetch: boolean;
+  }) => Promise<UseQueryResult>;
 }
 
 const ShopifyContext = createContext<ShopifyContextProviderValue>({
   products: [],
   handleIncreasePageIndex: () => {},
   handleDecreasePageIndex: () => {},
-  pageIndex: 0
+  pageIndex: 0,
+  refetch: async () => new Promise(() => {})
 });
 
 interface ShopifyContextProviderProps {
@@ -32,7 +40,8 @@ export const ShopifyContextProvider = ({ children }: ShopifyContextProviderProps
     isError,
     isLoading,
     error,
-    isFetching
+    isFetching,
+    refetch
   } = useQuery({
     queryKey: ['products', pageIndex],
     queryFn: async () => {
@@ -65,11 +74,8 @@ export const ShopifyContextProvider = ({ children }: ShopifyContextProviderProps
 
   // useEffect(() => {
   //   const fetchFirstProducts = async () => {
-  //     if (products.length === 0) {
-  //       const firstPageProducts = await getProductsByCursor({ first: PRODUCT_PER_PAGE });
-  //       console.log('this is the firts page product', firstPageProducts);
-  //       setProducts(firstPageProducts);
-  //     }
+  //     const firstPageProducts = await getProductsByCursor({ first: PRODUCT_PER_PAGE });
+  //     console.log('this is the firts page product', firstPageProducts);
   //   };
   //   fetchFirstProducts();
   // }, []);
@@ -82,7 +88,8 @@ export const ShopifyContextProvider = ({ children }: ShopifyContextProviderProps
         products: productsData?.data?.products?.nodes,
         handleIncreasePageIndex,
         handleDecreasePageIndex,
-        pageIndex
+        pageIndex,
+        refetch
       }}>
       {children}
     </ShopifyContext.Provider>

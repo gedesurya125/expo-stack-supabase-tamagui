@@ -8,6 +8,7 @@ import { useShopifyContext } from '~/context/ShopifyContext';
 import { dashboardData } from '~/data/dashboardData';
 import { imagePlaceholder } from '~/images/placeholder';
 import { Image as ExpoImage } from 'expo-image';
+import { StyledButton } from '~/components/StyledButton';
 
 const Page = () => {
   return (
@@ -20,7 +21,6 @@ const Page = () => {
             Here will contain, announcement, rewards, target, notification etc
           </Text>
           <ProductDisplay />
-          <XentralProducts />
           <ProductCategories />
         </ScrollView>
       </YStack>
@@ -31,13 +31,17 @@ const Page = () => {
 export default Page;
 
 const ProductDisplay = () => {
-  const { products } = useShopifyContext();
+  const { products, refetch } = useShopifyContext();
   return (
-    <View alignItems="center" mt="$10">
+    <View alignItems="center" mt="$14">
       <H2>Our Products</H2>
-      <View display="flex" flexDirection="row" gap="$3" flexWrap="wrap" mt="$5">
+      <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
         {products?.map((data, index) => {
-          return <ProductCard key={index} width="30%" productData={data} />;
+          return (
+            <View className="grid-item-container" width={`${100 / 4}%`} key={index} padding="$2">
+              <ProductCard productData={data} />
+            </View>
+          );
         })}
       </View>
     </View>
@@ -89,7 +93,7 @@ const ProductCategories = () => {
   const { data } = useProductCategories();
 
   return (
-    <View alignItems="center" mt="$12">
+    <View alignItems="center" mt="$14">
       <H2>Product Categories:</H2>
       <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
         {/* @ts-ignore */}
@@ -120,54 +124,6 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
         />
       </View>
       <H3 ml="$5">{data.name}</H3>
-    </Card>
-  );
-};
-
-const XentralProducts = () => {
-  const { data } = useProducts();
-
-  return (
-    <View mt="$16">
-      <H3>Recommended Products: (Xentral Products)</H3>
-      <View>
-        {data?.data.map((productData, index) => {
-          return <XentralProductCard key={index} data={productData} />;
-        })}
-      </View>
-    </View>
-  );
-};
-
-export const XentralProductCard = ({ data }: { data: XentralProductData }) => {
-  console.log('this is the products', data);
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
-  return (
-    <Card>
-      <View>
-        {/* <ExpoImage
-          style={{
-            width: 100,
-            height: 100
-          }}
-          source="https://picsum.photos/seed/696/3000/2000"
-          placeholder={blurhash}
-          contentFit="cover"
-          transition={1000}
-        /> */}
-        <Image
-          source={{
-            uri: 'https://65f3ab65c1ff4.demo.xentral.com/index.php?module=artikel&action=thumbnail&id=1&bildvorschau=53_100_100',
-            width: 100,
-            height: 100
-          }}
-        />
-      </View>
-      <H3>{data.name}</H3>
-      <Text>{data.description.replace(/<br\s\/>/gi, '\n')}</Text>
-      <Text>{data.stockCount} items available</Text>
     </Card>
   );
 };

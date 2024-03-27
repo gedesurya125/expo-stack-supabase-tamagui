@@ -56,6 +56,7 @@ export const ShopifyContextProvider = ({ children }: ShopifyContextProviderProps
       }
       return newData;
     }
+    // refetchInterval: 1000
   });
 
   const handleIncreasePageIndex = () => {

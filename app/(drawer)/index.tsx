@@ -1,6 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { YStack, H2, Theme, Text, XStack, View, H4, ScrollView, Image, Card, H3 } from 'tamagui';
+import {
+  YStack,
+  H2,
+  Theme,
+  Text,
+  XStack,
+  View,
+  H4,
+  ScrollView,
+  Image,
+  Card,
+  H3,
+  Paragraph
+} from 'tamagui';
 import { useProductCategories } from '~/api/xentral/useProductCategory';
 import { XentralProductData, useProducts } from '~/api/xentral/useProducts';
 import { ProductCard } from '~/components/ProductCard';
@@ -38,7 +51,14 @@ const ProductDisplay = () => {
       <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
         {products?.map((data, index) => {
           return (
-            <View className="grid-item-container" width={`${100 / 4}%`} key={index} padding="$2">
+            <View
+              className="grid-item-container"
+              width={`${100 / 2}%`}
+              $gtMd={{
+                width: `${100 / 4}%`
+              }}
+              key={index}
+              padding="$2">
               <ProductCard productData={data} />
             </View>
           );
@@ -108,7 +128,13 @@ const ProductCategories = () => {
 const ProductCategoryCard = ({ data }: { data: any }) => {
   return (
     <Card
-      width={`${100 / 3}%`}
+      width={`${100}%`}
+      $gtSm={{
+        width: `${100 / 2}%`
+      }}
+      $gtMd={{
+        width: `${100 / 3}%`
+      }}
       padding="$3"
       backgroundColor="transparent"
       display="flex"
@@ -116,14 +142,25 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
       alignItems="center">
       <View borderColor="$primary" borderWidth="$0.5" borderRadius="$10" overflow="hidden">
         <Image
-          source={{
+          height={40}
+          width={40}
+          $gtSm={{
             height: 50,
-            width: 50,
+            width: 50
+          }}
+          source={{
             uri: imagePlaceholder
           }}
         />
       </View>
-      <H3 ml="$5">{data.name}</H3>
+      <Paragraph
+        ml="$5"
+        fontSize="$5"
+        $gtSm={{
+          fontSize: '$8'
+        }}>
+        {data.name}
+      </Paragraph>
     </Card>
   );
 };

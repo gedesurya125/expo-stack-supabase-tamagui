@@ -1,4 +1,4 @@
-import { fetchShopifyGraphql } from './index';
+import { fetchShopifyGraphql } from './fetchShopifyGraphql';
 import { recursiveFetchAllProduct } from './helpers/recursiveFetchAllProduct';
 
 export const MINIMAL_PRODUCT_FIELDS = `#graphql
@@ -307,27 +307,4 @@ export const getProductsByCursor = async ({ first, after }: { first: number; aft
   `;
 
   return await fetchShopifyGraphql({ query: GET_PRODUCTS, variables: { first, after } });
-};
-
-//TODO: REMOVE THIS FUNCTION
-export const getProducts = async () => {
-  const GET_PRODUCTS = `#graphql
-    query allProducts($first: Int) {
-      products( first: $first) {
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-        
-      }
-    }
-  `;
-
-  const products = await fetchShopifyGraphql({
-    query: GET_PRODUCTS,
-    variables: {
-      first: 10
-    }
-  });
-  return products;
 };

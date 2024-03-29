@@ -49,7 +49,6 @@ const CustomerList = () => {
       stickyHeaderIndices={[0]}
       onEndReachedThreshold={0.1}
       onEndReached={async () => {
-        console.log('fetching...', page);
         await fetchNextPage();
       }}
       style={{
@@ -73,9 +72,8 @@ export const CustomerItem = ({ item }: { item: any }) => {
       <Pressable
         style={{ flex: 1 }}
         onPress={() => {
-          console.log('customer tobe  save', item);
           handleSetCustomerInfo(item);
-          navigation.navigate('index' as never);
+          navigation.navigate('catalogue' as never);
         }}>
         <YStack flex={1}>
           <Text color="$color">{item.general.name}</Text>

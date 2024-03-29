@@ -17,8 +17,6 @@ export default function ModalScreen() {
 
   const displayShopProps = currentSelectedCustomerInfo?.id === params?.id;
 
-  console.log('is current selected customer shop props', displayShopProps);
-
   return (
     <Theme>
       {status === 'pending' ? (

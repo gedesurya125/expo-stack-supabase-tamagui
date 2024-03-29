@@ -32,8 +32,6 @@ export const SelectedCustomerContextProvider = ({
     setCustomerInfo(null);
   };
 
-  console.log('this is current customer', customerInfo);
-
   return (
     <SelectedCustomerContext.Provider
       value={{ customerInfo, handleSetCustomerInfo, handleClearCustomerInfo }}>

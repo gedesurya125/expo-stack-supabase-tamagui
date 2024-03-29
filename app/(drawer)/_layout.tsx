@@ -1,18 +1,26 @@
 /* eslint-disable import/order */
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Link, Redirect } from 'expo-router';
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  DrawerToggleButton
+} from '@react-navigation/drawer';
+import { DrawerActions } from '@react-navigation/native';
+import { Link, Redirect, useNavigation } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
 import { Pressable, StyleSheet } from 'react-native';
-import { Text, View, XStack, getToken, useTheme } from 'tamagui';
+import { Button, ButtonIcon, Text, View, XStack, YStack, getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
 import { SearchBar } from '~/components/SearchBar';
 import { StyledPressable } from '~/components/StyledPressable';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
+import { Menu } from '@tamagui/lucide-icons';
 
 const DrawerLayout = () => {
   const { session, inSessionLoginInfo } = useSession();
   const theme = useTheme();
-  const { customerInfo } = useSelectedCustomerContext();
+  const { customerInfo, handleClearCustomerInfo } = useSelectedCustomerContext();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
 
@@ -34,6 +42,9 @@ const DrawerLayout = () => {
           color: theme.color.val
         },
         headerTitleAlign: 'left',
+        headerLeft: () => {
+          return <CustomDrawerToggleButton />;
+        },
         headerRight: () => (
           <XStack alignItems="center" paddingBottom="$3" width="100%" justifyContent="flex-end">
             <SearchBar
@@ -42,6 +53,10 @@ const DrawerLayout = () => {
               mr="$4"
               flex={1 / 2}
               placeholder="Search for product"
+              display="none"
+              $gtSm={{
+                display: 'block'
+              }}
             />
             <Link href="/achievement" asChild>
               <Pressable>
@@ -104,9 +119,19 @@ const DrawerLayout = () => {
             )}
           </XStack>
         )
+      }}
+      drawerContent={(props) => {
+        return (
+          <YStack flex={1}>
+            <DrawerContentScrollView {...props}>
+              <DrawerItemList {...props} />
+            </DrawerContentScrollView>
+            <LogOutCustomerButton />
+          </YStack>
+        );
       }}>
       <Drawer.Screen
-        name="index"
+        name="catalogue"
         options={{
           headerTitle: 'Catalogue',
           drawerLabel: 'Catalogue',
@@ -116,7 +141,7 @@ const DrawerLayout = () => {
         }}
       />
       <Drawer.Screen
-        name="make-order"
+        name="index"
         options={{
           headerTitle: 'Make Order',
           drawerLabel: 'Make Order',
@@ -192,6 +217,45 @@ const BackToMakeOrderScreen = (props: any) => {
         )}
       </Pressable>
     </Link>
+  );
+};
+
+const CustomDrawerToggleButton = () => {
+  const navigation = useNavigation();
+
+  return (
+    <Pressable onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}>
+      <Menu size={30} ml="$3" />
+    </Pressable>
+  );
+};
+
+const LogOutCustomerButton = () => {
+  const { customerInfo, handleClearCustomerInfo } = useSelectedCustomerContext();
+  const navigation = useNavigation();
+
+  if (!customerInfo) return null;
+  return (
+    <DrawerItem
+      icon={({ size, color }) => {
+        return (
+          <Ionicons
+            name="log-out-outline"
+            size={size}
+            color={color}
+            style={{
+              marginTop: 'auto'
+            }}
+          />
+        );
+      }}
+      label="Logout Current Customer"
+      onPress={() => {
+        handleClearCustomerInfo();
+        navigation.dispatch(DrawerActions.toggleDrawer());
+        navigation.navigate('index' as never);
+      }}
+    />
   );
 };
 

@@ -154,7 +154,7 @@ export const AddCustomerForm = ({
         if (result?.ok) {
           const text = await result.text();
           clearExistingCustomer();
-          console.log('customer crated', result.status, text);
+          console.log('customer created', result.status, text);
           setErrorMessage('');
         } else {
           const text = await result?.text();

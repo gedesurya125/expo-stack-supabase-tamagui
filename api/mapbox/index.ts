@@ -42,7 +42,6 @@ export const getPlacesDetails = async ({ id, currentLocation }: GeoCodingProps) 
 };
 export const getForwardSearchPlaces = async ({ searchText, currentLocation }: GeoCodingProps) => {
   const url = `${MAP_BOX_API_BASE_URL}/search/searchbox/v1/forward?q=${searchText}&access_token=${process.env.EXPO_PUBLIC_MAPBOX_TOKEN}&proximity=${currentLocation.longitude},${currentLocation.latitude}&limit=10&types=place`;
-  console.log('this is the URL', url);
 
   const places = await fetch(url).then((res) => res.json());
   return places;

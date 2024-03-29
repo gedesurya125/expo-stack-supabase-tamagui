@@ -6,10 +6,19 @@ const fetchOption = {
   }
 };
 
-export const fetchXentral = async <T>(endPoint: string): Promise<T> => {
-  console.log('this is the url', `${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`);
+const betaFetchOption = {
+  method: 'GET',
+  headers: {
+    accept: 'application/vnd.xentral.default.v1-beta+json',
+    authorization: `Bearer ${process.env.EXPO_PUBLIC_XENTRAL_PERSONAL_ACCESS_TOKEN}`
+  }
+};
 
-  return await fetch(`${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`, fetchOption)
+export const fetchXentral = async <T>(endPoint: string, isBeta?: boolean): Promise<T> => {
+  return await fetch(
+    `${process.env.EXPO_PUBLIC_XENTRAL_API_BASE}${endPoint}`,
+    isBeta ? betaFetchOption : fetchOption
+  )
     .then((response) => response?.json())
     .catch((err) => console.error(err));
 };

@@ -1,4 +1,4 @@
-import { fetchShopifyGraphql } from '../index';
+import { fetchShopifyGraphql } from '../fetchShopifyGraphql';
 
 export const recursiveFetchAllProduct = async (query: string, endCursor?: number) => {
   /**

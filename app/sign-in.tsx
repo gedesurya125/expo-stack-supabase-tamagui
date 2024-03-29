@@ -26,7 +26,6 @@ export default function SignIn() {
 }
 
 const SignInView = ({ isSessionExist }: { isSessionExist: boolean }) => {
-  console.log('is sesstion exist', isSessionExist);
   const [step, setStep] = React.useState(1);
 
   const [email, setEmail] = React.useState('');
@@ -34,8 +33,6 @@ const SignInView = ({ isSessionExist }: { isSessionExist: boolean }) => {
   const [pin, setPin] = React.useState(''); // currently pin can be as password
   const { signInWithEmail, loading, session } = useSession();
   const { hasPin } = useCurrentUser();
-
-  console.log('this is the pin', { pin });
 
   const handleSignIn = ({ email, password }: { email: string; password: string }) => {
     signInWithEmail({ email, password });

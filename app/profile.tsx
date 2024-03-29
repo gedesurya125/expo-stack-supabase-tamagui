@@ -41,7 +41,6 @@ export default function ProfileScreen() {
       }
 
       if (data) {
-        console.log('this is the profile data', data);
         setUsername(data.username);
         setWebsite(data.website);
         setAvatarUrl(data.avatar_url);
@@ -83,8 +82,6 @@ export default function ProfileScreen() {
         pin: pin || null,
         updated_at: new Date()
       };
-
-      console.log('this is the updates', updates);
 
       const { error } = await supabase.from('profiles').upsert(updates);
 

@@ -81,8 +81,6 @@ export const ShopifyContextProvider = ({ children }: ShopifyContextProviderProps
   //   fetchFirstProducts();
   // }, []);
 
-  console.log('this is the products', productsData?.data?.products?.nodes);
-
   return (
     <ShopifyContext.Provider
       value={{

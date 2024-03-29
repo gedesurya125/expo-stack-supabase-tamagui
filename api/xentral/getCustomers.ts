@@ -31,7 +31,6 @@ export const getCustomers = async ({
     const { field, direction } = other.order;
     endPoint = `${endPoint}&order[0][field]=${field}&order[0][dir]=${direction}`;
   }
-  console.log('EXECUTED GET CUSTOMER ENDPOINT: ', endPoint);
 
   // filter[0][key]=name&filter[0][op]=contains&filter[0][value]=ss
   // &order[0][field]=name&order[0][dir]=asc

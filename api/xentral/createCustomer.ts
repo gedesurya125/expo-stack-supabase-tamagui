@@ -59,8 +59,6 @@ export const createCustomer = async (data: CreateCustomerBody) => {
     };
   }
 
-  console.log('CREATE CUSTOMER DATA TO SEND:', JSON.stringify(dataToSend));
-
   const result = await createXentral('/customers', JSON.stringify(dataToSend));
   return result;
 };

@@ -4,23 +4,23 @@ import {
   DrawerContentScrollView,
   DrawerItem,
   DrawerItemList,
-  DrawerToggleButton
+  useDrawerStatus
 } from '@react-navigation/drawer';
 import { DrawerActions } from '@react-navigation/native';
 import { Link, Redirect, useNavigation } from 'expo-router';
 import { Drawer } from 'expo-router/drawer';
-import { Pressable, StyleSheet } from 'react-native';
-import { Button, ButtonIcon, Text, View, XStack, YStack, getToken, useTheme } from 'tamagui';
+import { Pressable } from 'react-native';
+import { Text, View, XStack, YStack, getToken, useTheme } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
 import { SearchBar } from '~/components/SearchBar';
-import { StyledPressable } from '~/components/StyledPressable';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 import { Menu } from '@tamagui/lucide-icons';
+import React from 'react';
+import { StyledButton } from '~/components/StyledButton';
 
 const DrawerLayout = () => {
   const { session, inSessionLoginInfo } = useSession();
   const theme = useTheme();
-  const { customerInfo, handleClearCustomerInfo } = useSelectedCustomerContext();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
 
@@ -45,80 +45,7 @@ const DrawerLayout = () => {
         headerLeft: () => {
           return <CustomDrawerToggleButton />;
         },
-        headerRight: () => (
-          <XStack alignItems="center" paddingBottom="$3" width="100%" justifyContent="flex-end">
-            <SearchBar
-              currentValue=""
-              setValue={() => {}}
-              mr="$4"
-              flex={1 / 2}
-              placeholder="Search for product"
-              display="none"
-              $gtSm={{
-                display: 'block'
-              }}
-            />
-            <Link href="/achievement" asChild>
-              <Pressable>
-                <View flexDirection="row" alignItems="center">
-                  <Text
-                    backgroundColor="$blue4"
-                    paddingVertical="$2"
-                    paddingRight="$7"
-                    paddingLeft="$3"
-                    mr="$-4">
-                    3500pts
-                  </Text>
-                  <Ionicons
-                    name="trophy-outline"
-                    size={25}
-                    color={theme.blue10.val}
-                    style={{
-                      marginRight: getToken('$3', 'space')
-                    }}
-                  />
-                </View>
-              </Pressable>
-            </Link>
-            <Link href="/profile" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <Ionicons
-                    name="person-circle-outline"
-                    size={25}
-                    color={theme.blue9.val}
-                    style={{
-                      marginRight: getToken('$3', 'space')
-                    }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-            {customerInfo?.id && (
-              <Link
-                href={{
-                  pathname: '/customer-detail-modal',
-                  params: {
-                    id: customerInfo.id
-                  }
-                }}
-                asChild>
-                <Pressable>
-                  {({ pressed }) => (
-                    <Ionicons
-                      name="newspaper-outline"
-                      size={25}
-                      color={theme.orange9.val}
-                      style={{
-                        marginRight: getToken('$3', 'space')
-                      }}
-                    />
-                  )}
-                </Pressable>
-              </Link>
-            )}
-          </XStack>
-        )
+        headerRight: HeaderRightComponent
       }}
       drawerContent={(props) => {
         return (
@@ -210,6 +137,61 @@ const DrawerLayout = () => {
 
 export default DrawerLayout;
 
+const HeaderRightComponent = () => {
+  const theme = useTheme();
+  return (
+    <XStack alignItems="center" paddingBottom="$3" width="100%" justifyContent="flex-end">
+      <SearchBar
+        currentValue=""
+        setValue={() => {}}
+        mr="$4"
+        flex={1 / 2}
+        placeholder="Search for product"
+        display="none"
+        $gtSm={{
+          display: 'block'
+        }}
+      />
+      <Link href="/achievement" asChild>
+        <Pressable>
+          <View flexDirection="row" alignItems="center">
+            <Text
+              backgroundColor="$blue4"
+              paddingVertical="$2"
+              paddingRight="$7"
+              paddingLeft="$3"
+              mr="$-4">
+              3500pts
+            </Text>
+            <Ionicons
+              name="trophy-outline"
+              size={25}
+              color={theme.blue10.val}
+              style={{
+                marginRight: getToken('$3', 'space')
+              }}
+            />
+          </View>
+        </Pressable>
+      </Link>
+      <Link href="/profile" asChild>
+        <Pressable>
+          {({ pressed }) => (
+            <Ionicons
+              name="person-circle-outline"
+              size={25}
+              color={theme.blue9.val}
+              style={{
+                marginRight: getToken('$3', 'space')
+              }}
+            />
+          )}
+        </Pressable>
+      </Link>
+    </XStack>
+  );
+};
+
 const BackToMakeOrderScreen = (props: any) => {
   const theme = useTheme();
 
@@ -244,30 +226,110 @@ const CustomDrawerToggleButton = () => {
 const LogOutCustomerButton = () => {
   const { customerInfo, handleClearCustomerInfo } = useSelectedCustomerContext();
   const navigation = useNavigation();
+  const theme = useTheme();
+  const [showDialog, setShowDialog] = React.useState(false);
+  const handleToggleDialog = () => {
+    setShowDialog((state) => !state);
+  };
+
+  const drawerStatus = useDrawerStatus();
+
+  console.log('this is the drawer drawerStatus', drawerStatus);
+
+  React.useEffect(() => {
+    let closeDelay: any;
+    if (drawerStatus === 'closed') {
+      closeDelay = setTimeout(() => {
+        setShowDialog(false);
+      }, 500);
+    }
+    return () => {
+      if (closeDelay) {
+        clearTimeout(closeDelay);
+      }
+    };
+  }, [drawerStatus]);
 
   if (!customerInfo) return null;
+
   return (
-    <DrawerItem
-      icon={({ size, color }) => {
-        return (
-          <Ionicons
-            name="log-out-outline"
-            size={size}
-            color={color}
-            style={{
-              marginTop: 'auto'
+    <View position="relative">
+      <DrawerItem
+        icon={({ size, color }) => {
+          return (
+            <Ionicons
+              name="log-out-outline"
+              size={size}
+              color={showDialog ? theme.primary.val : color}
+              style={{
+                marginTop: 'auto'
+              }}
+            />
+          );
+        }}
+        label="Logout Current Customer"
+        onPress={() => {
+          handleToggleDialog();
+        }}
+        labelStyle={{
+          ...(showDialog ? { color: theme.primary.val } : {})
+        }}
+      />
+      {showDialog && (
+        <View
+          backgroundColor="$primary"
+          width="100%"
+          // height={200}
+          position="absolute"
+          bottom="100%"
+          borderTopLeftRadius="$4"
+          borderTopRightRadius="$4"
+          zIndex={-1}
+          padding="$5"
+          gap="$4">
+          <Link
+            href={{
+              pathname: '/customer-detail-modal',
+              params: {
+                id: customerInfo.id
+              }
             }}
-          />
-        );
-      }}
-      label="Logout Current Customer"
-      onPress={() => {
-        handleClearCustomerInfo();
-        navigation.dispatch(DrawerActions.toggleDrawer());
-        navigation.navigate('index' as never);
-      }}
-    />
+            asChild>
+            <StyledButton
+              icon={
+                <Ionicons
+                  name="newspaper-outline"
+                  size={25}
+                  color={theme.orange9.val}
+                  style={{
+                    marginRight: getToken('$3', 'space')
+                  }}
+                />
+              }>
+              Profile
+            </StyledButton>
+          </Link>
+          <StyledButton
+            icon={
+              <Ionicons
+                name="log-out-outline"
+                size={25}
+                color={theme.orange9.val}
+                style={{
+                  marginRight: getToken('$3', 'space')
+                }}
+              />
+            }
+            onPress={() => {
+              handleClearCustomerInfo();
+              navigation.dispatch(DrawerActions.toggleDrawer());
+              handleToggleDialog();
+              navigation.navigate('index' as never);
+            }}>
+            Log Out
+          </StyledButton>
+        </View>
+      )}
+    </View>
   );
 };
-
-//? this group is not used, it moved to /(drawer)/make-order

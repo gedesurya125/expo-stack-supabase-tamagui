@@ -258,8 +258,8 @@ const LogOutCustomerButton = () => {
         icon={({ size, color }) => {
           return (
             <Ionicons
-              name="log-out-outline"
-              size={size}
+              name="person-circle-sharp"
+              size={28}
               color={showDialog ? theme.primary.val : color}
               style={{
                 marginTop: 'auto'
@@ -267,7 +267,7 @@ const LogOutCustomerButton = () => {
             />
           );
         }}
-        label="Logout Current Customer"
+        label="Customer"
         onPress={() => {
           handleToggleDialog();
         }}

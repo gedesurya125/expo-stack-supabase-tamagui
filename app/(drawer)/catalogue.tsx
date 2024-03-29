@@ -17,7 +17,7 @@ import {
 import { useProductCategories } from '~/api/xentral/useProductCategory';
 import { useProducts } from '~/api/xentral/useProducts';
 import {
-  XENTRAL_EXTERNAL_REFERENCE_NAME,
+  XentralProjectId,
   type XentralProductData,
   type XentralProductExternalReference
 } from '~/api/xentral/types';
@@ -27,12 +27,19 @@ import { dashboardData } from '~/data/dashboardData';
 import { imagePlaceholder } from '~/images/placeholder';
 import { Image as ExpoImage } from 'expo-image';
 import { StyledButton } from '~/components/StyledButton';
-import { useXentralProductExternalReference } from '~/api/xentral';
+import { useProductsByProject, useXentralProductExternalReference } from '~/api/xentral';
 import { ShopifyProductNumber } from '~/api/shopify/types';
 import { useShopifyProduct } from '~/api/shopify';
 import { useProductsByIndustry } from '~/api/xentral/useProductsByIndustry';
+import { XENTRAL_EXTERNAL_REFERENCE_NAME } from '~/api/xentral/constants';
+import { useLocalSearchParams } from 'expo-router';
 
 const Page = () => {
+  const params = useLocalSearchParams();
+
+  const projectId = params?.projectId;
+  const projectName = params?.projectName;
+
   return (
     <Theme>
       <YStack flex={1} backgroundColor="$background" padding="$4">
@@ -42,7 +49,12 @@ const Page = () => {
           <Text color="$color" fontSize="$5" marginTop="$4">
             Here will contain, announcement, rewards, target, notification etc
           </Text>
-          <ProductDisplay />
+          {typeof projectId === 'string' && typeof projectName === 'string' ? (
+            <XentralProductsByProject projectId={projectId} projectName={projectName} />
+          ) : (
+            <AssignProjectToCustomer />
+          )}
+          {/* <ProductDisplay /> */}
           <AllXentralProducts />
           <ClothingIndustryCategoryProducs />
           <StickerIndustryCategoryProducs />
@@ -55,6 +67,14 @@ const Page = () => {
 };
 
 export default Page;
+
+const AssignProjectToCustomer = () => {
+  return (
+    <View backgroundColor="$blue6" padding="$4" mt="$10">
+      <H3 textAlign="center">{`This Customer not registered to any Project (Company Category)`}</H3>
+    </View>
+  );
+};
 
 const ProductDisplay = () => {
   const { products, refetch } = useShopifyContext();
@@ -181,6 +201,16 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
 const AllXentralProducts = () => {
   const { data } = useProducts();
   return <XentralProductsList title="All Products" productsData={data?.data} />;
+};
+const XentralProductsByProject = ({
+  projectId,
+  projectName
+}: {
+  projectId: XentralProjectId;
+  projectName: string;
+}) => {
+  const { data } = useProductsByProject(projectId);
+  return <XentralProductsList title={`${projectName} Products:`} productsData={data?.data} />;
 };
 const ClothingIndustryCategoryProducs = () => {
   const { data } = useProductsByIndustry('clothing-industry');

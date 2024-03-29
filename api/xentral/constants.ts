@@ -4,3 +4,6 @@ export const INDUSTRY_TYPE = {
   paint: 'paint',
   other: 'other'
 } as const;
+export const XENTRAL_EXTERNAL_REFERENCE_NAME = {
+  shopifyproductid: 'shopifyproductid'
+} as const;

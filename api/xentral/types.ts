@@ -43,8 +43,18 @@ export interface XentralProductExternalReference {
 
 export type xentralProductId = string;
 
-export const XENTRAL_EXTERNAL_REFERENCE_NAME = {
-  shopifyproductid: 'shopifyproductid'
-} as const;
-
 export type IndustryType = 'clothing-industry' | 'paint' | 'sticker' | 'other';
+
+export type XentralProjectId = string;
+
+export type XentralProjectData = {
+  id: string;
+  name: string;
+  keyName: string;
+  description: string;
+  currency: string;
+  normalTaxRate: number;
+  reducedTaxRate: number;
+  storageProcess: string;
+  pickingProcess: string;
+};

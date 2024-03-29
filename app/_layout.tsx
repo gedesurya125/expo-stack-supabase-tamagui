@@ -11,8 +11,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useReactQueryDevTools } from '@dev-plugins/react-query/build/useReactQueryDevTools';
 import { ShopifyContextProvider } from '~/context/ShopifyContext';
 import { SelectedCustomerContextProvider } from '~/context/SelectedCustomerContext';
+import * as SystemUI from 'expo-system-ui';
 
 SplashScreen.preventAutoHideAsync();
+SystemUI.setBackgroundColorAsync('black');
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.

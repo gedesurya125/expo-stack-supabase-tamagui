@@ -193,6 +193,17 @@ const DrawerLayout = () => {
           headerLeft: BackToMakeOrderScreen
         }}
       />
+      <Drawer.Screen
+        name="industry-select"
+        options={{
+          headerTitle: 'Select Industry',
+          drawerLabel: 'Select Industry',
+          drawerItemStyle: {
+            display: 'none'
+          },
+          headerLeft: BackToMakeOrderScreen
+        }}
+      />
     </Drawer>
   );
 };

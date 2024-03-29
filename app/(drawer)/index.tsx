@@ -40,7 +40,7 @@ const OptionsButton = () => {
         backgroundColor="$secondary"
         marginTop="$4"
         onPress={() => {
-          navigation.navigate('new-customer' as never);
+          navigation.navigate('industry-select' as never);
         }}>
         New Customer
       </Button>

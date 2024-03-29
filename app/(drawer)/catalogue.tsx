@@ -30,6 +30,7 @@ import { StyledButton } from '~/components/StyledButton';
 import { useXentralProductExternalReference } from '~/api/xentral';
 import { ShopifyProductNumber } from '~/api/shopify/types';
 import { useShopifyProduct } from '~/api/shopify';
+import { useProductsByIndustry } from '~/api/xentral/useProductsByIndustry';
 
 const Page = () => {
   return (
@@ -42,7 +43,10 @@ const Page = () => {
             Here will contain, announcement, rewards, target, notification etc
           </Text>
           <ProductDisplay />
-          <XentralProducts />
+          <AllXentralProducts />
+          <ClothingIndustryCategoryProducs />
+          <StickerIndustryCategoryProducs />
+          <PaintIndustryProducts />
           <ProductCategories />
         </ScrollView>
       </YStack>
@@ -174,14 +178,36 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
   );
 };
 
-const XentralProducts = () => {
+const AllXentralProducts = () => {
   const { data } = useProducts();
+  return <XentralProductsList title="All Products" productsData={data?.data} />;
+};
+const ClothingIndustryCategoryProducs = () => {
+  const { data } = useProductsByIndustry('clothing-industry');
+  return <XentralProductsList title="Clothing IndustryProducts" productsData={data?.data} />;
+};
+const StickerIndustryCategoryProducs = () => {
+  const { data } = useProductsByIndustry('sticker');
+  return <XentralProductsList title="Sticker IndustryProducts" productsData={data?.data} />;
+};
+const PaintIndustryProducts = () => {
+  const { data } = useProductsByIndustry('paint');
+  return <XentralProductsList title="Paint IndustryProducts" productsData={data?.data} />;
+};
 
+// Reusable Components
+const XentralProductsList = ({
+  title,
+  productsData
+}: {
+  title: string;
+  productsData?: XentralProductData[];
+}) => {
   return (
     <View mt="$16">
-      <H3>All Products: </H3>
+      <H3>{title}</H3>
       <ScrollView horizontal mt="$5">
-        {data?.data.map((productData, index) => {
+        {productsData?.map((productData, index) => {
           return <XentralProductCard key={index} data={productData} ml={index !== 0 ? '$3' : 0} />;
         })}
       </ScrollView>

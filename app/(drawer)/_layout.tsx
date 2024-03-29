@@ -203,7 +203,7 @@ const BackToMakeOrderScreen = (props: any) => {
   const theme = useTheme();
 
   return (
-    <Link href="/make-order" asChild>
+    <Link href="/(drawer)" asChild>
       <Pressable>
         {({ pressed }) => (
           <Ionicons

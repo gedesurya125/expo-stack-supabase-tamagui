@@ -46,3 +46,5 @@ export type xentralProductId = string;
 export const XENTRAL_EXTERNAL_REFERENCE_NAME = {
   shopifyproductid: 'shopifyproductid'
 } as const;
+
+export type IndustryType = 'clothing-industry' | 'paint' | 'sticker' | 'other';

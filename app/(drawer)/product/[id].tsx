@@ -5,9 +5,15 @@ import { useCombinedSingleProductData } from '~/api';
 import { useShopifyProductVariant } from '~/api/shopify/useShopifyProductVariant';
 import { useSingleProduct, useXentralProductExternalReference } from '~/api/xentral';
 import { XENTRAL_EXTERNAL_REFERENCE_NAME } from '~/api/xentral/constants';
-import { VariantPropertyOfXentralProductData, XentralProductData } from '~/api/xentral/types';
+import {
+  VariantPropertyOfXentralProductData,
+  XentralPrice,
+  XentralProductData
+} from '~/api/xentral/types';
 import { StyledImage } from '~/components/StyledExpoImage';
 import { imagePlaceholder } from '~/images/placeholder';
+import { useSingleProductSalesPrice } from '~/api/xentral/useSingleProductSalesPrice';
+import { formatPrice } from '~/utils/formatPrice';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
@@ -38,7 +44,7 @@ const ProductDetail = ({ xentralProductData }: { xentralProductData?: XentralPro
     <YStack mt="$10">
       <H2>{xentralProductData?.name}</H2>
       <Paragraph>{xentralProductData?.description || 'this product has no description'}</Paragraph>
-      <View>
+      <View mt="$10">
         <H4>Variants:</H4>
         {xentralProductData?.variants?.map((variant, index) => {
           return <ProductVariants key={index} variant={variant} />;
@@ -57,15 +63,41 @@ const ProductVariants = ({ variant }: { variant: VariantPropertyOfXentralProduct
 
   const { data: shopifyProductVariantData } = useShopifyProductVariant(shopifyVariantId || '');
 
+  const { data: variantSalesPrice } = useSingleProductSalesPrice({ productId: variant.id });
+
   return (
-    <Card>
+    <Card flexDirection="row" alignItems="center" gap="$10">
       <StyledImage
         source={shopifyProductVariantData?.data?.productVariant?.image?.url || imagePlaceholder}
         contentFit="contain"
-        width={200}
-        height={200}
+        width={100}
+        height={100}
       />
-      <H3>{xentralProductVariantData?.data.name}</H3>
+      <View>
+        <H3>{xentralProductVariantData?.data.name}</H3>
+        <Paragraph>Stock: {xentralProductVariantData?.data.stockCount} pcs</Paragraph>
+        {variantSalesPrice?.data.map((xentralPrice, index) => (
+          <Price
+            key={index}
+            priceLabel={xentralPrice?.customer || xentralPrice.customerGroup?.name}
+            xentralPrice={xentralPrice.price}
+          />
+        ))}
+      </View>
     </Card>
+  );
+};
+
+const Price = ({
+  priceLabel = 'Standard Price',
+  xentralPrice
+}: {
+  priceLabel?: string;
+  xentralPrice: XentralPrice;
+}) => {
+  return (
+    <Paragraph>
+      {priceLabel}: {formatPrice(xentralPrice)}
+    </Paragraph>
   );
 };

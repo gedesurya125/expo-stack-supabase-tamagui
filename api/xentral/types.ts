@@ -55,6 +55,11 @@ export type IndustryType = 'clothing-industry' | 'paint' | 'sticker' | 'other';
 
 export type XentralProjectId = string;
 
+export type XentralPrice = {
+  amount: string;
+  currency: string;
+};
+
 export type XentralProjectData = {
   id: string;
   name: string;
@@ -66,3 +71,16 @@ export type XentralProjectData = {
   storageProcess: string;
   pickingProcess: string;
 };
+
+export interface XentralProductSalesPrice {
+  id: string;
+  customer: string | null;
+  customerGroup: {
+    id: string;
+    name: string;
+    reference: string;
+  } | null;
+  validFrom: string | null;
+  amount: 1;
+  price: XentralPrice;
+}

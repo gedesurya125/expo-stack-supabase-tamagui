@@ -7,9 +7,7 @@ export const useShopifyProductVariant = (shopifyVariantProductId: ShopifyProduct
 
   return useQuery({
     queryKey: ['shopify-products-variant', shopifyProductId],
-    queryFn: async () => await getVariantDetail({ variantId: shopifyProductId }),
-    staleTime: 0
-    // enabled: false
+    queryFn: async () => await getVariantDetail({ variantId: shopifyProductId })
   });
 };
 

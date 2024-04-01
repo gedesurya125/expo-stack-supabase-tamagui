@@ -62,6 +62,13 @@ const ProductList = () => {
 };
 
 const ProductItem = ({ data }: { data: ProductInCartType }) => {
+  const {
+    increaseSingleProductInCart,
+    decreaseSingleProductInCart,
+    removeSingleProductFromCart,
+    getProductQuantity
+  } = useCartContext();
+
   return (
     <Card
       width="100%"
@@ -82,16 +89,34 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
       />
       <YStack>
         <H5>{data?.xentralProductData.name}</H5>
-        <Text>Ammount: {data?.quantity}</Text>
+        <Text>Ammount: {getProductQuantity(data.xentralProductData.id)}</Text>
       </YStack>
       <XStack ml="auto" gap="$2">
-        <StyledButton colorStyle="secondary" paddingVertical="$1" paddingHorizontal="$2">
+        <StyledButton
+          colorStyle="secondary"
+          paddingVertical="$1"
+          paddingHorizontal="$2"
+          onPress={() => {
+            increaseSingleProductInCart(data.xentralProductData.id);
+          }}>
           <Ionicons name="add-outline" size={30} color="white" />
         </StyledButton>
-        <StyledButton colorStyle="primary" paddingVertical="$1" paddingHorizontal="$2">
+        <StyledButton
+          colorStyle="primary"
+          paddingVertical="$1"
+          paddingHorizontal="$2"
+          onPress={() => {
+            decreaseSingleProductInCart(data.xentralProductData.id);
+          }}>
           <Ionicons name="remove-outline" size={30} color="white" />
         </StyledButton>
-        <StyledButton colorStyle="danger" paddingVertical="$1" paddingHorizontal="$3">
+        <StyledButton
+          colorStyle="danger"
+          paddingVertical="$1"
+          paddingHorizontal="$3"
+          onPress={() => {
+            removeSingleProductFromCart(data.xentralProductData.id);
+          }}>
           <Ionicons name="trash-outline" size={23} color="white" />
         </StyledButton>
       </XStack>

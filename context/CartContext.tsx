@@ -12,17 +12,19 @@ export interface ProductInCartType {
 interface CartContextValue {
   products: ProductInCartType[];
   addProductToCart: (productDetails: ProductInCartType) => void;
-  removeProductInCart: (xentralId: xentralProductId) => void;
+  removeSingleProductFromCart: (xentralId: xentralProductId) => void;
   increaseSingleProductInCart: (prodcutId: xentralProductId) => void;
-  reduceSingleProductInCart: (productId: xentralProductId) => void;
+  decreaseSingleProductInCart: (productId: xentralProductId) => void;
+  getProductQuantity: (productId: xentralProductId) => number;
 }
 
 const CartContext = createContext<CartContextValue>({
   products: [],
   addProductToCart: () => {},
-  removeProductInCart: () => {},
+  removeSingleProductFromCart: () => {},
   increaseSingleProductInCart: () => {},
-  reduceSingleProductInCart: () => {}
+  decreaseSingleProductInCart: () => {},
+  getProductQuantity: () => 0
 });
 
 interface CartContextProviderProps {
@@ -43,12 +45,12 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     setProductInCart((state) => [...state, { ...productDetails, quantity: 1 }]);
   };
 
-  const removeProductInCart = (xentralId: xentralProductId) => {
+  const removeSingleProductFromCart = (xentralId: xentralProductId) => {
     const newCart = productInCart.filter((product) => product.xentralProductData.id !== xentralId);
     setProductInCart(newCart);
   };
 
-  const reduceSingleProductInCart = (productId: xentralProductId) => {
+  const decreaseSingleProductInCart = (productId: xentralProductId) => {
     const newCart = productInCart
       .map((product) => {
         if (product.xentralProductData.id !== productId) return product;
@@ -92,14 +94,21 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     setProductInCart(newCart);
   };
 
+  const getProductQuantity = (prodcutId: xentralProductId) => {
+    return (
+      productInCart.find((product) => product.xentralProductData.id === prodcutId)?.quantity || 0
+    );
+  };
+
   return (
     <CartContext.Provider
       value={{
         products: productInCart,
         addProductToCart,
-        removeProductInCart,
-        reduceSingleProductInCart,
-        increaseSingleProductInCart
+        removeSingleProductFromCart,
+        decreaseSingleProductInCart,
+        increaseSingleProductInCart,
+        getProductQuantity
       }}>
       {children}
     </CartContext.Provider>

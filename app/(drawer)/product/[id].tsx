@@ -21,6 +21,8 @@ export default function ProductDetailPage() {
 
   const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
 
+  console.log('this is the shopifyProductData', shopifyProductData);
+
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">
       <ScrollView>

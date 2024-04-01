@@ -21,12 +21,8 @@ import {
   type XentralProductData,
   type XentralProductExternalReference
 } from '~/api/xentral/types';
-import { ProductCard } from '~/components/ProductCard';
-import { useShopifyContext } from '~/context/ShopifyContext';
 import { dashboardData } from '~/data/dashboardData';
 import { imagePlaceholder } from '~/images/placeholder';
-import { Image as ExpoImage } from 'expo-image';
-import { StyledButton } from '~/components/StyledButton';
 import { useProductsByProject, useXentralProductExternalReference } from '~/api/xentral';
 import { ShopifyProductNumber } from '~/api/shopify/types';
 import { useShopifyProduct } from '~/api/shopify';
@@ -55,7 +51,6 @@ const Page = () => {
           ) : (
             <AssignProjectToCustomer />
           )}
-          {/* <ProductDisplay /> */}
           <AllXentralProducts />
           <ClothingIndustryCategoryProducs />
           <StickerIndustryCategoryProducs />
@@ -73,31 +68,6 @@ const AssignProjectToCustomer = () => {
   return (
     <View backgroundColor="$blue6" padding="$4" mt="$10">
       <H3 textAlign="center">{`This Customer is not registered to any Project (Company Category)`}</H3>
-    </View>
-  );
-};
-
-const ProductDisplay = () => {
-  const { products, refetch } = useShopifyContext();
-  return (
-    <View alignItems="center" mt="$14">
-      <H2>Our Products</H2>
-      <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
-        {products?.map((data, index) => {
-          return (
-            <View
-              className="grid-item-container"
-              width={`${100 / 2}%`}
-              $gtMd={{
-                width: `${100 / 4}%`
-              }}
-              key={index}
-              padding="$2">
-              <ProductCard productData={data} />
-            </View>
-          );
-        })}
-      </View>
     </View>
   );
 };

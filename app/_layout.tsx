@@ -2,16 +2,16 @@ import { useFonts } from 'expo-font';
 import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TamaguiProvider, View, useTheme } from 'tamagui';
+import { TamaguiProvider, useTheme } from 'tamagui';
 
 import config from '../tamagui.config';
 import { SessionProvider } from '~/components/AuthContext';
 import { ExistingCustomerContextProvider } from '~/context/CustomersContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useReactQueryDevTools } from '@dev-plugins/react-query/build/useReactQueryDevTools';
-import { ShopifyContextProvider } from '~/context/ShopifyContext';
 import { SelectedCustomerContextProvider } from '~/context/SelectedCustomerContext';
 import * as SystemUI from 'expo-system-ui';
+import { CartContextProvider } from '~/context/CartContext';
 
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync('black');
@@ -55,7 +55,7 @@ const Navigator = () => {
     <QueryClientProvider client={queryClient}>
       <ExistingCustomerContextProvider>
         <SelectedCustomerContextProvider>
-          <ShopifyContextProvider>
+          <CartContextProvider>
             <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack
                 screenOptions={{
@@ -84,7 +84,7 @@ const Navigator = () => {
                 />
               </Stack>
             </GestureHandlerRootView>
-          </ShopifyContextProvider>
+          </CartContextProvider>
         </SelectedCustomerContextProvider>
       </ExistingCustomerContextProvider>
     </QueryClientProvider>

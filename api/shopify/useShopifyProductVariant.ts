@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchShopifyAdminGraphql } from './fetchShopifyGraphql';
-import { ShopifyImageData, ShopifyProductNumber } from './types';
+import { ShopifyImageData, ShopifyProductNumber, ShopifyProductVariant } from './types';
 
 export const useShopifyProductVariant = (shopifyVariantProductId: ShopifyProductNumber) => {
   const shopifyProductId = `gid://shopify/ProductVariant/${shopifyVariantProductId}`;
@@ -37,9 +37,6 @@ export const getVariantDetail = async (props = { variantId: '' }) => {
 
 interface GetShopifyProductVariantResponse {
   data: {
-    productVariant: {
-      displayName: string;
-      image: ShopifyImageData;
-    };
+    productVariant: ShopifyProductVariant;
   };
 }

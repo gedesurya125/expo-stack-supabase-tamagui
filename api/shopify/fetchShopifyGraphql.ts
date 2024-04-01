@@ -46,7 +46,6 @@ export const fetchShopifyAdminGraphql = async <T>({
     body: JSON.stringify({ query, variables })
   })
     .then((res) => {
-      console.log('this is the response', res);
       return res?.json();
     })
     .catch((err) => console.log('error fetching the graphql', err));

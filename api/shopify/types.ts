@@ -40,16 +40,16 @@ export type ShopifyPrice = {
 };
 
 export type ShopifyProductVariant = {
-  availableForSale: boolean;
-  id: string;
+  // availableForSale: boolean;
+  // id: string;
   image: ShopifyImageData;
-  price: ShopifyPrice;
-  quantityAvailable: number;
-  selectedOptions: { name: string; value: string }[];
-  sku: string;
-  title: string;
-  unitPrice: null | string;
-  unitPriceMeasurement: { referenceUnit: null | string; referenceValue: number };
-  weight: number;
-  weightUnit: string;
+  // price: ShopifyPrice;
+  // quantityAvailable: number;
+  // selectedOptions: { name: string; value: string }[];
+  // sku: string;
+  // title: string;
+  // unitPrice: null | string;
+  // unitPriceMeasurement: { referenceUnit: null | string; referenceValue: number };
+  // weight: number;
+  // weightUnit: string;
 };

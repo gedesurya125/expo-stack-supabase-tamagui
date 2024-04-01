@@ -5,5 +5,6 @@ export const INDUSTRY_TYPE = {
   other: 'other'
 } as const;
 export const XENTRAL_EXTERNAL_REFERENCE_NAME = {
-  shopifyproductid: 'shopifyproductid'
+  shopifyproductid: 'shopifyproductid',
+  shopifyVariantId: 'shopifyvariantid'
 } as const;

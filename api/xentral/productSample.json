@@ -1,0 +1,356 @@
+[
+  {
+    "id": "1",
+    "uuid": "018e7526-6b27-76cb-bbf8-12fbb41a95bc",
+    "name": "BIO Kaffee ganze Bohne 1kg",
+    "description": "- fein geröstet mit milder Note<br />- täglich frisch durch unsere Barrista hergestellt<br />- leichte Note: Zitrone und Kakao",
+    "shortDescription": null,
+    "number": "100001",
+    "project": {
+      "id": "8",
+      "name": "Home and Hospital"
+    },
+    "category": {
+      "id": "1",
+      "name": "Handelsware (100000)"
+    },
+    "standardSupplier": {
+      "id": "10"
+    },
+    "stockCount": 160,
+    "shopPriceDisplay": "0.00",
+    "ean": "400018364572",
+    "manufacturer": {
+      "name": "Einkaufsgenossenschaft e.G.",
+      "number": "BK1004",
+      "url": null
+    },
+    "customsTariffNumber": "2345678",
+    "options": [],
+    "selectedOptions": [],
+    "variants": [],
+    "isVariant": false,
+    "variantOf": null,
+    "mainVariant": null,
+    "thumbnailUrl": "https://660150dd05e3f.demo.xentral.com/index.php?module=artikel&action=thumbnail&id=1&bildvorschau=53_100_100",
+    "thumbnailId": "53",
+    "tags": [
+      {
+        "id": "29",
+        "name": "B2C Produkt",
+        "color": "99ccff"
+      },
+      {
+        "id": "26",
+        "name": "BIO",
+        "color": "00ff00"
+      },
+      {
+        "id": "27",
+        "name": "Nachhaltig",
+        "color": "00ccff"
+      }
+    ],
+    "freeFields": [
+      {
+        "id": "1",
+        "value": "je Portion 1 Tasse"
+      },
+      {
+        "id": "2",
+        "value": "2018KJ / 130 kcal"
+      },
+      {
+        "id": "3",
+        "value": "2g"
+      },
+      {
+        "id": "4",
+        "value": "1g"
+      },
+      {
+        "id": "5",
+        "value": "2g"
+      },
+      {
+        "id": "6",
+        "value": "10g"
+      },
+      {
+        "id": "7",
+        "value": "5g"
+      },
+      {
+        "id": "8",
+        "value": "1g"
+      },
+      {
+        "id": "9",
+        "value": "0g"
+      },
+      {
+        "id": "10",
+        "value": "Südeuropa"
+      },
+      {
+        "id": "11",
+        "value": "Coffein"
+      },
+      {
+        "id": "12",
+        "value": "viel Liebe"
+      },
+      {
+        "id": "13",
+        "value": "Plastik"
+      },
+      {
+        "id": "14",
+        "value": "1"
+      }
+    ],
+    "countryOfOrigin": "CR",
+    "regionOfOrigin": "",
+    "internalComment": "",
+    "isDeleted": false,
+    "measurements": {
+      "weight": {
+        "value": 1.1,
+        "unit": "kg"
+      },
+      "netWeight": {
+        "value": 1,
+        "unit": "kg"
+      },
+      "length": {
+        "value": 8,
+        "unit": "cm"
+      },
+      "width": {
+        "value": 5,
+        "unit": "cm"
+      },
+      "height": {
+        "value": 11,
+        "unit": "cm"
+      }
+    },
+    "minimumOrderQuantity": 50,
+    "minimumStorageQuantity": 100,
+    "salesTax": "standard",
+    "hasBatches": false,
+    "serialNumbersMode": "disabled",
+    "hasBestBeforeDate": true,
+    "hasBillOfMaterials": false,
+    "isAssembledJustInTime": false,
+    "isProductionProduct": false,
+    "isExternallyProduced": false,
+    "allowPurchaseFromAllSuppliers": false,
+    "isDisabled": false,
+    "disabledReason": null,
+    "hidePriceOnDocuments": false,
+    "ageRating": null,
+    "isStockItem": true,
+    "isStockTakingDisabled": false,
+    "isCustomProduct": false,
+    "hideJustInTimeItemsOnDocuments": false,
+    "markAsSoldOut": false,
+    "markAsInactive": false,
+    "isRemainingQuantity": false,
+    "isShippingCostsProduct": false,
+    "discount": {
+      "isDiscountProduct": false,
+      "discountPercentage": 0
+    },
+    "updatedAt": "2024-03-29T09:44:08+01:00"
+  },
+  {
+    "id": "1",
+    "uuid": "018e7526-6b27-76cb-bbf8-12fbb41a95bc",
+    "name": "BIO Kaffee ganze Bohne 1kg",
+    "description": "- fein geröstet mit milder Note<br />- täglich frisch durch unsere Barrista hergestellt<br />- leichte Note: Zitrone und Kakao",
+    "shortDescription": null,
+    "number": "100001",
+    "project": {
+      "id": "8",
+      "name": "Home and Hospital"
+    },
+    "category": {
+      "id": "1",
+      "name": "Handelsware (100000)"
+    },
+    "standardSupplier": {
+      "id": "10"
+    },
+    "stockCount": 160,
+    "stockStats": {
+      "purchasedCount": "0.0000",
+      "totalCount": "160.0000",
+      "availableCount": "0.0000",
+      "inProductionCount": "0.0000"
+    },
+    "purchasePriceNet": {
+      "currency": "EUR",
+      "amount": "9.0000"
+    },
+    "purchasePriceGross": {
+      "currency": "EUR",
+      "amount": "10.7100"
+    },
+    "salesPriceNet": {
+      "currency": "EUR",
+      "amount": "21.0000"
+    },
+    "salesPriceGross": {
+      "currency": "EUR",
+      "amount": "24.9900"
+    },
+    "shopPriceDisplay": "0.00",
+    "ean": "400018364572",
+    "manufacturerName": "Einkaufsgenossenschaft e.G.",
+    "manufacturerNumber": "BK1004",
+    "customsTariffNumber": "2345678",
+    "isVariant": false,
+    "variantOf": null,
+    "thumbnailUrl": "https://660150dd05e3f.demo.xentral.com/index.php?module=artikel&action=thumbnail&id=1&bildvorschau=53_100_100",
+    "thumbnailId": "53",
+    "tags": [
+      {
+        "id": "29",
+        "name": "B2C Produkt",
+        "color": "99ccff"
+      },
+      {
+        "id": "26",
+        "name": "BIO",
+        "color": "00ff00"
+      },
+      {
+        "id": "27",
+        "name": "Nachhaltig",
+        "color": "00ccff"
+      }
+    ],
+    "freeFields": [
+      {
+        "id": "1",
+        "name": "100g enthalten",
+        "value": "je Portion 1 Tasse"
+      },
+      {
+        "id": "2",
+        "name": "Energie",
+        "value": "2018KJ / 130 kcal"
+      },
+      {
+        "id": "3",
+        "name": "Fett",
+        "value": "2g"
+      },
+      {
+        "id": "4",
+        "name": "gesättigte Fettsäuren",
+        "value": "1g"
+      },
+      {
+        "id": "5",
+        "name": "Kohlenhydrate",
+        "value": "2g"
+      },
+      {
+        "id": "6",
+        "name": "davon Zucker",
+        "value": "10g"
+      },
+      {
+        "id": "7",
+        "name": "Ballaststoffe",
+        "value": "5g"
+      },
+      {
+        "id": "8",
+        "name": "Eiweiss",
+        "value": "1g"
+      },
+      {
+        "id": "9",
+        "name": "Salz",
+        "value": "0g"
+      },
+      {
+        "id": "10",
+        "name": "Herkunft",
+        "value": "Südeuropa"
+      },
+      {
+        "id": "11",
+        "name": "Allergene",
+        "value": "Coffein"
+      },
+      {
+        "id": "12",
+        "name": "Zusatzstoffe",
+        "value": "viel Liebe"
+      },
+      {
+        "id": "13",
+        "name": "Material|Baumwolle|Leinen|Leder|Polyester|Plastik|Glas|ohne Verpackung|",
+        "value": "Plastik"
+      },
+      {
+        "id": "14",
+        "name": "Zertifizierung ",
+        "value": "1"
+      }
+    ],
+    "countryOfOrigin": "CR",
+    "regionOfOrigin": "",
+    "internalComment": "",
+    "measurements": {
+      "weight": {
+        "value": 1.1,
+        "unit": "kg"
+      },
+      "netWeight": {
+        "value": 1,
+        "unit": "kg"
+      },
+      "length": {
+        "value": 8,
+        "unit": "cm"
+      },
+      "width": {
+        "value": 5,
+        "unit": "cm"
+      },
+      "height": {
+        "value": 11,
+        "unit": "cm"
+      }
+    },
+    "minimumOrderQuantity": 50,
+    "minimumStorageQuantity": 100,
+    "salesTax": "standard",
+    "hasBatches": false,
+    "serialNumbersMode": "disabled",
+    "hasBestBeforeDate": true,
+    "hasBillOfMaterials": false,
+    "isAssembledJustInTime": false,
+    "isProductionProduct": false,
+    "isExternallyProduced": false,
+    "allowPurchaseFromAllSuppliers": false,
+    "isDisabled": false,
+    "disabledReason": "",
+    "hidePriceOnDocuments": false,
+    "ageRating": null,
+    "isStockItem": true,
+    "isStockTakingDisabled": false,
+    "hideJustInTimeItemsOnDocuments": false,
+    "isShippingCostsProduct": false,
+    "discount": {
+      "isDiscountProduct": false,
+      "discountPercentage": 0
+    },
+    "updatedAt": "2024-03-29T09:44:08+01:00"
+  }
+]

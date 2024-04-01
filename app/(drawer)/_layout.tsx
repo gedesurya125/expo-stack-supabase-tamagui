@@ -131,6 +131,17 @@ const DrawerLayout = () => {
           headerLeft: BackToMakeOrderScreen
         }}
       />
+      <Drawer.Screen
+        name="product/[id]"
+        options={{
+          headerTitle: 'Product Detail',
+          drawerLabel: 'Product Detail',
+          drawerItemStyle: {
+            display: 'none'
+          },
+          headerLeft: BackToCatalogButton
+        }}
+      />
     </Drawer>
   );
 };
@@ -192,11 +203,17 @@ const HeaderRightComponent = () => {
   );
 };
 
-const BackToMakeOrderScreen = (props: any) => {
-  const theme = useTheme();
+const BackToMakeOrderScreen = () => {
+  return <BackLink href={'/(drawer)' as never} />;
+};
+const BackToCatalogButton = () => {
+  return <BackLink href={'catalogue' as never} />;
+};
 
+const BackLink = ({ ...props }: React.ComponentProps<typeof Link>) => {
+  const theme = useTheme();
   return (
-    <Link href="/(drawer)" asChild>
+    <Link asChild {...props}>
       <Pressable>
         {({ pressed }) => (
           <Ionicons
@@ -233,8 +250,6 @@ const LogOutCustomerButton = () => {
   };
 
   const drawerStatus = useDrawerStatus();
-
-  console.log('this is the drawer drawerStatus', drawerStatus);
 
   React.useEffect(() => {
     let closeDelay: any;

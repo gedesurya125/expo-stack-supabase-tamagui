@@ -32,7 +32,8 @@ import { ShopifyProductNumber } from '~/api/shopify/types';
 import { useShopifyProduct } from '~/api/shopify';
 import { useProductsByIndustry } from '~/api/xentral/useProductsByIndustry';
 import { XENTRAL_EXTERNAL_REFERENCE_NAME } from '~/api/xentral/constants';
-import { useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
+import { ImageContainer } from '~/components/ImageContainer';
 
 const Page = () => {
   const params = useLocalSearchParams();
@@ -71,7 +72,7 @@ export default Page;
 const AssignProjectToCustomer = () => {
   return (
     <View backgroundColor="$blue6" padding="$4" mt="$10">
-      <H3 textAlign="center">{`This Customer not registered to any Project (Company Category)`}</H3>
+      <H3 textAlign="center">{`This Customer is not registered to any Project (Company Category)`}</H3>
     </View>
   );
 };
@@ -261,20 +262,29 @@ export const XentralProductCard = ({ data, ...props }: XentralProductCardProps) 
   const shopifyProductNumber = getShopifyProductId(xentralExternalReferenceData?.data || []);
 
   return (
-    <Card {...props} width={300} padded>
-      <View>
-        {shopifyProductNumber ? (
-          <XentralCardImage shopifyProductNumber={shopifyProductNumber} />
-        ) : (
-          <CardImage />
-        )}
-      </View>
-      <H3 mt="$5">{data?.name}</H3>
-      <View className="__card-description" mt="$5">
-        <Text>{data?.description?.replace(/<br\s\/>/gi, '\n')}</Text>
-        <Text>{data?.stockCount} items available</Text>
-      </View>
-    </Card>
+    <Link
+      asChild
+      href={{
+        pathname: '/(drawer)/product/[id]',
+        params: {
+          id: data?.id
+        }
+      }}>
+      <Card {...props} width={300} padded>
+        <View>
+          {shopifyProductNumber ? (
+            <XentralCardImage shopifyProductNumber={shopifyProductNumber} />
+          ) : (
+            <ImageContainer />
+          )}
+        </View>
+        <H3 mt="$5">{data?.name}</H3>
+        <View className="__card-description" mt="$5">
+          <Text>{data?.description?.replace(/<br\s\/>/gi, '\n')}</Text>
+          <Text>{data?.stockCount} items available</Text>
+        </View>
+      </Card>
+    </Link>
   );
 };
 
@@ -285,20 +295,5 @@ const XentralCardImage = ({
 }) => {
   const { data: shopifyProductData } = useShopifyProduct(shopifyProductNumber);
 
-  console.log('this is the product featured image', shopifyProductData);
-
-  return <CardImage imageUri={shopifyProductData?.data?.product?.featuredImage.url} />;
-};
-
-const CardImage = ({ imageUri }: { imageUri?: string }) => {
-  return (
-    <Image
-      width="100%"
-      source={{
-        uri: imageUri || imagePlaceholder,
-        width: 300,
-        height: 200
-      }}
-    />
-  );
+  return <ImageContainer imageUri={shopifyProductData?.data?.product?.featuredImage.url} />;
 };

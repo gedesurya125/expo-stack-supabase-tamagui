@@ -22,6 +22,14 @@ export interface XentralProductData {
   thumbnailUrl: string;
   stockCount: number;
   uuid: string;
+  variants: VariantPropertyOfXentralProductData[];
+}
+
+export interface VariantPropertyOfXentralProductData {
+  id: string;
+  options: {
+    id: string;
+  }[];
 }
 
 export interface XentralExtra {

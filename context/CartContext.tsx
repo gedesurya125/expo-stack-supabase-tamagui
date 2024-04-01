@@ -2,11 +2,11 @@ import React, { createContext, useContext } from 'react';
 import { ShopifyImageData } from '~/api/shopify/types';
 import { XentralProductData, xentralProductId } from '~/api/xentral/types';
 
-interface ProductInCartType {
+export interface ProductInCartType {
   xentralProductData: XentralProductData;
-  image: ShopifyImageData;
+  image?: ShopifyImageData;
   isVariant?: boolean;
-  quantity: number;
+  quantity?: number;
 }
 
 interface CartContextValue {
@@ -33,7 +33,14 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const [productInCart, setProductInCart] = React.useState<ProductInCartType[]>([]);
 
   const addProductToCart = (productDetails: ProductInCartType) => {
-    setProductInCart((state) => [...state, productDetails]);
+    if (
+      productInCart.find(
+        (product) => product.xentralProductData.id === productDetails.xentralProductData.id
+      )
+    )
+      return;
+
+    setProductInCart((state) => [...state, { ...productDetails, quantity: 1 }]);
   };
 
   const removeProductInCart = (xentralId: xentralProductId) => {
@@ -45,7 +52,7 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     const newCart = productInCart
       .map((product) => {
         if (product.xentralProductData.id !== productId) return product;
-        const currentProductQuantity = product.quantity;
+        const currentProductQuantity = product?.quantity || 0;
         let newQuantity;
         if (currentProductQuantity - 1 < 0) {
           newQuantity = 0;
@@ -57,7 +64,7 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
           quantity: newQuantity
         };
       })
-      .filter((product) => product.quantity > 0);
+      .filter((product) => !!product?.quantity && product?.quantity > 0);
 
     setProductInCart(newCart);
   };
@@ -66,7 +73,7 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     const newCart = productInCart.map((product) => {
       if (product.xentralProductData.id !== prodcutId) return product;
 
-      const currentProductQuantity = product.quantity;
+      const currentProductQuantity = product?.quantity || 0;
 
       let newQuantity;
 

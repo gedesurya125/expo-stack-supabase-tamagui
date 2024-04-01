@@ -14,15 +14,13 @@ import {
   useTheme
 } from 'tamagui';
 
-import { useLocalSearchParams } from 'expo-router';
 import { FlatList } from 'react-native-gesture-handler';
 import { imagePlaceholder } from '~/images/placeholder';
 import { StyledButton } from '~/components/StyledButton';
 import { Ionicons } from '@expo/vector-icons';
+import { ProductInCartType, useCartContext } from '~/context/CartContext';
 
 export default function ModalScreen() {
-  const params = useLocalSearchParams();
-
   const status = null;
 
   return <Theme>{status === 'pending' ? <LoadingView /> : <CartInfo />}</Theme>;
@@ -46,17 +44,11 @@ const CartInfo = () => {
 };
 
 const ProductList = () => {
-  const fakeListData = [
-    { imageUri: imagePlaceholder, amount: 3, name: 'Exmaple Product 1' },
-    { imageUri: imagePlaceholder, amount: 3, name: 'Exmaple Product 1' },
-    { imageUri: imagePlaceholder, amount: 3, name: 'Exmaple Product 1' },
-    { imageUri: imagePlaceholder, amount: 3, name: 'Exmaple Product 1' },
-    { imageUri: imagePlaceholder, amount: 3, name: 'Exmaple Product 1' }
-  ];
+  const { products } = useCartContext();
 
   return (
     <FlatList
-      data={fakeListData}
+      data={products}
       renderItem={({ item, index }) => {
         return <ProductItem key={index} data={item} />;
       }}
@@ -69,8 +61,7 @@ const ProductList = () => {
   );
 };
 
-const ProductItem = ({ data }: { data: any }) => {
-  const theme = useTheme();
+const ProductItem = ({ data }: { data: ProductInCartType }) => {
   return (
     <Card
       width="100%"
@@ -86,12 +77,12 @@ const ProductItem = ({ data }: { data: any }) => {
         source={{
           width: 100,
           height: 100,
-          uri: data?.imageUri
+          uri: data?.image?.url || imagePlaceholder
         }}
       />
       <YStack>
-        <H5>{data?.name}</H5>
-        <Text>Ammount: {data.amount}</Text>
+        <H5>{data?.xentralProductData.name}</H5>
+        <Text>Ammount: {data?.quantity}</Text>
       </YStack>
       <XStack ml="auto" gap="$2">
         <StyledButton colorStyle="secondary" paddingVertical="$1" paddingHorizontal="$2">

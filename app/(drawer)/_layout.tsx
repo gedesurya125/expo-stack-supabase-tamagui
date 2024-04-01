@@ -185,21 +185,40 @@ const HeaderRightComponent = () => {
           </View>
         </Pressable>
       </Link>
-      <Link href="/profile" asChild>
-        <Pressable>
-          {({ pressed }) => (
-            <Ionicons
-              name="person-circle-outline"
-              size={25}
-              color={theme.blue9.val}
-              style={{
-                marginRight: getToken('$3', 'space')
-              }}
-            />
-          )}
-        </Pressable>
-      </Link>
+      <NavigationIconLink
+        href={'/profile' as never}
+        Icon={(props) => <Ionicons name="person-circle-outline" {...props} />}
+      />
+
+      <NavigationIconLink
+        href={'/cart-detail-modal' as never}
+        Icon={(props) => <Ionicons name="cart-outline" {...props} />}
+      />
     </XStack>
+  );
+};
+
+interface NavigationIconLinkProps extends React.ComponentProps<typeof Link> {
+  Icon: React.ElementType;
+}
+
+const NavigationIconLink = ({ Icon, ...props }: NavigationIconLinkProps) => {
+  const theme = useTheme();
+
+  return (
+    <Link {...props} asChild>
+      <Pressable>
+        {({ pressed }) => (
+          <Icon
+            size={35}
+            color={theme.blue9.val}
+            style={{
+              marginRight: getToken('$3', 'space')
+            }}
+          />
+        )}
+      </Pressable>
+    </Link>
   );
 };
 

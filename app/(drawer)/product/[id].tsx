@@ -14,14 +14,15 @@ import { StyledImage } from '~/components/StyledExpoImage';
 import { imagePlaceholder } from '~/images/placeholder';
 import { useSingleProductSalesPrice } from '~/api/xentral/useSingleProductSalesPrice';
 import { formatPrice } from '~/utils/formatPrice';
+import { StyledButton } from '~/components/StyledButton';
+import { useCartContext } from '~/context/CartContext';
+import { ShopifyImageData } from '~/api/shopify/types';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
   const productId = params?.id as string;
 
   const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
-
-  console.log('this is the shopifyProductData', shopifyProductData);
 
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">
@@ -34,25 +35,59 @@ export default function ProductDetailPage() {
             width="100%"
             height={400}
           />
-          <ProductDetail xentralProductData={xentralProductData} />
+          <ProductDetail
+            xentralProductData={xentralProductData}
+            shopifyImage={shopifyProductData?.featuredImage}
+          />
         </View>
       </ScrollView>
     </YStack>
   );
 }
 
-const ProductDetail = ({ xentralProductData }: { xentralProductData?: XentralProductData }) => {
+const ProductDetail = ({
+  xentralProductData,
+  shopifyImage
+}: {
+  xentralProductData?: XentralProductData;
+  shopifyImage?: ShopifyImageData;
+}) => {
+  const hasVariants = xentralProductData?.variants && xentralProductData.variants?.length > 0;
+  const { addProductToCart } = useCartContext();
+  if (!xentralProductData) return null;
+
   return (
     <YStack mt="$10">
       <H2>{xentralProductData?.name}</H2>
       <Paragraph>{xentralProductData?.description || 'this product has no description'}</Paragraph>
-      <View mt="$10">
-        <H4>Variants:</H4>
-        {xentralProductData?.variants?.map((variant, index) => {
-          return <ProductVariants key={index} variant={variant} />;
-        })}
-      </View>
+      {!hasVariants && (
+        <AddToCartButton
+          mt="$10"
+          onPress={() => {
+            addProductToCart({
+              xentralProductData,
+              image: shopifyImage
+            });
+          }}
+        />
+      )}
+      {hasVariants && (
+        <View mt="$10" gap="$5">
+          <H4>Variants:</H4>
+          {xentralProductData?.variants?.map((variant, index) => {
+            return <ProductVariants key={index} variant={variant} />;
+          })}
+        </View>
+      )}
     </YStack>
+  );
+};
+
+const AddToCartButton = ({ ...props }: React.ComponentProps<typeof StyledButton>) => {
+  return (
+    <StyledButton colorStyle="secondary" {...props}>
+      Add to Cart
+    </StyledButton>
   );
 };
 
@@ -67,8 +102,10 @@ const ProductVariants = ({ variant }: { variant: VariantPropertyOfXentralProduct
 
   const { data: variantSalesPrice } = useSingleProductSalesPrice({ productId: variant.id });
 
+  const { addProductToCart } = useCartContext();
+
   return (
-    <Card flexDirection="row" alignItems="center" gap="$10">
+    <Card flexDirection="row" alignItems="center" gap="$10" padded>
       <StyledImage
         source={shopifyProductVariantData?.data?.productVariant?.image?.url || imagePlaceholder}
         contentFit="contain"
@@ -86,6 +123,17 @@ const ProductVariants = ({ variant }: { variant: VariantPropertyOfXentralProduct
           />
         ))}
       </View>
+      {xentralProductVariantData?.data && (
+        <AddToCartButton
+          onPress={() => {
+            addProductToCart({
+              xentralProductData: xentralProductVariantData?.data,
+              image: shopifyProductVariantData?.data.productVariant.image
+            });
+          }}
+          ml="auto"
+        />
+      )}
     </Card>
   );
 };

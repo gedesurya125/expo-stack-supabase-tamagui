@@ -87,7 +87,7 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
           uri: data?.image?.url || imagePlaceholder
         }}
       />
-      <YStack>
+      <YStack flex={1}>
         <H5>{data?.xentralProductData.name}</H5>
         <Text>Ammount: {getProductQuantity(data.xentralProductData.id)}</Text>
       </YStack>

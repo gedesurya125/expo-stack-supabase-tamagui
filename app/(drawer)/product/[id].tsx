@@ -17,6 +17,7 @@ import { formatPrice } from '~/utils/formatPrice';
 import { StyledButton } from '~/components/StyledButton';
 import { useCartContext } from '~/context/CartContext';
 import { ShopifyImageData } from '~/api/shopify/types';
+import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
@@ -59,7 +60,9 @@ const ProductDetail = ({
   return (
     <YStack mt="$10">
       <H2>{xentralProductData?.name}</H2>
-      <Paragraph>{xentralProductData?.description || 'this product has no description'}</Paragraph>
+      <Paragraph>
+        {convertHTMLText(xentralProductData?.description) || 'this product has no description'}
+      </Paragraph>
       {!hasVariants && (
         <AddToCartButton
           mt="$10"
@@ -112,7 +115,7 @@ const ProductVariants = ({ variant }: { variant: VariantPropertyOfXentralProduct
         width={100}
         height={100}
       />
-      <View>
+      <View flex={1}>
         <H3>{xentralProductVariantData?.data.name}</H3>
         <Paragraph>Stock: {xentralProductVariantData?.data.stockCount} pcs</Paragraph>
         {variantSalesPrice?.data.map((xentralPrice, index) => (

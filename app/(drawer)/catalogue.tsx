@@ -30,6 +30,7 @@ import { useProductsByIndustry } from '~/api/xentral/useProductsByIndustry';
 import { XENTRAL_EXTERNAL_REFERENCE_NAME } from '~/api/xentral/constants';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { ImageContainer } from '~/components/ImageContainer';
+import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
 
 const Page = () => {
   const params = useLocalSearchParams();
@@ -250,7 +251,7 @@ export const XentralProductCard = ({ data, ...props }: XentralProductCardProps) 
         </View>
         <H3 mt="$5">{data?.name}</H3>
         <View className="__card-description" mt="$5">
-          <Text>{data?.description?.replace(/<br\s\/>/gi, '\n')}</Text>
+          <Text>{convertHTMLText(data?.description)}</Text>
           <Text>{data?.stockCount} items available</Text>
         </View>
       </Card>

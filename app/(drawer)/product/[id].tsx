@@ -18,6 +18,7 @@ import { StyledButton } from '~/components/StyledButton';
 import { useCartContext } from '~/context/CartContext';
 import { ShopifyImageData } from '~/api/shopify/types';
 import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
+import { ProductDetailTab } from '~/components';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
@@ -63,6 +64,7 @@ const ProductDetail = ({
       <Paragraph>
         {convertHTMLText(xentralProductData?.description) || 'this product has no description'}
       </Paragraph>
+      <ProductDetailTab />
       {!hasVariants && (
         <AddToCartButton
           mt="$10"

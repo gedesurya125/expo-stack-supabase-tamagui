@@ -125,6 +125,15 @@ export const PRODUCT_FIELDS = `#graphql
       title
     }
     handle
+    datasheet: metafield(key: "datasheet", namespace: "custom") {
+      id
+      reference {
+        ... on GenericFile {
+          id
+          url
+        }
+      }
+    }
     
   }
 `;

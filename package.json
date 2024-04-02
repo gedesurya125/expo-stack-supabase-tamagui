@@ -10,7 +10,30 @@
     "start": "expo start",
     "web": "expo start --web",
     "lint": "eslint .",
-    "prebuild:clean": "expo prebuild --clean"
+    "prebuild:clean": "expo prebuild --clean",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)"
+    ],
+    "setupFiles": [
+      "./jestSetupFile.js"
+    ],
+    "setupFilesAfterEnv": [
+      "./jestSetupFileAfterEnv.js"
+    ],
+    "transform": {
+      "\\.[jt]sx?$": [
+        "babel-jest",
+        {
+          "caller": {
+            "preserveEnvVars": true
+          }
+        }
+      ]
+    }
   },
   "dependencies": {
     "@dev-plugins/react-query": "^0.0.5",
@@ -43,6 +66,8 @@
     "expo-system-ui": "~2.9.3",
     "expo-web-browser": "~12.8.2",
     "formik": "^2.4.5",
+    "jest": "^29.3.1",
+    "jest-expo": "~50.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.73.4",
@@ -62,11 +87,16 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@tamagui/babel-plugin": "^1.90.7",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.4.5",
+    "@types/jest": "^29.5.12",
     "@types/react": "~18.2.14",
+    "@types/react-test-renderer": "^18.0.7",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.7.2",
     "eslint": "^8.50.0",
     "eslint-config-universe": "^12.0.0",
+    "eslint-plugin-testing-library": "^6.2.0",
     "prettier": "^3.0.3",
     "typescript": "^5.1.3"
   },

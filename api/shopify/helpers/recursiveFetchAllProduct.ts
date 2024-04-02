@@ -12,6 +12,7 @@ export const recursiveFetchAllProduct = async (query: string, endCursor?: number
       after: endCursor
     }
   });
+  // @ts-ignore
   const responseData = response?.data?.products;
   const products = responseData.nodes;
 

@@ -15,6 +15,7 @@ expo-env.d.ts
 .tamagui/
 # firebase/supabase
 .env
+.env.test
 
 ios
 android

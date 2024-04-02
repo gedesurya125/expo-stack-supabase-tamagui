@@ -2,9 +2,8 @@ import { useFonts } from 'expo-font';
 import { Stack, SplashScreen } from 'expo-router';
 import React, { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { TamaguiProvider, useTheme } from 'tamagui';
+import { useTheme } from 'tamagui';
 
-import config from '../tamagui.config';
 import { SessionProvider } from '~/components/AuthContext';
 import { ExistingCustomerContextProvider } from '~/context/CustomersContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +11,7 @@ import { useReactQueryDevTools } from '@dev-plugins/react-query/build/useReactQu
 import { SelectedCustomerContextProvider } from '~/context/SelectedCustomerContext';
 import * as SystemUI from 'expo-system-ui';
 import { CartContextProvider } from '~/context/CartContext';
+import { ThemeProvider } from 'react-native-elements';
 
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync('black');
@@ -40,9 +40,9 @@ export default function RootLayout() {
   return (
     <SessionProvider>
       {/* At the moment we just use dark */}
-      <TamaguiProvider config={config} defaultTheme="dark">
+      <ThemeProvider>
         <Navigator />
-      </TamaguiProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }

@@ -10,14 +10,12 @@ export default function TabOneScreen() {
   const { customerInfo } = useSelectedCustomerContext();
 
   return (
-    <Theme>
-      <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
-        <H2 fontSize="$9" width={500} textAlign="center">
-          Hi {currentUser?.full_name}, let's start your sales presentation
-        </H2>
-        <OptionsButton />
-      </YStack>
-    </Theme>
+    <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
+      <H2 fontSize="$9" width={500} textAlign="center">
+        Hi {currentUser?.full_name}, let's start your sales presentation
+      </H2>
+      <OptionsButton />
+    </YStack>
   );
 }
 

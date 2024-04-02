@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": ["universe/native"],
+  "extends": ["universe/native", "plugin:testing-library/react"],
   "rules": {
     "import/order": "off",
     "object-shorthand": "off"

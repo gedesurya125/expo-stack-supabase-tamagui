@@ -17,6 +17,7 @@ import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 import { Menu } from '@tamagui/lucide-icons';
 import React from 'react';
 import { StyledButton } from '~/components/StyledButton';
+import { useCartContext } from '~/context/CartContext';
 
 const DrawerLayout = () => {
   const { session, inSessionLoginInfo } = useSession();
@@ -189,33 +190,64 @@ const HeaderRightComponent = () => {
         href={'/profile' as never}
         Icon={(props) => <Ionicons name="person-circle-outline" {...props} />}
       />
-
-      <NavigationIconLink
+      <CartButton />
+      {/* <NavigationIconLink
         href={'/cart-detail-modal' as never}
         Icon={(props) => <Ionicons name="cart-outline" {...props} />}
-      />
+      /> */}
     </XStack>
   );
 };
 
 interface NavigationIconLinkProps extends React.ComponentProps<typeof Link> {
   Icon: React.ElementType;
+  containerProps?: React.ComponentProps<typeof View>;
 }
 
-const NavigationIconLink = ({ Icon, ...props }: NavigationIconLinkProps) => {
+const CartButton = () => {
+  const { totalProductsQuantity } = useCartContext();
+
+  return (
+    <NavigationIconLink
+      href={'/cart-detail-modal' as never}
+      Icon={(props) => <Ionicons name="cart-outline" {...props} />}
+      containerProps={{
+        position: 'relative'
+      }}>
+      {totalProductsQuantity !== 0 && (
+        <View
+          position="absolute"
+          right={-2}
+          top={-2}
+          backgroundColor="red"
+          paddingHorizontal="$2"
+          paddingVertical="$1"
+          borderRadius={100}
+          justifyContent="center"
+          alignItems="center">
+          <Text>{totalProductsQuantity}</Text>
+        </View>
+      )}
+    </NavigationIconLink>
+  );
+};
+
+const NavigationIconLink = ({
+  Icon,
+  children,
+  containerProps,
+  ...props
+}: NavigationIconLinkProps) => {
   const theme = useTheme();
 
   return (
     <Link {...props} asChild>
       <Pressable>
         {({ pressed }) => (
-          <Icon
-            size={35}
-            color={theme.blue9.val}
-            style={{
-              marginRight: getToken('$3', 'space')
-            }}
-          />
+          <View mr="$3" {...containerProps}>
+            <Icon size={35} color={theme.blue9.val} />
+            {children}
+          </View>
         )}
       </Pressable>
     </Link>

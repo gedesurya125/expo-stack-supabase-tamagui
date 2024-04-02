@@ -16,6 +16,7 @@ interface CartContextValue {
   increaseSingleProductInCart: (prodcutId: xentralProductId) => void;
   decreaseSingleProductInCart: (productId: xentralProductId) => void;
   getProductQuantity: (productId: xentralProductId) => number;
+  totalProductsQuantity: number;
 }
 
 const CartContext = createContext<CartContextValue>({
@@ -24,7 +25,8 @@ const CartContext = createContext<CartContextValue>({
   removeSingleProductFromCart: () => {},
   increaseSingleProductInCart: () => {},
   decreaseSingleProductInCart: () => {},
-  getProductQuantity: () => 0
+  getProductQuantity: () => 0,
+  totalProductsQuantity: 0
 });
 
 interface CartContextProviderProps {
@@ -100,6 +102,11 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     );
   };
 
+  const totalProductsQuantity = productInCart.reduce((acc, cur) => {
+    const currentProductQuantity = cur?.quantity ? cur?.quantity : 0;
+    return acc + currentProductQuantity;
+  }, 0);
+
   return (
     <CartContext.Provider
       value={{
@@ -108,7 +115,8 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
         removeSingleProductFromCart,
         decreaseSingleProductInCart,
         increaseSingleProductInCart,
-        getProductQuantity
+        getProductQuantity,
+        totalProductsQuantity
       }}>
       {children}
     </CartContext.Provider>

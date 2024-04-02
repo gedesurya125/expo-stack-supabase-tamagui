@@ -128,7 +128,7 @@ const ProductVariants = ({ variant }: { variant: VariantPropertyOfXentralProduct
           onPress={() => {
             addProductToCart({
               xentralProductData: xentralProductVariantData?.data,
-              image: shopifyProductVariantData?.data.productVariant.image
+              image: shopifyProductVariantData?.data?.productVariant?.image
             });
           }}
           ml="auto"

@@ -26,7 +26,7 @@ describe('<App />', () => {
   });
 
   it('my-test', async () => {
-    const MockComponent = jest.fn(() => <Home />);
+    const MockComponent = jest.fn(() => <View />);
 
     renderRouter(
       {

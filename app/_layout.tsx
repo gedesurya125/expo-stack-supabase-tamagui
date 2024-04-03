@@ -11,7 +11,7 @@ import { useReactQueryDevTools } from '@dev-plugins/react-query/build/useReactQu
 import { SelectedCustomerContextProvider } from '~/context/SelectedCustomerContext';
 import * as SystemUI from 'expo-system-ui';
 import { CartContextProvider } from '~/context/CartContext';
-import { ThemeProvider } from 'react-native-elements';
+import { ThemeProvider } from '~/components/ThemeProvider';
 
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync('black');

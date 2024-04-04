@@ -4,7 +4,6 @@ import { supabase } from '../utils/supabase';
 import { StyleSheet, View, Alert } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { Session } from '@supabase/supabase-js';
-import { Redirect } from 'expo-router';
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -47,7 +46,7 @@ export default function Account({ session }: { session: Session }) {
   async function updateProfile({
     username,
     website,
-    avatar_url,
+    avatar_url
   }: {
     username: string;
     website: string;
@@ -62,7 +61,7 @@ export default function Account({ session }: { session: Session }) {
         username,
         website,
         avatar_url,
-        updated_at: new Date(),
+        updated_at: new Date()
       };
 
       const { error } = await supabase.from('profiles').upsert(updates);
@@ -109,14 +108,14 @@ export default function Account({ session }: { session: Session }) {
 const styles = StyleSheet.create({
   container: {
     marginTop: 40,
-    padding: 12,
+    padding: 12
   },
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
-    alignSelf: 'stretch',
+    alignSelf: 'stretch'
   },
   mt20: {
-    marginTop: 20,
-  },
+    marginTop: 20
+  }
 });

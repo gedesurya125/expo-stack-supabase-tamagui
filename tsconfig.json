@@ -13,8 +13,8 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "jestSetupFileAfterEnv.js",
-    "jestSetupFile.js",
+    "jestSetupFileAfterEnv.ts",
+    "jestSetupFile.ts",
     "__mock__/@react-native-async-storage/async-storage.js"
   ]
 }

@@ -1,6 +1,9 @@
 // @ts-nocheck
 // ? this test is moved to each component
 
+import { render } from 'react-native-testing-library';
+import { AuthCon } from '';
+
 describe('check the env', () => {
   it('should load the env variable', () => {
     //? to enable the inline access of process.env.[VAR NAME]  source: https://github.com/expo/expo/issues/26513#issuecomment-1989035903

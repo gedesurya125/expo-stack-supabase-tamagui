@@ -22,9 +22,20 @@ describe('this test the supabase integration', () => {
   });
 
   it('should keep the current user logged in', async () => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      // TODO: continue here
-      // setSession(session);
+    await supabase.auth.getSession().then(({ data: { session } }) => {
+      expect(session?.user).toBeDefined();
+    });
+  });
+  it(`should have email same with the loggin user ${USER_EMAIL}`, async () => {
+    await supabase.auth.getSession().then(({ data: { session } }) => {
+      expect(session?.user?.email).toBe(USER_EMAIL);
+    });
+  });
+
+  it(`should sign out the user with email ${USER_EMAIL}`, async () => {
+    supabase.auth.signOut();
+    await supabase.auth.getSession().then(({ data: { session } }) => {
+      expect(session?.user?.email).toBeUndefined();
     });
   });
 });

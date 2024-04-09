@@ -121,7 +121,12 @@ export default function ProfileScreen() {
               }}
             />
             <Form onSubmit={() => {}} gap="$4" marginTop="$7">
-              <Input placeholder="Email" value={session?.user?.email} disabled />
+              <Input
+                placeholder="Email"
+                value={session?.user?.email}
+                disabled
+                testID="email-input"
+              />
               <Input
                 placeholder="Username"
                 value={username || ''}

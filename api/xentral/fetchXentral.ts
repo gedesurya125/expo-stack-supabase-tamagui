@@ -20,7 +20,9 @@ export const fetchXentral = async <T>(endPoint: string, isBeta?: boolean): Promi
     isBeta ? betaFetchOption : fetchOption
   )
     .then((response) => response?.json())
-    .catch((err) => console.error(err));
+    .catch((err: any) => {
+      console.log('error fetching xentral', err);
+    });
 };
 
 const createOptions = {
@@ -38,5 +40,7 @@ export const createXentral = async (endPoint: string, body: string) => {
     body: body
   })
     .then((response) => response)
-    .catch((err) => console.error(err));
+    .catch((err: any) => {
+      console.log('error creating in xentral', err);
+    });
 };

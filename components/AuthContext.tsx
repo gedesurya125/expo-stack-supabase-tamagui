@@ -15,9 +15,13 @@ interface InSessionLoginInfoProps {
 
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
-    supabase.auth.startAutoRefresh();
+    supabase.auth.startAutoRefresh().catch((err) => {
+      console.log('error starting the auto refresh', err);
+    });
   } else {
-    supabase.auth.stopAutoRefresh();
+    supabase.auth.stopAutoRefresh().catch((err) => {
+      console.log('error stopping the auto refresh', err);
+    });
   }
 });
 

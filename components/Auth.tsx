@@ -1,7 +1,7 @@
 /* eslint-disable import/order */
 import React, { useState } from 'react';
-import { AppState } from 'react-native';
-import { supabase } from '../utils/supabase';
+// import { AppState } from 'react-native';
+// import { supabase } from '../utils/supabase';
 // import { Button, Input } from 'react-native-elements';
 import { Input } from 'react-native-elements';
 import { View, Button, useTheme, getToken } from 'tamagui';
@@ -11,13 +11,13 @@ import { useSession } from './AuthContext';
 // the app is in the foreground. When this is added, you will continue to receive
 // `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
 // if the user's session is terminated. This should only be registered once.
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh();
-  } else {
-    supabase.auth.stopAutoRefresh();
-  }
-});
+// AppState.addEventListener('change', (state) => {
+//   if (state === 'active') {
+//     supabase.auth.startAutoRefresh();
+//   } else {
+//     supabase.auth.stopAutoRefresh();
+//   }
+// });
 
 interface AuthProps extends React.ComponentProps<typeof View> {
   hideSignInButton?: boolean;

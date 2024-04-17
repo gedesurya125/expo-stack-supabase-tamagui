@@ -17,6 +17,12 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location.",
           "locationWhenInUsePermission": "Show current location on map."
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/RedHatDisplay-Regular.ttf"]
+        }
       ]
     ],
     "experiments": {

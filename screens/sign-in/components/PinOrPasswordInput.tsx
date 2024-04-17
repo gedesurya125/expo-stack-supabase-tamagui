@@ -17,7 +17,7 @@ export const PinOrPasswordInput = ({
 }: CredentialInputProps) => {
   return (
     <>
-      <H1>{isSessionExist ? 'Pin' : 'Password'}</H1>
+      <H1 fontFamily="$heading2">{isSessionExist ? 'Pin' : 'Password'}</H1>
       {isSessionExist && (
         <PinVerification value={value} setValue={setValue} email={email} hasPin={hasPin} />
       )}

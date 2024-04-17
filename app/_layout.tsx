@@ -26,7 +26,8 @@ const queryClient = new QueryClient();
 export default function RootLayout() {
   const [loaded] = useFonts({
     Inter: require('@tamagui/font-inter/otf/Inter-Medium.otf'),
-    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf')
+    InterBold: require('@tamagui/font-inter/otf/Inter-Bold.otf'),
+    RedHatDisplayRegular: require('../assets/fonts/RedHatDisplay-Regular.ttf')
   });
 
   useEffect(() => {

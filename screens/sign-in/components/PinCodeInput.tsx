@@ -1,6 +1,6 @@
 import React from 'react';
 // @ts-ignore
-import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import SmoothPinCodeInput from '@zfloc/react-native-smooth-pincode-input';
 import { View, useTheme, Text } from 'tamagui';
 
 export const PinCodeInput = ({

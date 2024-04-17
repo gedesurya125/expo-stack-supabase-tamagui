@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 // import { supabase } from '../utils/supabase';
 // import { Button, Input } from 'react-native-elements';
 import { Input } from 'react-native-elements';
-import { View, Button, useTheme, getToken } from 'tamagui';
+import { View, Button, useTheme, getToken, Spinner } from 'tamagui';
 import { useSession } from './AuthContext';
+import { TextInput } from './TextInput';
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -27,9 +28,10 @@ interface AuthProps extends React.ComponentProps<typeof View> {
 export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: AuthProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const { signInWithEmail, signUpWithEmail, loading } = useSession();
 
-  const theme = useTheme();
+  const isButtonDisabled = loading || password !== confirmPassword || !confirmPassword || !email;
 
   return (
     <View
@@ -39,7 +41,8 @@ export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: A
       justifyContent="center"
       paddingBottom="$20"
       {...props}>
-      <Input
+      <EmailInput value={email} setValue={setEmail} />
+      {/* <Input
         label="Email"
         leftIcon={{
           type: 'font-awesome',
@@ -56,8 +59,8 @@ export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: A
         value={email}
         placeholder="email@address.com"
         autoCapitalize="none"
-      />
-      <Input
+      /> */}
+      {/* <Input
         label="Password"
         leftIcon={{
           type: 'font-awesome',
@@ -74,6 +77,12 @@ export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: A
         secureTextEntry
         placeholder="Password"
         autoCapitalize="none"
+      /> */}
+      <PasswordInput value={password} setValue={setPassword} />
+      <PasswordInput
+        value={confirmPassword}
+        setValue={setConfirmPassword}
+        placeholder="Confirm Password"
       />
       {!hideSignInButton && (
         <Button
@@ -85,13 +94,49 @@ export default function Auth({ hideSignInButton, hideSignUpButton, ...props }: A
       )}
       {!hideSignUpButton && (
         <Button
-          disabled={loading}
+          disabled={isButtonDisabled}
           onPress={() => signUpWithEmail({ email, password })}
           marginTop="$5"
-          backgroundColor="$blue6">
-          Sign Up
+          backgroundColor={isButtonDisabled ? '$gray8' : '$blue6'}>
+          {loading ? <Spinner /> : 'Sign Up'}
         </Button>
       )}
     </View>
   );
 }
+
+const EmailInput = ({ value, setValue }: { value: string; setValue: any }) => {
+  return (
+    <TextInput
+      autoCapitalize="none"
+      placeholder="email@address.com"
+      value={value}
+      onChangeText={(text) => {
+        setValue(text);
+      }}
+    />
+  );
+};
+
+const PasswordInput = ({
+  value,
+  setValue,
+  placeholder = 'Password'
+}: {
+  value: string;
+  setValue: any;
+  placeholder?: string;
+}) => {
+  return (
+    <TextInput
+      autoCapitalize="none"
+      placeholder={placeholder}
+      value={value}
+      onChangeText={(text) => {
+        setValue(text);
+      }}
+      secureTextEntry
+      marginTop="$4"
+    />
+  );
+};

@@ -20,7 +20,12 @@ export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) =>
   const handleSignIn = async ({ email, password }: { email: string; password: string }) => {
     await signInWithEmail({ email, password });
     const loggedInUserData = await getCurrentUser();
-    handleInSessionLogin({ email, pin: loggedInUserData?.pin });
+    if (loggedInUserData?.pin) {
+      handleInSessionLogin({ email, pin: loggedInUserData?.pin });
+    }
+    if (!loggedInUserData?.pin && loggedInUserData?.username) {
+      setStep(3);
+    }
   };
 
   React.useEffect(() => {
@@ -31,10 +36,6 @@ export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) =>
   }, [session?.user.email]);
 
   // ?: source https://reactnative.dev/docs/keyboardavoidingview
-
-  // if (!inSessionLoginInfo?.email && !inSessionLoginInfo?.pin && session?.user) {
-  //   return <Redirect href="/(drawer)/" />;
-  // }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

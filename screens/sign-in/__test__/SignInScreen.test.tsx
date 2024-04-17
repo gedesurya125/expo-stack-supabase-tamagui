@@ -52,6 +52,8 @@ describe('Sign In Screen', () => {
     fireEvent(loginButton, 'press');
 
     expect(screen?.queryByTestId('email-input')).toBeNull();
+
+    screen.debug();
   });
 });
 

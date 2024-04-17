@@ -26,8 +26,10 @@ export const EmailInput = ({ value, setValue, handleButtonClick }: LoginInputPro
       : 'Hi, welcome to Ambratect app';
 
   return (
-    <View justifyContent="center" alignItems="center">
-      <H2>{welcomeMessage}</H2>
+    <View justifyContent="center" alignItems="center" padding="$4">
+      <H2 fontFamily="$heading2" textAlign="center">
+        {welcomeMessage}
+      </H2>
       <TextInput
         autoCapitalize="none"
         placeholder="john@emai.com"

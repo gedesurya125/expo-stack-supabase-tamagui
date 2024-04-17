@@ -1,4 +1,4 @@
-import { YStack, H2, Separator, Theme, Button, H1 } from 'tamagui';
+import { YStack, H2, Separator, Theme, Button, H1, Text, View } from 'tamagui';
 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, Redirect } from 'expo-router';
@@ -11,9 +11,12 @@ export default function TabOneScreen() {
 
   return (
     <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">
-      <H2 fontSize="$9" width={500} textAlign="center">
-        Hi {currentUser?.full_name}, let's start your sales presentation
-      </H2>
+      <Text fontSize="$9" textAlign="center" fontFamily="$heading2">
+        Hi {currentUser?.full_name},
+      </Text>
+      <Text marginTop="$4" fontFamily="$heading2">
+        let's start your sales presentation
+      </Text>
       <OptionsButton />
     </YStack>
   );

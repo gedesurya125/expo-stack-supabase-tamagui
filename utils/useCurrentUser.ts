@@ -14,6 +14,7 @@ export const useCurrentUser = () => {
   const { session } = useSession();
 
   const [currentUser, setCurrentUser] = React.useState<UserInformation | null>(null);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const getAndSetCurrentUserIfExist = async () => {
@@ -31,9 +32,25 @@ export const useCurrentUser = () => {
         throw response?.error;
       }
       setCurrentUser(response?.data);
+      setLoading(false);
     };
     getAndSetCurrentUserIfExist();
   }, [session]);
 
-  return { currentUser, hasPin: !!currentUser?.pin };
+  return { currentUser, hasPin: !!currentUser?.pin, loading };
 };
+
+export const getCurrentUser = async () =>
+  await supabase.auth
+    .getSession()
+    .then(({ data: { session } }) => {
+      return supabase
+        .from('profiles')
+        .select(`username, website, avatar_url, full_name, pin`)
+        .eq('id', session?.user.id)
+        .single()
+        .then((res) => res?.data);
+    })
+    .catch((err: any) => {
+      console.log('error when getting current user', err);
+    });

@@ -1,11 +1,12 @@
 import React from 'react';
 // @ts-ignore
 import { KeyboardAvoidingView, Platform } from 'react-native';
-import { ScrollView } from 'tamagui';
+import { ScrollView, View } from 'tamagui';
 import { useSession } from '~/components/AuthContext';
-import { useCurrentUser } from '~/utils/useCurrentUser';
-import { PinOrPasswordInput } from './components/PinOrPasswordInput';
+import { getCurrentUser } from '~/utils/useCurrentUser';
+import { PasswordInput, PinInput, PinOrPasswordInput } from './components/PinOrPasswordInput';
 import { EmailInput } from './components/EmailInput';
+import { Redirect } from 'expo-router';
 
 export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) => {
   const [step, setStep] = React.useState(1);
@@ -13,21 +14,27 @@ export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) =>
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [pin, setPin] = React.useState(''); // currently pin can be as password
-  const { signInWithEmail, session } = useSession();
-  const { hasPin } = useCurrentUser();
+  const { signInWithEmail, session, handleInSessionLogin, inSessionLoginInfo } = useSession();
 
-  const handleSignIn = ({ email, password }: { email: string; password: string }) => {
-    signInWithEmail({ email, password });
+  // ? when sign in don't as user the pin
+  const handleSignIn = async ({ email, password }: { email: string; password: string }) => {
+    await signInWithEmail({ email, password });
+    const loggedInUserData = await getCurrentUser();
+    handleInSessionLogin({ email, pin: loggedInUserData?.pin });
   };
 
   React.useEffect(() => {
-    if (isSessionExist && session && session?.user.email) {
+    if (isSessionExist && session && session?.user.email && step === 1) {
       setEmail(session.user.email);
-      setStep(2);
+      setStep(3);
     }
-  }, [isSessionExist]);
+  }, [session?.user.email]);
 
   // ?: source https://reactnative.dev/docs/keyboardavoidingview
+
+  // if (!inSessionLoginInfo?.email && !inSessionLoginInfo?.pin && session?.user) {
+  //   return <Redirect href="/(drawer)/" />;
+  // }
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -42,7 +49,7 @@ export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) =>
           alignItems: 'center'
         }}
         testID="sign-in-screen-container">
-        {step === 1 && (
+        {step === 1 && !isSessionExist && (
           <EmailInput
             value={email}
             setValue={setEmail}
@@ -51,18 +58,15 @@ export const SignInScreen = ({ isSessionExist }: { isSessionExist: boolean }) =>
             }}
           />
         )}
-        {step === 2 && (
-          <PinOrPasswordInput
-            value={pin}
-            setValue={setPin}
+        {step === 2 && !isSessionExist && (
+          <PasswordInput
             password={password}
             setPassword={setPassword}
-            handleButtonClick={handleSignIn}
+            handleLogin={handleSignIn}
             email={email}
-            isSessionExist={isSessionExist}
-            hasPin={hasPin}
           />
         )}
+        {step === 3 && isSessionExist && <PinInput pin={pin} setPin={setPin} email={email} />}
       </ScrollView>
     </KeyboardAvoidingView>
   );

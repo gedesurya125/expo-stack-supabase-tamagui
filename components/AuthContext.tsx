@@ -26,7 +26,7 @@ AppState.addEventListener('change', (state) => {
 });
 
 const AuthContext = React.createContext<{
-  signInWithEmail: (data: SignProps) => void;
+  signInWithEmail: (data: SignProps) => Promise<void>;
   signUpWithEmail: (data: SignProps) => void;
   signOut: () => void;
   session?: Session | null;
@@ -38,7 +38,7 @@ const AuthContext = React.createContext<{
   handleInSessionLogin: ({ email, pin }: InSessionLoginInfoProps) => void;
   isSessionExist: boolean;
 }>({
-  signInWithEmail: () => null,
+  signInWithEmail: () => new Promise(() => {}),
   signUpWithEmail: () => null,
   signOut: () => null,
   session: null,
@@ -74,7 +74,6 @@ export function SessionProvider(props: React.PropsWithChildren) {
       email,
       password
     });
-
     if (error) Alert.alert(error.message);
     setLoading(false);
   }

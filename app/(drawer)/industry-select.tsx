@@ -1,11 +1,10 @@
 import { Link } from 'expo-router';
-import { Button, H2, Spinner, YStack } from 'tamagui';
-import { useCustomerCategory } from '~/api/weClapp/customerCategory';
-import { useProjects } from '~/api/xentral/useProjects';
+import { H2, Spinner, YStack } from 'tamagui';
+import { useArticleCategory } from '~/api/weClapp/articleCategory';
 import { StyledButton } from '~/components/StyledButton';
 
 export default function IndustrySelect() {
-  const { data, isLoading } = useCustomerCategory();
+  const { data, isLoading } = useArticleCategory();
 
   return (
     <YStack backgroundColor="$background" flex={1} justifyContent="center" alignItems="center">

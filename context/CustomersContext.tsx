@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { useWeClapCustomers } from '~/api/weClapp';
 import { CustomerFilter, CustomerOrder, getCustomers } from '~/api/xentral';
 import { XentralCustomer } from '~/types';
 
@@ -28,7 +29,8 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
   const [customers, setCustomers] = React.useState<XentralCustomer[]>([]);
   const [nameFilter, setNameFilter] = React.useState('');
   const [page, setPage] = React.useState(0);
-  const [isLast, setIsLast] = React.useState(false);
+
+  const { data } = useWeClapCustomers();
 
   const filterValue: CustomerFilter = {
     key: 'name',
@@ -93,3 +95,5 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
 };
 
 export const useCustomerContext = () => React.useContext(CustomerContext);
+
+// TODO: REMOVE THIS

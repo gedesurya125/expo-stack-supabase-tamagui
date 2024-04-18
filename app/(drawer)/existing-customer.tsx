@@ -8,17 +8,16 @@ import {
   Input,
   getTokenValue,
   View,
-  useTheme,
-  XStack,
-  Button
+  useTheme
 } from 'tamagui';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { useCustomerContext } from '~/context/CustomersContext';
-import { StyledButton } from '~/components/StyledButton';
 import { Pressable } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
+import { useWeClapCustomers } from '~/api/weClapp';
+import { WeClappCustomer } from '~/api/weClapp/types/customer';
 
 // =========== Main COmponent ===========
 
@@ -33,32 +32,38 @@ export default function ExistingCustomer() {
 }
 
 const CustomerList = () => {
-  const { customers, fetchNextPage, page } = useCustomerContext();
+  const { data, fetchNextPage: fetchNextWeClappCustomers } = useWeClapCustomers();
 
   // ? callback prevent re render the header
   const renderHeader = React.useCallback(() => <SearchBar />, []);
 
+  const dataToDisplay = data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
+    return [...acc, ...cur?.result];
+  }, []);
+
   return (
-    <FlatList
-      data={customers}
-      renderItem={({ item }) => <CustomerItem item={item} />}
-      keyExtractor={(item, index) => `${index}`}
-      ItemSeparatorComponent={Separator}
-      // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
-      ListHeaderComponent={renderHeader}
-      stickyHeaderIndices={[0]}
-      onEndReachedThreshold={0.1}
-      onEndReached={async () => {
-        await fetchNextPage();
-      }}
-      style={{
-        flex: 1
-      }}
-    />
+    <>
+      <FlatList
+        data={dataToDisplay}
+        renderItem={({ item }) => <CustomerItem item={item} />}
+        keyExtractor={(item, index) => `${index}`}
+        ItemSeparatorComponent={Separator}
+        // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
+        ListHeaderComponent={renderHeader}
+        stickyHeaderIndices={[0]}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => {
+          fetchNextWeClappCustomers();
+        }}
+        style={{
+          flex: 1
+        }}
+      />
+    </>
   );
 };
 
-export const CustomerItem = ({ item }: { item: any }) => {
+export const CustomerItem = ({ item }: { item: WeClappCustomer }) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { handleSetCustomerInfo } = useSelectedCustomerContext();
@@ -76,9 +81,9 @@ export const CustomerItem = ({ item }: { item: any }) => {
           navigation.navigate('catalogue' as never);
         }}>
         <YStack flex={1}>
-          <Text color="$color">{item.general.name}</Text>
+          <Text color="$color">{item.company}</Text>
           <Text color="$color" mt="$2">
-            {item.general.email}
+            {item.email}
           </Text>
         </YStack>
       </Pressable>

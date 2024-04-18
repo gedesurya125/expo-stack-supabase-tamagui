@@ -8,7 +8,8 @@ import {
   Input,
   getTokenValue,
   View,
-  useTheme
+  useTheme,
+  Spinner
 } from 'tamagui';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,10 +36,14 @@ const CustomerList = () => {
 
   const searchQuery = searchInput ? `&company-ilike=%${searchInput}%` : '';
 
-  const { data, fetchNextPage: fetchNextWeClappCustomers } = useWeClapCustomers(searchQuery);
+  const {
+    data,
+    fetchNextPage: fetchNextWeClappCustomers,
+    isLoading
+  } = useWeClapCustomers(searchQuery);
 
   // ? callback prevent re render the header
-  const renderHeader = React.useCallback(() => <SearchBar setSearch={setSearchInput} />, []);
+  // const renderHeader = React.useCallback(() => <SearchBar setSearch={setSearchInput} />, []);
 
   const dataToDisplay = data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
     return [...acc, ...cur?.result];
@@ -46,22 +51,27 @@ const CustomerList = () => {
 
   return (
     <>
-      <FlatList
-        data={dataToDisplay}
-        renderItem={({ item }) => <CustomerItem item={item} />}
-        keyExtractor={(item, index) => `${index}`}
-        ItemSeparatorComponent={Separator}
-        // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
-        ListHeaderComponent={renderHeader}
-        stickyHeaderIndices={[0]}
-        onEndReachedThreshold={0.1}
-        onEndReached={() => {
-          fetchNextWeClappCustomers();
-        }}
-        style={{
-          flex: 1
-        }}
-      />
+      <SearchBar setSearch={setSearchInput} />
+      {isLoading ? (
+        <Spinner size="large" />
+      ) : (
+        <FlatList
+          data={dataToDisplay}
+          renderItem={({ item }) => <CustomerItem item={item} />}
+          keyExtractor={(item, index) => `${index}`}
+          ItemSeparatorComponent={Separator}
+          // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
+          // ListHeaderComponent={renderHeader}
+          // stickyHeaderIndices={[0]}
+          onEndReachedThreshold={0.1}
+          onEndReached={() => {
+            fetchNextWeClappCustomers();
+          }}
+          style={{
+            flex: 1
+          }}
+        />
+      )}
     </>
   );
 };
@@ -131,7 +141,7 @@ export const ListSearchBar = ({
   const theme = useTheme();
 
   return (
-    <View paddingTop="$4" backgroundColor="$background" paddingHorizontal="$4" paddingBottom="$2">
+    <View paddingTop="$4" backgroundColor="$background" paddingHorizontal="$4" paddingBottom="$4">
       <View position="relative" justifyContent="center">
         <Ionicons
           name="search-outline"

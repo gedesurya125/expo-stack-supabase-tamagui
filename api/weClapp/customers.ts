@@ -4,10 +4,6 @@ import { weClappAPI } from './fetchWeClapp';
 import { WeClappCustomer } from './types/customer';
 
 export const useWeClapCustomers = (operation?: string) => {
-  // return useQuery({
-  //   queryKey: ['weClapp', 'customers', operation],
-  //   queryFn: () => getWeClappCustomers(operation)
-  // });
   const initialPageParam = 1;
   const pageSize = 10;
 

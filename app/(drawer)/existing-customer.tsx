@@ -12,7 +12,6 @@ import {
 } from 'tamagui';
 import { FlatList } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import { useCustomerContext } from '~/context/CustomersContext';
 import { Pressable } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
@@ -32,10 +31,14 @@ export default function ExistingCustomer() {
 }
 
 const CustomerList = () => {
-  const { data, fetchNextPage: fetchNextWeClappCustomers } = useWeClapCustomers();
+  const [searchInput, setSearchInput] = React.useState('');
+
+  const searchQuery = searchInput ? `&company-ilike=%${searchInput}%` : '';
+
+  const { data, fetchNextPage: fetchNextWeClappCustomers } = useWeClapCustomers(searchQuery);
 
   // ? callback prevent re render the header
-  const renderHeader = React.useCallback(() => <SearchBar />, []);
+  const renderHeader = React.useCallback(() => <SearchBar setSearch={setSearchInput} />, []);
 
   const dataToDisplay = data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
     return [...acc, ...cur?.result];
@@ -103,16 +106,12 @@ export const CustomerItem = ({ item }: { item: WeClappCustomer }) => {
   );
 };
 
-const SearchBar = () => {
-  const { setNameFilter } = useCustomerContext();
-
+const SearchBar = ({ setSearch }: { setSearch: any }) => {
   const [value, setValue] = React.useState('');
-
-  // const theme = useTheme();
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      setNameFilter(value);
+      setSearch(value);
     }, 1000);
     return () => {
       clearTimeout(timeout);

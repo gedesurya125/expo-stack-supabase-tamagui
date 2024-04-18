@@ -23,9 +23,9 @@ export default function ModalScreen() {
     <Theme>
       {isLoading ? (
         <LoadingView />
-      ) : (
+      ) : data ? (
         <CustomerInfo customerData={data} displayShopProps={displayShopProps} />
-      )}
+      ) : null}
     </Theme>
   );
 }

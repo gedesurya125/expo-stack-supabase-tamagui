@@ -42,9 +42,6 @@ const CustomerList = () => {
     isLoading
   } = useWeClapCustomers(searchQuery);
 
-  // ? callback prevent re render the header
-  // const renderHeader = React.useCallback(() => <SearchBar setSearch={setSearchInput} />, []);
-
   const dataToDisplay = data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
     return [...acc, ...cur?.result];
   }, []);
@@ -61,8 +58,6 @@ const CustomerList = () => {
           keyExtractor={(item, index) => `${index}`}
           ItemSeparatorComponent={Separator}
           // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
-          // ListHeaderComponent={renderHeader}
-          // stickyHeaderIndices={[0]}
           onEndReachedThreshold={0.1}
           onEndReached={() => {
             fetchNextWeClappCustomers();

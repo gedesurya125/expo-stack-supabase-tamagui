@@ -46,7 +46,10 @@ const DrawerLayout = () => {
         headerLeft: () => {
           return <CustomDrawerToggleButton />;
         },
-        headerRight: HeaderRightComponent
+        headerRight: HeaderRightComponent,
+        drawerContentStyle: {
+          backgroundColor: '#151515'
+        }
       }}
       drawerContent={(props) => {
         return (

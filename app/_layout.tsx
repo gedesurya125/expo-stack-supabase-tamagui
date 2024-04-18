@@ -65,6 +65,9 @@ const Navigator = () => {
                   },
                   headerTitleStyle: {
                     color: theme.color.val
+                  },
+                  contentStyle: {
+                    backgroundColor: '#151515'
                   }
                 }}>
                 <Stack.Screen name="(drawer)" options={{ headerShown: false }} />

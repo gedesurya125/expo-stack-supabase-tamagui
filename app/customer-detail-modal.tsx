@@ -15,8 +15,6 @@ export default function ModalScreen() {
   // const { status, data, error, isFetching } = useCustomer(params?.id as string);
   const { data, isLoading } = useSingleCustomer(params?.id as string);
 
-  console.log('this is the customer detail ', data);
-
   const displayShopProps = currentSelectedCustomerInfo?.id === params?.id;
 
   return (

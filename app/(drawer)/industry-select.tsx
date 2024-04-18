@@ -6,6 +6,8 @@ import { StyledButton } from '~/components/StyledButton';
 export default function IndustrySelect() {
   const { data, isLoading } = useArticleCategory();
 
+  console.log('this is the article category', data);
+
   return (
     <YStack backgroundColor="$background" flex={1} justifyContent="center" alignItems="center">
       <H2>Helo in industry select</H2>
@@ -27,8 +29,8 @@ export default function IndustrySelect() {
                 href={{
                   pathname: '/(drawer)/catalogue',
                   params: {
-                    projectId: category.id,
-                    projectName: category.name
+                    categoryId: category.id,
+                    categoryName: category.name
                   }
                 }}
                 key={index}>

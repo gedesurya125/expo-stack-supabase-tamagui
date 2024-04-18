@@ -15,28 +15,22 @@ import {
   Paragraph
 } from 'tamagui';
 import { useProductCategories } from '~/api/xentral/useProductCategory';
-import { useProducts } from '~/api/xentral/useProducts';
-import {
-  XentralProjectId,
-  type XentralProductData,
-  type XentralProductExternalReference
-} from '~/api/xentral/types';
+import { XentralProjectId } from '~/api/xentral/types';
 import { dashboardData } from '~/data/dashboardData';
 import { imagePlaceholder } from '~/images/placeholder';
-import { useProductsByProject, useXentralProductExternalReference } from '~/api/xentral';
 import { ShopifyProductNumber } from '~/api/shopify/types';
 import { useShopifyProduct } from '~/api/shopify';
-import { useProductsByIndustry } from '~/api/xentral/useProductsByIndustry';
-import { XENTRAL_EXTERNAL_REFERENCE_NAME } from '~/api/xentral/constants';
 import { Link, useLocalSearchParams } from 'expo-router';
 import { ImageContainer } from '~/components/ImageContainer';
 import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
+import { useWeClappArticles } from '~/api/weClapp/articles';
+import { ArticleType } from '~/api/weClapp/types/articles';
 
 const Page = () => {
   const params = useLocalSearchParams();
 
-  const projectId = params?.projectId;
-  const projectName = params?.projectName;
+  const categoryId = params?.categoryId;
+  const categoryName = params?.categoryName;
 
   return (
     <Theme>
@@ -47,16 +41,16 @@ const Page = () => {
           <Text color="$color" fontSize="$5" marginTop="$4">
             Here will contain, announcement, rewards, target, notification etc
           </Text>
-          {typeof projectId === 'string' && typeof projectName === 'string' ? (
-            <XentralProductsByProject projectId={projectId} projectName={projectName} />
+          {typeof categoryId === 'string' && typeof categoryName === 'string' ? (
+            <ProductsByCategory categoryId={categoryId} categoryName={categoryName} />
           ) : (
             <AssignProjectToCustomer />
           )}
-          <AllXentralProducts />
-          <ClothingIndustryCategoryProducs />
+          <AllProducts />
+          {/* <ClothingIndustryCategoryProducs />
           <StickerIndustryCategoryProducs />
           <PaintIndustryProducts />
-          <ProductCategories />
+          <ProductCategories /> */}
         </ScrollView>
       </YStack>
     </Theme>
@@ -68,7 +62,7 @@ export default Page;
 const AssignProjectToCustomer = () => {
   return (
     <View backgroundColor="$blue6" padding="$4" mt="$10">
-      <H3 textAlign="center">{`This Customer is not registered to any Project (Company Category)`}</H3>
+      <H3 textAlign="center">{`This Customer is not registered to any Industry Category`}</H3>
     </View>
   );
 };
@@ -170,67 +164,64 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
   );
 };
 
-const AllXentralProducts = () => {
-  const { data } = useProducts();
-  return <XentralProductsList title="All Products" productsData={data?.data} />;
+const AllProducts = () => {
+  const { data } = useWeClappArticles();
+  console.log('this is the products data', data);
+
+  // TODO: the useWeClappArticles is returning paginated infinity lazy load, so latter this should implement lazy load
+  return <ProductList title="All Products" productsData={data?.pages[0].result} />;
 };
-const XentralProductsByProject = ({
-  projectId,
-  projectName
+const ProductsByCategory = ({
+  categoryId,
+  categoryName
 }: {
-  projectId: XentralProjectId;
-  projectName: string;
+  categoryId: XentralProjectId;
+  categoryName: string;
 }) => {
-  const { data } = useProductsByProject(projectId);
-  return <XentralProductsList title={`${projectName} Products:`} productsData={data?.data} />;
+  const { data } = useWeClappArticles(`&articleCategoryId-eq=${categoryId}`);
+  return <ProductList title={`${categoryName} Products:`} productsData={data?.pages[0].result} />;
 };
-const ClothingIndustryCategoryProducs = () => {
-  const { data } = useProductsByIndustry('clothing-industry');
-  return <XentralProductsList title="Clothing IndustryProducts" productsData={data?.data} />;
-};
-const StickerIndustryCategoryProducs = () => {
-  const { data } = useProductsByIndustry('sticker');
-  return <XentralProductsList title="Sticker IndustryProducts" productsData={data?.data} />;
-};
-const PaintIndustryProducts = () => {
-  const { data } = useProductsByIndustry('paint');
-  return <XentralProductsList title="Paint IndustryProducts" productsData={data?.data} />;
-};
+// const ClothingIndustryCategoryProducs = () => {
+//   const { data } = useProductsByIndustry('clothing-industry');
+//   return <ProductList title="Clothing IndustryProducts" productsData={data?.data} />;
+// };
+// const StickerIndustryCategoryProducs = () => {
+//   const { data } = useProductsByIndustry('sticker');
+//   return <ProductList title="Sticker IndustryProducts" productsData={data?.data} />;
+// };
+// const PaintIndustryProducts = () => {
+//   const { data } = useProductsByIndustry('paint');
+//   return <ProductList title="Paint IndustryProducts" productsData={data?.data} />;
+// };
 
 // Reusable Components
-const XentralProductsList = ({
-  title,
-  productsData
-}: {
-  title: string;
-  productsData?: XentralProductData[];
-}) => {
+const ProductList = ({ title, productsData }: { title: string; productsData?: ArticleType[] }) => {
   return (
     <View mt="$16">
       <H3>{title}</H3>
       <ScrollView horizontal mt="$5">
         {productsData?.map((productData, index) => {
-          return <XentralProductCard key={index} data={productData} ml={index !== 0 ? '$3' : 0} />;
+          return <ProductCard key={index} data={productData} ml={index !== 0 ? '$3' : 0} />;
         })}
       </ScrollView>
     </View>
   );
 };
 
-interface XentralProductCardProps extends React.ComponentProps<typeof Card> {
-  data: XentralProductData;
+interface ProductCardProps extends React.ComponentProps<typeof Card> {
+  data: ArticleType;
 }
 
-export const XentralProductCard = ({ data, ...props }: XentralProductCardProps) => {
-  const { data: xentralExternalReferenceData } = useXentralProductExternalReference(data.id);
+export const ProductCard = ({ data, ...props }: ProductCardProps) => {
+  // const { data: xentralExternalReferenceData } = useXentralProductExternalReference(data.id);
 
-  const getShopifyProductId = (externalDataList: XentralProductExternalReference[]) => {
-    return externalDataList.find(
-      (data) => data.name === XENTRAL_EXTERNAL_REFERENCE_NAME.shopifyproductid
-    )?.number;
-  };
+  // const getShopifyProductId = (externalDataList: XentralProductExternalReference[]) => {
+  //   return externalDataList.find(
+  //     (data) => data.name === XENTRAL_EXTERNAL_REFERENCE_NAME.shopifyproductid
+  //   )?.number;
+  // };
 
-  const shopifyProductNumber = getShopifyProductId(xentralExternalReferenceData?.data || []);
+  // const shopifyProductNumber = getShopifyProductId(xentralExternalReferenceData?.data || []);
 
   return (
     <Link
@@ -242,17 +233,17 @@ export const XentralProductCard = ({ data, ...props }: XentralProductCardProps) 
         }
       }}>
       <Card {...props} width={300} padded>
-        <View>
+        {/* <View>
           {shopifyProductNumber ? (
             <XentralCardImage shopifyProductNumber={shopifyProductNumber} />
           ) : (
             <ImageContainer />
           )}
-        </View>
+        </View> */}
         <H3 mt="$5">{data?.name}</H3>
         <View className="__card-description" mt="$5">
           <Text>{convertHTMLText(data?.description)}</Text>
-          <Text>{data?.stockCount} items available</Text>
+          {data?.targetStockQuantity && <Text>{data?.targetStockQuantity} items available</Text>}
         </View>
       </Card>
     </Link>

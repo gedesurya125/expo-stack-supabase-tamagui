@@ -1,3 +1,8 @@
 export const convertHTMLText = (htmlText: string) => {
-  return htmlText?.replace(/<br\s\/>/gi, '\n');
+  const replacedPasByPTag = htmlText?.replace(/<\/p><p>/g, '\\n');
+
+  // remove the p tag
+  const removedFrontPTag = replacedPasByPTag?.replace(/<p>/g, '');
+  const removedBackPTag = removedFrontPTag?.replace(/<\/p>/g, '');
+  return removedBackPTag?.replace(/<br\s\/>/gi, '\n');
 };

@@ -14,7 +14,7 @@ export const useWeClapCustomers = (operation?: string) => {
   return useInfiniteQuery({
     queryKey: ['weClapp', 'customer', operation || ''],
     queryFn: ({ pageParam = initialPageParam }) =>
-      getWeClappCustomers(`&page=${pageParam}&pageSize=${pageSize}${operation || ''}`),
+      getWeClappCustomers(undefined, `&page=${pageParam}&pageSize=${pageSize}${operation || ''}`),
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.result?.length < pageSize) return;
       return (pages.length + 1).toString();
@@ -23,9 +23,23 @@ export const useWeClapCustomers = (operation?: string) => {
   });
 };
 
-const getWeClappCustomers = async (operation?: string) => {
+export const useSingleCustomer = (customerId: string) => {
+  return useQuery({
+    queryKey: ['weClapp', 'single-customer', customerId],
+    queryFn: () => getWeClapSingleCustomer(customerId)
+  });
+};
+
+const getWeClapSingleCustomer = async (customerId: string, operation?: string) => {
+  const data = await weClappAPI.GET<WeClappCustomer>(
+    `/customer/id/${customerId}?serializeNulls${operation || ''}`
+  );
+  return data;
+};
+
+const getWeClappCustomers = async (endpoint?: string, operation?: string) => {
   const data = await weClappAPI.GET<GetWeClappCustomersResponse>(
-    `/customer?serializeNulls${operation || ''}`
+    `/customer${endpoint || ''}?serializeNulls${operation || ''}`
   );
   return data;
 };

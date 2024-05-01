@@ -49,7 +49,7 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
         allowsMultipleSelection: false, // Can only select one image
         allowsEditing: true, // Allows the user to crop / rotate their photo before uploading it
         quality: 1,
-        exif: false, // We don't want nor need that data.
+        exif: false // We don't want nor need that data.
       });
 
       if (result.canceled || !result.assets || result.assets.length === 0) {
@@ -71,7 +71,7 @@ export default function Avatar({ url, size = 150, onUpload }: Props) {
       const { data, error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(path, arraybuffer, {
-          contentType: image.mimeType ?? 'image/jpeg',
+          contentType: image.mimeType ?? 'image/jpeg'
         });
 
       if (uploadError) {

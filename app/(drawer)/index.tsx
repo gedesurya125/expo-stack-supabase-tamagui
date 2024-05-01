@@ -36,6 +36,9 @@ const OptionsButton = () => {
         }}>
         Existing Customer
       </Button>
+      <Text mt="$4" textAlign="center">
+        Or
+      </Text>
       <Button
         icon={<Ionicons name="person-add-outline" size={21} />}
         backgroundColor="$secondary"

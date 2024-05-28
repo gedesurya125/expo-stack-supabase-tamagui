@@ -12,6 +12,7 @@ import { SelectedCustomerContextProvider } from '~/context/SelectedCustomerConte
 import * as SystemUI from 'expo-system-ui';
 import { CartContextProvider } from '~/context/CartContext';
 import { ThemeProvider } from '~/components/ThemeProvider';
+import { BusinessCentralContextProvider } from '~/api/businessCentral/context/BusinessCentralContext';
 
 SplashScreen.preventAutoHideAsync();
 SystemUI.setBackgroundColorAsync('black');
@@ -54,43 +55,45 @@ const Navigator = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ExistingCustomerContextProvider>
-        <SelectedCustomerContextProvider>
-          <CartContextProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Stack
-                screenOptions={{
-                  headerStyle: {
-                    backgroundColor: theme.background.val
-                  },
-                  headerTitleStyle: {
-                    color: theme.color.val
-                  },
-                  contentStyle: {
-                    backgroundColor: '#151515'
-                  }
-                }}>
-                <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="profile"
-                  options={{ title: 'Profile', presentation: 'modal' }}
-                />
-                <Stack.Screen
-                  name="customer-detail-modal"
-                  options={{ title: 'Customer Detail', presentation: 'modal' }}
-                />
-                <Stack.Screen
-                  name="cart-detail-modal"
-                  options={{
-                    title: 'Cart Detail',
-                    presentation: 'modal'
-                  }}
-                />
-              </Stack>
-            </GestureHandlerRootView>
-          </CartContextProvider>
-        </SelectedCustomerContextProvider>
-      </ExistingCustomerContextProvider>
+      <BusinessCentralContextProvider>
+        <ExistingCustomerContextProvider>
+          <SelectedCustomerContextProvider>
+            <CartContextProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack
+                  screenOptions={{
+                    headerStyle: {
+                      backgroundColor: theme.background.val
+                    },
+                    headerTitleStyle: {
+                      color: theme.color.val
+                    },
+                    contentStyle: {
+                      backgroundColor: '#151515'
+                    }
+                  }}>
+                  <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+                  <Stack.Screen
+                    name="profile"
+                    options={{ title: 'Profile', presentation: 'modal' }}
+                  />
+                  <Stack.Screen
+                    name="customer-detail-modal"
+                    options={{ title: 'Customer Detail', presentation: 'modal' }}
+                  />
+                  <Stack.Screen
+                    name="cart-detail-modal"
+                    options={{
+                      title: 'Cart Detail',
+                      presentation: 'modal'
+                    }}
+                  />
+                </Stack>
+              </GestureHandlerRootView>
+            </CartContextProvider>
+          </SelectedCustomerContextProvider>
+        </ExistingCustomerContextProvider>
+      </BusinessCentralContextProvider>
     </QueryClientProvider>
   );
 };

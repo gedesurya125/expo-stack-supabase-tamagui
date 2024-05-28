@@ -13,7 +13,7 @@ const fetchWeClapp = async <T>(endPoint: string, options: RequestInit): Promise<
   })
     .then((response) => response?.json())
     .catch((err: any) => {
-      console.log('error fetching xentral', err);
+      console.log('error fetching weclap', err);
     });
 };
 

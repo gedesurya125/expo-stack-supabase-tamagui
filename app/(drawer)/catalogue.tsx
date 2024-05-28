@@ -12,7 +12,8 @@ import {
   Image,
   Card,
   H3,
-  Paragraph
+  Paragraph,
+  Button
 } from 'tamagui';
 import { useProductCategories } from '~/api/xentral/useProductCategory';
 import { XentralProjectId } from '~/api/xentral/types';
@@ -25,6 +26,8 @@ import { ImageContainer } from '~/components/ImageContainer';
 import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
 import { useWeClappArticles } from '~/api/weClapp/articles';
 import { ArticleType } from '~/api/weClapp/types/articles';
+import { StyledButton } from '~/components/StyledButton';
+import { supabase } from '~/utils/supabase';
 
 const Page = () => {
   const params = useLocalSearchParams();
@@ -47,6 +50,7 @@ const Page = () => {
             <AssignProjectToCustomer />
           )}
           <AllProducts />
+          {/* <TestArea /> */}
           {/* <ClothingIndustryCategoryProducs />
           <StickerIndustryCategoryProducs />
           <PaintIndustryProducts />
@@ -63,6 +67,27 @@ const AssignProjectToCustomer = () => {
   return (
     <View backgroundColor="$blue6" padding="$4" mt="$10">
       <H3 textAlign="center">{`This Customer is not registered to any Industry Category`}</H3>
+    </View>
+  );
+};
+
+const TestArea = () => {
+  const handleButtonClick = async () => {
+    const { data, error } = await supabase.rpc('purchase_reward', {
+      customer_id: 1,
+      erp_item_id: 32423,
+      reward_amount: 1,
+      reward_cost: 10
+    });
+    if (error) console.error('purchase reward is error', error);
+    else console.log('purchase reward is success', data);
+  };
+
+  return (
+    <View mt="$9">
+      <StyledButton onPress={handleButtonClick} colorStyle="danger">
+        Try to send the Supabase function
+      </StyledButton>
     </View>
   );
 };
@@ -166,7 +191,6 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
 
 const AllProducts = () => {
   const { data } = useWeClappArticles();
-  console.log('this is the products data', data);
 
   // TODO: the useWeClappArticles is returning paginated infinity lazy load, so latter this should implement lazy load
   return <ProductList title="All Products" productsData={data?.pages[0].result} />;

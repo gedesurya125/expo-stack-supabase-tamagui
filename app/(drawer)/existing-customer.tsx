@@ -42,13 +42,18 @@ const CustomerList = () => {
     isLoading
   } = useWeClapCustomers(searchQuery);
 
-  const dataToDisplay = data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
-    return [...acc, ...cur?.result];
-  }, []);
+  const hasData = data?.pages && data?.pages?.length > 0 && data?.pages[0]?.result;
+
+  const dataToDisplay = hasData
+    ? data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
+        return [...acc, ...cur?.result];
+      }, [])
+    : [];
 
   return (
     <>
       <SearchBar setSearch={setSearchInput} />
+      {!hasData && <Text>{JSON.stringify(data?.pages[0], null, 2)}</Text>}
       {isLoading ? (
         <Spinner size="large" />
       ) : (

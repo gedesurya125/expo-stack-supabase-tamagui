@@ -1,6 +1,6 @@
 import { useFetchBc } from './fetchBc';
 
-export const useFetchBcCompanies = () => {
+export const useBcCompanies = () => {
   return useFetchBc({
     queryKey: ['bc-companies'],
     fetchProps: {

@@ -18,6 +18,11 @@ import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 import { useWeClapCustomers } from '~/api/weClapp';
 import { WeClappCustomer } from '~/api/weClapp/types/customer';
+import {
+  BcCustomer,
+  useBcCustomers,
+  usePaginatedBcCustomers
+} from '~/api/businessCentral/useBcCustomer';
 
 // =========== Main COmponent ===========
 
@@ -34,26 +39,40 @@ export default function ExistingCustomer() {
 const CustomerList = () => {
   const [searchInput, setSearchInput] = React.useState('');
 
-  const searchQuery = searchInput ? `&company-ilike=%${searchInput}%` : '';
+  const searchQuery = searchInput ? `&$filter=displayName eq '${searchInput}'` : '';
+
+  // const { data: customers, isLoading: isLoadingCustomers } = useBcCustomers();
+
+  // const {
+  //   data,
+  //   fetchNextPage: fetchNextWeClappCustomers,
+  //   isLoading
+  // } = useWeClapCustomers(searchQuery);
 
   const {
-    data,
-    fetchNextPage: fetchNextWeClappCustomers,
+    data: customers,
+    fetchNextPage: fetchNextBcCustomers,
     isLoading
-  } = useWeClapCustomers(searchQuery);
+  } = usePaginatedBcCustomers(searchQuery);
 
-  const hasData = data?.pages && data?.pages?.length > 0 && data?.pages[0]?.result;
+  // const hasData = data?.pages && data?.pages?.length > 0 && data?.pages[0]?.result;
+  const hasData = customers?.pages && customers?.pages.length > 0;
 
+  // const dataToDisplay = hasData
+  //   ? data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
+  //       return [...acc, ...cur?.result];
+  //     }, [])
+  //   : [];
   const dataToDisplay = hasData
-    ? data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
-        return [...acc, ...cur?.result];
+    ? customers?.pages?.reduce<BcCustomer[]>((acc, cur) => {
+        return [...acc, ...(cur?.value || [])];
       }, [])
     : [];
 
   return (
     <>
       <SearchBar setSearch={setSearchInput} />
-      {!hasData && <Text>{JSON.stringify(data?.pages[0], null, 2)}</Text>}
+      {!hasData && <Text>{JSON.stringify(customers?.pages[0], null, 2)}</Text>}
       {isLoading ? (
         <Spinner size="large" />
       ) : (
@@ -65,7 +84,7 @@ const CustomerList = () => {
           // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
           onEndReachedThreshold={0.1}
           onEndReached={() => {
-            fetchNextWeClappCustomers();
+            fetchNextBcCustomers();
           }}
           style={{
             flex: 1
@@ -76,7 +95,7 @@ const CustomerList = () => {
   );
 };
 
-export const CustomerItem = ({ item }: { item: WeClappCustomer }) => {
+export const CustomerItem = ({ item }: { item: BcCustomer }) => {
   const theme = useTheme();
   const navigation = useNavigation();
   const { handleSetCustomerInfo } = useSelectedCustomerContext();
@@ -94,7 +113,7 @@ export const CustomerItem = ({ item }: { item: WeClappCustomer }) => {
           navigation.navigate('catalogue' as never);
         }}>
         <YStack flex={1}>
-          <Text color="$color">{item.company}</Text>
+          <Text color="$color">{item.displayName}</Text>
           <Text color="$color" mt="$2">
             {item.email}
           </Text>

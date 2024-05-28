@@ -30,12 +30,12 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
       ...props?.options?.headers
     }
   })
-    .then((res) => res.json())
+    .then((res) => res?.json())
     .catch((err) => {
-      console.log('Error when fetching xentral', err);
+      console.log('Error when fetching Business Central', err, props, apiUrl);
     });
 
-  return response;
+  return response || null;
 };
 
 type FetchBcHookProps = {

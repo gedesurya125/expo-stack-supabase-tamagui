@@ -7,7 +7,7 @@ import { useCurrentUser } from '~/utils/useCurrentUser';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 import * as WebBrowser from 'expo-web-browser';
-import { useFetchBcCompanies } from '~/api/businessCentral/useFetchBcCompanies';
+import { useBcCompanies } from '~/api/businessCentral/useBcCompanies';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -15,7 +15,7 @@ export default function TabOneScreen() {
   const { currentUser } = useCurrentUser();
   const { customerInfo } = useSelectedCustomerContext();
 
-  const { data, isLoading, error } = useFetchBcCompanies();
+  const { data, isLoading, error } = useBcCompanies();
 
   console.log('this is the companies, companies', isLoading, data);
 

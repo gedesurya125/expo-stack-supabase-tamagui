@@ -1,13 +1,12 @@
 import React from 'react';
-import { YStack, H2, Separator, Theme, Button, H1, Text, View } from 'tamagui';
+import { YStack, Button, Text } from 'tamagui';
 
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, Redirect } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import { useCurrentUser } from '~/utils/useCurrentUser';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 import * as WebBrowser from 'expo-web-browser';
-import { StyledButton } from '~/components/StyledButton';
 import { useFetchBcCompanies } from '~/api/businessCentral/useFetchBcCompanies';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -29,9 +28,6 @@ export default function TabOneScreen() {
         let's start your sales presentation
       </Text>
       <OptionsButton />
-      <StyledButton colorStyle="secondary" mt="$10" onPress={() => {}}>
-        Fetch Companies
-      </StyledButton>
     </YStack>
   );
 }

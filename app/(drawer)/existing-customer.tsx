@@ -16,13 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
-import { useWeClapCustomers } from '~/api/weClapp';
-import { WeClappCustomer } from '~/api/weClapp/types/customer';
-import {
-  BcCustomer,
-  useBcCustomers,
-  usePaginatedBcCustomers
-} from '~/api/businessCentral/useBcCustomer';
+
+import { BcCustomer, usePaginatedBcCustomers } from '~/api/businessCentral/useBcCustomer';
 
 // =========== Main COmponent ===========
 
@@ -39,15 +34,7 @@ export default function ExistingCustomer() {
 const CustomerList = () => {
   const [searchInput, setSearchInput] = React.useState('');
 
-  const searchQuery = searchInput ? `&$filter=displayName eq '${searchInput}'` : '';
-
-  // const { data: customers, isLoading: isLoadingCustomers } = useBcCustomers();
-
-  // const {
-  //   data,
-  //   fetchNextPage: fetchNextWeClappCustomers,
-  //   isLoading
-  // } = useWeClapCustomers(searchQuery);
+  const searchQuery = searchInput ? `&$filter=contains(displayName,'${searchInput}')` : '';
 
   const {
     data: customers,
@@ -55,14 +42,8 @@ const CustomerList = () => {
     isLoading
   } = usePaginatedBcCustomers(searchQuery);
 
-  // const hasData = data?.pages && data?.pages?.length > 0 && data?.pages[0]?.result;
   const hasData = customers?.pages && customers?.pages.length > 0;
 
-  // const dataToDisplay = hasData
-  //   ? data?.pages?.reduce<WeClappCustomer[]>((acc, cur) => {
-  //       return [...acc, ...cur?.result];
-  //     }, [])
-  //   : [];
   const dataToDisplay = hasData
     ? customers?.pages?.reduce<BcCustomer[]>((acc, cur) => {
         return [...acc, ...(cur?.value || [])];

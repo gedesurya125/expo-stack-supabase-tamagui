@@ -19,27 +19,25 @@ import { useCartContext } from '~/context/CartContext';
 import { ShopifyImageData } from '~/api/shopify/types';
 import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
 import { ProductDetailTab } from '~/components';
+import { useBcSingleItem } from '~/api/businessCentral/useBcSingleItem';
+import { BcItem } from '~/api/businessCentral/types/item';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
   const productId = params?.id as string;
 
-  const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
+  // const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
+  const bcProductData = useBcSingleItem({ itemId: productId });
 
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">
       <ScrollView>
         <View>
           {/* Tamagui image cannot has content fit, or object fit property */}
-          <StyledImage
-            source={shopifyProductData?.featuredImage?.url || imagePlaceholder}
-            contentFit="contain"
-            width="100%"
-            height={400}
-          />
+          <StyledImage source={imagePlaceholder} contentFit="contain" width="100%" height={400} />
           <ProductDetail
-            xentralProductData={xentralProductData}
-            shopifyImage={shopifyProductData?.featuredImage}
+            erpProductData={bcProductData?.data}
+            // shopifyImage={shopifyProductData?.featuredImage}
           />
         </View>
       </ScrollView>
@@ -48,24 +46,24 @@ export default function ProductDetailPage() {
 }
 
 const ProductDetail = ({
-  xentralProductData,
+  erpProductData,
   shopifyImage
 }: {
-  xentralProductData?: XentralProductData;
+  erpProductData?: BcItem | null;
   shopifyImage?: ShopifyImageData;
 }) => {
-  const hasVariants = xentralProductData?.variants && xentralProductData.variants?.length > 0;
+  // const hasVariants = erpProductData?.variants && erpProductData.variants?.length > 0;
   const { addProductToCart } = useCartContext();
-  if (!xentralProductData) return null;
+  if (!erpProductData) return null;
+
+  console.log('this is the erp product data', erpProductData);
 
   return (
     <YStack mt="$10">
-      <H2>{xentralProductData?.name}</H2>
-      <Paragraph>
-        {convertHTMLText(xentralProductData?.description) || 'this product has no description'}
-      </Paragraph>
+      <H2>{erpProductData?.displayName}</H2>
+      <Paragraph>${erpProductData?.unitPrice}</Paragraph>
       <ProductDetailTab />
-      {!hasVariants && (
+      {/* {!hasVariants && (
         <AddToCartButton
           mt="$10"
           onPress={() => {
@@ -83,7 +81,7 @@ const ProductDetail = ({
             return <ProductVariants key={index} variant={variant} />;
           })}
         </View>
-      )}
+      )} */}
     </YStack>
   );
 };

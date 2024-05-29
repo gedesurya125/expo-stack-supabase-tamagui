@@ -247,10 +247,6 @@ interface ProductCardProps extends React.ComponentProps<typeof Card> {
 export const ProductCard = ({ data, ...props }: ProductCardProps) => {
   const shopifyProducts = useBcShopifyProductByItemNumber({ itemNumber: data?.number });
 
-  if (shopifyProducts?.data) {
-    console.log('this is the shopify products', shopifyProducts);
-  }
-
   return (
     <Link
       asChild

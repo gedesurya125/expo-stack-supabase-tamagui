@@ -7,17 +7,12 @@ import { useCurrentUser } from '~/utils/useCurrentUser';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 import * as WebBrowser from 'expo-web-browser';
-import { useBcCompanies } from '~/api/businessCentral/useBcCompanies';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function TabOneScreen() {
   const { currentUser } = useCurrentUser();
   const { customerInfo } = useSelectedCustomerContext();
-
-  const { data, isLoading, error } = useBcCompanies();
-
-  console.log('this is the companies, companies', isLoading, data);
 
   return (
     <YStack flex={1} alignItems="center" justifyContent="center" backgroundColor="$background">

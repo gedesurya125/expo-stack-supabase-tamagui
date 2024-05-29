@@ -1,8 +1,10 @@
 import React from 'react';
 import { useBcToken } from '../fetchBcToken';
+import { BcCompany } from '../types/companies';
 
 type BusinessCentralContextValue = {
   token?: string;
+  companies?: BcCompany[];
 };
 
 const BusinessCentralContext = React.createContext<BusinessCentralContextValue>({ token: '' });

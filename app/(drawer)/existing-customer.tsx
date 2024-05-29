@@ -17,7 +17,8 @@ import { Pressable } from 'react-native';
 import { Link, useNavigation } from 'expo-router';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
-import { BcCustomer, usePaginatedBcCustomers } from '~/api/businessCentral/useBcCustomer';
+import { usePaginatedBcCustomers } from '~/api/businessCentral/useBcCustomers';
+import { BcCustomer } from '~/api/businessCentral/types/customer';
 
 // =========== Main COmponent ===========
 

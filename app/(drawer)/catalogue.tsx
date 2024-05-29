@@ -28,6 +28,11 @@ import { useWeClappArticles } from '~/api/weClapp/articles';
 import { ArticleType } from '~/api/weClapp/types/articles';
 import { StyledButton } from '~/components/StyledButton';
 import { supabase } from '~/utils/supabase';
+import { useBcItems } from '~/api/businessCentral/useBcItems';
+import { BcItem } from '~/api/businessCentral/types/item';
+import { useBcItemPicture } from '~/api/businessCentral/useBcItemPicture';
+import { useBcSingleItem } from '~/api/businessCentral/useBcSingleItem';
+import { useBcShopifyProductByItemNumber } from '~/api/businessCentral/useBcShopifyProductByItemNumber';
 
 const Page = () => {
   const params = useLocalSearchParams();
@@ -190,10 +195,12 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
 };
 
 const AllProducts = () => {
-  const { data } = useWeClappArticles();
+  const { data: allItems, isLoading, error } = useBcItems();
+
+  // const { data } = useWeClappArticles();
 
   // TODO: the useWeClappArticles is returning paginated infinity lazy load, so latter this should implement lazy load
-  return <ProductList title="All Products" productsData={data?.pages[0].result} />;
+  return <ProductList title="All Products" productsData={allItems?.value} />;
 };
 const ProductsByCategory = ({
   categoryId,
@@ -202,8 +209,9 @@ const ProductsByCategory = ({
   categoryId: XentralProjectId;
   categoryName: string;
 }) => {
-  const { data } = useWeClappArticles(`&articleCategoryId-eq=${categoryId}`);
-  return <ProductList title={`${categoryName} Products:`} productsData={data?.pages[0].result} />;
+  return null;
+  // const { data } = useWeClappArticles(`&articleCategoryId-eq=${categoryId}`);
+  // return <ProductList title={`${categoryName} Products:`} productsData={data?.pages[0].result} />;
 };
 // const ClothingIndustryCategoryProducs = () => {
 //   const { data } = useProductsByIndustry('clothing-industry');
@@ -219,7 +227,7 @@ const ProductsByCategory = ({
 // };
 
 // Reusable Components
-const ProductList = ({ title, productsData }: { title: string; productsData?: ArticleType[] }) => {
+const ProductList = ({ title, productsData }: { title: string; productsData?: BcItem[] }) => {
   return (
     <View mt="$16">
       <H3>{title}</H3>
@@ -233,19 +241,15 @@ const ProductList = ({ title, productsData }: { title: string; productsData?: Ar
 };
 
 interface ProductCardProps extends React.ComponentProps<typeof Card> {
-  data: ArticleType;
+  data: BcItem;
 }
 
 export const ProductCard = ({ data, ...props }: ProductCardProps) => {
-  // const { data: xentralExternalReferenceData } = useXentralProductExternalReference(data.id);
+  const shopifyProducts = useBcShopifyProductByItemNumber({ itemNumber: data?.number });
 
-  // const getShopifyProductId = (externalDataList: XentralProductExternalReference[]) => {
-  //   return externalDataList.find(
-  //     (data) => data.name === XENTRAL_EXTERNAL_REFERENCE_NAME.shopifyproductid
-  //   )?.number;
-  // };
-
-  // const shopifyProductNumber = getShopifyProductId(xentralExternalReferenceData?.data || []);
+  if (shopifyProducts?.data) {
+    console.log('this is the shopify products', shopifyProducts);
+  }
 
   return (
     <Link
@@ -257,17 +261,16 @@ export const ProductCard = ({ data, ...props }: ProductCardProps) => {
         }
       }}>
       <Card {...props} width={300} padded>
-        {/* <View>
-          {shopifyProductNumber ? (
-            <XentralCardImage shopifyProductNumber={shopifyProductNumber} />
+        <View>
+          {shopifyProducts?.data ? (
+            <XentralCardImage shopifyProductNumber={shopifyProducts?.data?.Id?.toString()} />
           ) : (
             <ImageContainer />
           )}
-        </View> */}
-        <H3 mt="$5">{data?.name}</H3>
+        </View>
+        <H3 mt="$5">{data?.displayName}</H3>
         <View className="__card-description" mt="$5">
-          <Text>{convertHTMLText(data?.description)}</Text>
-          {data?.targetStockQuantity && <Text>{data?.targetStockQuantity} items available</Text>}
+          <Text>{convertHTMLText(shopifyProducts?.data?.Description || '')}</Text>
         </View>
       </Card>
     </Link>

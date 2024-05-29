@@ -1,6 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchBc, useFetchBc } from './fetchBc';
+import { fetchBc } from './fetchBc';
+import { useFetchBc } from './useFetchBc';
 import { useBusinessCentralContext } from './context/BusinessCentralContext';
+import { BcCustomer } from './types/customer';
 
 export const useBcCustomers = () => {
   return useFetchBc<CustomerFetchResponse>({
@@ -35,33 +37,3 @@ export const usePaginatedBcCustomers = (operation?: string) => {
 interface CustomerFetchResponse {
   value: BcCustomer[];
 }
-
-export type BcCustomer = {
-  addressLine1: string;
-  addressLine2: string;
-  balanceDue: number;
-  blocked: string;
-  city: string;
-  country: string;
-  creditLimit: number;
-  currencyCode: string;
-  currencyId: string;
-  displayName: string;
-  email: string;
-  id: string;
-  lastModifiedDateTime: string;
-  number: string;
-  paymentMethodId: string;
-  paymentTermsId: string;
-  phoneNumber: string;
-  postalCode: string;
-  salespersonCode: string;
-  shipmentMethodId: string;
-  state: string;
-  taxAreaDisplayName: string;
-  taxAreaId: string;
-  taxLiable: boolean;
-  taxRegistrationNumber: string;
-  type: string;
-  website: string;
-};

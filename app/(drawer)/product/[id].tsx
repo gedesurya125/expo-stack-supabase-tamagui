@@ -21,6 +21,7 @@ import { convertHTMLText } from '~/api/shopify/helpers/convertHTMLText';
 import { ProductDetailTab } from '~/components';
 import { useBcSingleItem } from '~/api/businessCentral/useBcSingleItem';
 import { BcItem } from '~/api/businessCentral/types/item';
+import { useBcItemsVariants } from '~/api/businessCentral/useBcItemVariants';
 
 export default function ProductDetailPage() {
   const params = useLocalSearchParams();
@@ -29,7 +30,9 @@ export default function ProductDetailPage() {
   // const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
   const { data } = useBcSingleItem({ itemId: productId });
 
-  console.log('this is the BC product data', data);
+  const { data: ItemVariantData, isLoading, error } = useBcItemsVariants({ itemId: productId });
+
+  console.log('this is the BC product data', { data, ItemVariantData });
 
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">

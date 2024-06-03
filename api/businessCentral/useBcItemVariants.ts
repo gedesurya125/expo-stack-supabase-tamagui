@@ -1,15 +1,19 @@
+import { BcItemVariant } from './types/bcItemVariant';
 import { useFetchBc } from './useFetchBc';
-import { BcItem } from './types/item';
 
-export const useBcItems = () => {
-  return useFetchBc<BcItemHookResponse>({
-    queryKey: ['bc-items'],
+interface UseBcItemVariantsProps {
+  itemId: string;
+}
+
+export const useBcItemsVariants = ({ itemId }: UseBcItemVariantsProps) => {
+  return useFetchBc<BcItemVariantsHookResponse>({
+    queryKey: ['bc-item-variants', itemId],
     fetchProps: {
-      endPoint: `/items`
+      endPoint: `/items(${itemId})/itemVariants`
     }
   });
 };
 
-type BcItemHookResponse = {
-  value: BcItem[];
+type BcItemVariantsHookResponse = {
+  value: BcItemVariant[];
 };

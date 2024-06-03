@@ -27,3 +27,26 @@ export type BcCustomer = {
   type: string;
   website: string;
 };
+
+export type NewCustomerRequest = {
+  displayName: string;
+  type: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode: string;
+  phoneNumber: string;
+  email: string;
+  website: string;
+  taxLiable: true;
+  taxAreaId: string;
+  taxRegistrationNumber: string;
+  currencyId: string;
+  currencyCode: string;
+  paymentTermsId: string;
+  shipmentMethodId: string;
+  paymentMethodId: string;
+  blocked: string;
+};

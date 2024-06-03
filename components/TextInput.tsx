@@ -1,5 +1,4 @@
-import { useField } from 'formik';
-import { useTheme, Input } from 'tamagui';
+import { useTheme, Input, View } from 'tamagui';
 import { InputContainer } from './InputContainer';
 
 export const TextInput = ({ ...props }: React.ComponentProps<typeof Input>) => {
@@ -10,20 +9,20 @@ export const TextInput = ({ ...props }: React.ComponentProps<typeof Input>) => {
       {...props}
       borderColor="$orange6"
       focusStyle={{
-        borderColor: theme.blue6,
+        borderColor: theme.blue6
       }}
     />
   );
 };
 
-interface LabelledTextInputProps {
+interface LabelledTextInputProps extends React.ComponentProps<typeof View> {
   label: string;
   textInputProps?: React.ComponentProps<typeof TextInput>;
 }
 
-export const LabelledTextInput = ({ label, textInputProps }: LabelledTextInputProps) => {
+export const LabelledTextInput = ({ label, textInputProps, ...props }: LabelledTextInputProps) => {
   return (
-    <InputContainer label={label}>
+    <InputContainer label={label} {...props}>
       <TextInput {...textInputProps} />
     </InputContainer>
   );

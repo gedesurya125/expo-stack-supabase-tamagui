@@ -20,6 +20,9 @@ export const StyledButton = styled(Button, {
       },
       clear: {
         backgroundColor: 'transparent'
+      },
+      disabled: {
+        backgroundColor: '$gray6'
       }
     }
   }

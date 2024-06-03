@@ -19,6 +19,9 @@ import { imagePlaceholder } from '~/images/placeholder';
 import { StyledButton } from '~/components/StyledButton';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductInCartType, useCartContext } from '~/context/CartContext';
+import { Link } from 'expo-router';
+import { useCustomerContext } from '~/context/CustomersContext';
+import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 export default function ModalScreen() {
   const status = null;
@@ -39,8 +42,26 @@ const CartInfo = () => {
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$4" paddingVertical="$4">
       <Heading>Customer Cart: </Heading>
       <ProductList />
-      <StyledButton colorStyle="primary">Checkout</StyledButton>
+      <CheckoutButton />
     </YStack>
+  );
+};
+
+const CheckoutButton = () => {
+  const { customerInfo } = useSelectedCustomerContext();
+  const { totalProductsQuantity } = useCartContext();
+
+  console.log('this is the total productquantity', totalProductsQuantity);
+  const isDisableButton = totalProductsQuantity === 0;
+  const hasCustomerInfo = !!customerInfo;
+
+  return (
+    <Link
+      asChild
+      href={hasCustomerInfo ? '/checkout/options' : '/(drawer)/new-customer'}
+      disabled={isDisableButton}>
+      <StyledButton colorStyle={isDisableButton ? 'disabled' : 'primary'}>Checkout</StyledButton>
+    </Link>
   );
 };
 

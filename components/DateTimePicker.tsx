@@ -10,9 +10,10 @@ interface DateTimePickerProps {
   value: string;
   handleChange: (e: any) => void;
   onBlur: (e: any) => void;
+  mode?: 'date' | 'time';
 }
 
-export const DateTimePicker = ({ value, handleChange, onBlur }: DateTimePickerProps) => {
+export const DateTimePicker = ({ value, handleChange, onBlur, mode }: DateTimePickerProps) => {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   // const [value, setValue] = useState(new Date());
 
@@ -35,7 +36,7 @@ export const DateTimePicker = ({ value, handleChange, onBlur }: DateTimePickerPr
   return (
     <View position="relative" flexDirection="row" onBlur={onBlur}>
       <TextInput
-        value={new Date(value).toLocaleDateString()}
+        value={mode === 'time' ? new Date(value).toTimeString() : new Date(value).toDateString()}
         onTouchStart={showDatePicker}
         borderTopRightRadius={0}
         borderBottomRightRadius={0}
@@ -46,11 +47,15 @@ export const DateTimePicker = ({ value, handleChange, onBlur }: DateTimePickerPr
         borderBottomLeftRadius={0}
         backgroundColor="$orange6"
         onPress={showDatePicker}>
-        <Ionicons name="calendar-outline" size={20} color={theme.color.val} />
+        <Ionicons
+          name={mode === 'time' ? 'time-outline' : 'calendar-outline'}
+          size={20}
+          color={theme.color.val}
+        />
       </Button>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
-        mode="date"
+        mode={mode || 'date'}
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
         textColor={theme.color.val}

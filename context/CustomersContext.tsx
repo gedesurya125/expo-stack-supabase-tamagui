@@ -1,3 +1,4 @@
+// TODO: THIS CONTEXT IS NOT USED ANYMORE BECAUSE WE HAVE SelectedCustomerContext
 import React, { Dispatch, SetStateAction } from 'react';
 import { useWeClapCustomers } from '~/api/weClapp';
 import { CustomerFilter, CustomerOrder, getCustomers } from '~/api/xentral';
@@ -32,16 +33,16 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
 
   // const { data } = useWeClapCustomers();
 
-  const filterValue: CustomerFilter = {
-    key: 'name',
-    op: 'contains',
-    value: nameFilter
-  };
+  // const filterValue: CustomerFilter = {
+  //   key: 'name',
+  //   op: 'contains',
+  //   value: nameFilter
+  // };
 
-  const orderValue: CustomerOrder = {
-    field: 'name',
-    direction: 'asc'
-  };
+  // const orderValue: CustomerOrder = {
+  //   field: 'name',
+  //   direction: 'asc'
+  // };
 
   // ? reset the page to 1 when name filter change
   // React.useEffect(() => {

@@ -31,8 +31,6 @@ import { StyledButton } from '~/components/StyledButton';
 import { supabase } from '~/utils/supabase';
 import { useBcItems } from '~/api/businessCentral/useBcItems';
 import { BcItem } from '~/api/businessCentral/types/item';
-import { useBcItemPicture } from '~/api/businessCentral/useBcItemPicture';
-import { useBcSingleItem } from '~/api/businessCentral/useBcSingleItem';
 import { useBcShopifyProductByItemNumber } from '~/api/businessCentral/useBcShopifyProductByItemNumber';
 
 const Page = () => {
@@ -77,26 +75,26 @@ const AssignProjectToCustomer = () => {
   );
 };
 
-const TestArea = () => {
-  const handleButtonClick = async () => {
-    const { data, error } = await supabase.rpc('purchase_reward', {
-      customer_id: 1,
-      erp_item_id: 32423,
-      reward_amount: 1,
-      reward_cost: 10
-    });
-    if (error) console.error('purchase reward is error', error);
-    else console.log('purchase reward is success', data);
-  };
+// const TestArea = () => {
+//   const handleButtonClick = async () => {
+//     const { data, error } = await supabase.rpc('purchase_reward', {
+//       customer_id: 1,
+//       erp_item_id: 32423,
+//       reward_amount: 1,
+//       reward_cost: 10
+//     });
+//     if (error) console.error('purchase reward is error', error);
+//     else console.log('purchase reward is success', data);
+//   };
 
-  return (
-    <View mt="$9">
-      <StyledButton onPress={handleButtonClick} colorStyle="danger">
-        Try to send the Supabase function
-      </StyledButton>
-    </View>
-  );
-};
+//   return (
+//     <View mt="$9">
+//       <StyledButton onPress={handleButtonClick} colorStyle="danger">
+//         Try to send the Supabase function
+//       </StyledButton>
+//     </View>
+//   );
+// };
 
 const SpecialDeals = () => {
   const { specialDeals, achievements } = dashboardData;
@@ -139,70 +137,68 @@ const SpecialDeals = () => {
   );
 };
 
-const ProductCategories = () => {
-  const { data } = useProductCategories();
+// const ProductCategories = () => {
+//   const { data } = useProductCategories();
 
-  return (
-    <View alignItems="center" mt="$14">
-      <H2>Product Categories:</H2>
-      <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
-        {/* @ts-ignore */}
-        {data?.data?.map((productCategory: any, index: number) => {
-          return <ProductCategoryCard key={index} data={productCategory} />;
-        })}
-      </View>
-    </View>
-  );
-};
+//   return (
+//     <View alignItems="center" mt="$14">
+//       <H2>Product Categories:</H2>
+//       <View display="flex" flexDirection="row" flexWrap="wrap" mt="$5">
+//         {/* @ts-ignore */}
+//         {data?.data?.map((productCategory: any, index: number) => {
+//           return <ProductCategoryCard key={index} data={productCategory} />;
+//         })}
+//       </View>
+//     </View>
+//   );
+// };
 
-const ProductCategoryCard = ({ data }: { data: any }) => {
-  return (
-    <Card
-      width={`${100}%`}
-      $gtSm={{
-        width: `${100 / 2}%`
-      }}
-      $gtMd={{
-        width: `${100 / 3}%`
-      }}
-      padding="$3"
-      backgroundColor="transparent"
-      display="flex"
-      flexDirection="row"
-      alignItems="center">
-      <View borderColor="$primary" borderWidth="$0.5" borderRadius="$10" overflow="hidden">
-        <TamaguiImage
-          height={40}
-          width={40}
-          $gtSm={{
-            height: 50,
-            width: 50
-          }}
-          source={{
-            uri: imagePlaceholder
-          }}
-        />
-      </View>
-      <Paragraph
-        ml="$5"
-        fontSize="$5"
-        $gtSm={{
-          fontSize: '$8'
-        }}>
-        {data.name}
-      </Paragraph>
-    </Card>
-  );
-};
+// const ProductCategoryCard = ({ data }: { data: any }) => {
+//   return (
+//     <Card
+//       width={`${100}%`}
+//       $gtSm={{
+//         width: `${100 / 2}%`
+//       }}
+//       $gtMd={{
+//         width: `${100 / 3}%`
+//       }}
+//       padding="$3"
+//       backgroundColor="transparent"
+//       display="flex"
+//       flexDirection="row"
+//       alignItems="center">
+//       <View borderColor="$primary" borderWidth="$0.5" borderRadius="$10" overflow="hidden">
+//         <TamaguiImage
+//           height={40}
+//           width={40}
+//           $gtSm={{
+//             height: 50,
+//             width: 50
+//           }}
+//           source={{
+//             uri: imagePlaceholder
+//           }}
+//         />
+//       </View>
+//       <Paragraph
+//         ml="$5"
+//         fontSize="$5"
+//         $gtSm={{
+//           fontSize: '$8'
+//         }}>
+//         {data.name}
+//       </Paragraph>
+//     </Card>
+//   );
+// };
 
 const AllProducts = () => {
   const { data: allItems, isLoading, error } = useBcItems();
 
-  // const { data } = useWeClappArticles();
-
-  // TODO: the useWeClappArticles is returning paginated infinity lazy load, so latter this should implement lazy load
-
   if (isLoading) return <Spinner size="large" mt="$16" />;
+
+  console.log('this is the products', allItems);
 
   return <ProductList title="All Products" productsData={allItems?.value} />;
 };

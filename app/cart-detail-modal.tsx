@@ -87,9 +87,9 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
           uri: data?.image?.url || imagePlaceholder
         }}
       />
-      <YStack flex={1}>
-        <H5>{data?.xentralProductData.name}</H5>
-        <Text>Ammount: {getProductQuantity(data.xentralProductData.id)}</Text>
+      <YStack flex={1} marginLeft="$4">
+        <H5>{data?.item.displayName}</H5>
+        <Text>Ammount: {getProductQuantity(data.item.id)}</Text>
       </YStack>
       <XStack ml="auto" gap="$2">
         <StyledButton
@@ -97,7 +97,7 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
           paddingVertical="$1"
           paddingHorizontal="$2"
           onPress={() => {
-            increaseSingleProductInCart(data.xentralProductData.id);
+            increaseSingleProductInCart(data.item.id);
           }}>
           <Ionicons name="add-outline" size={30} color="white" />
         </StyledButton>
@@ -106,7 +106,7 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
           paddingVertical="$1"
           paddingHorizontal="$2"
           onPress={() => {
-            decreaseSingleProductInCart(data.xentralProductData.id);
+            decreaseSingleProductInCart(data.item.id);
           }}>
           <Ionicons name="remove-outline" size={30} color="white" />
         </StyledButton>
@@ -115,7 +115,7 @@ const ProductItem = ({ data }: { data: ProductInCartType }) => {
           paddingVertical="$1"
           paddingHorizontal="$3"
           onPress={() => {
-            removeSingleProductFromCart(data.xentralProductData.id);
+            removeSingleProductFromCart(data.item.id);
           }}>
           <Ionicons name="trash-outline" size={23} color="white" />
         </StyledButton>

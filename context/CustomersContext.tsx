@@ -8,7 +8,7 @@ type CustomersContextValue = {
   nameFilter: string;
   setNameFilter: Dispatch<SetStateAction<string>>;
   setCustomers: Dispatch<SetStateAction<XentralCustomer[]>>;
-  fetchNextPage: () => Promise<void>;
+  fetchNextPage?: () => Promise<void>;
   clearExistingCustomer: () => void;
   page: number;
 };
@@ -30,7 +30,7 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
   const [nameFilter, setNameFilter] = React.useState('');
   const [page, setPage] = React.useState(0);
 
-  const { data } = useWeClapCustomers();
+  // const { data } = useWeClapCustomers();
 
   const filterValue: CustomerFilter = {
     key: 'name',
@@ -44,35 +44,35 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
   };
 
   // ? reset the page to 1 when name filter change
-  React.useEffect(() => {
-    const fetchCustomer = async () => {
-      const newCustomer = await getCustomers({
-        pageNumber: 1,
-        pageSize: PAGE_SIZE,
-        filter: filterValue,
-        order: orderValue
-      });
-      if (newCustomer?.data?.length > 0) {
-        setCustomers(newCustomer?.data);
-        setPage(1);
-      }
-    };
+  // React.useEffect(() => {
+  //   const fetchCustomer = async () => {
+  //     const newCustomer = await getCustomers({
+  //       pageNumber: 1,
+  //       pageSize: PAGE_SIZE,
+  //       filter: filterValue,
+  //       order: orderValue
+  //     });
+  //     if (newCustomer?.data?.length > 0) {
+  //       setCustomers(newCustomer?.data);
+  //       setPage(1);
+  //     }
+  //   };
 
-    fetchCustomer();
-  }, [nameFilter]);
+  //   fetchCustomer();
+  // }, [nameFilter]);
 
-  const fetchNextPage = async () => {
-    const nextPageCustomers = await getCustomers({
-      pageNumber: page + 1,
-      pageSize: PAGE_SIZE,
-      filter: filterValue,
-      order: orderValue
-    });
-    if (nextPageCustomers?.data?.length > 0) {
-      setCustomers((state) => [...state, ...nextPageCustomers?.data]);
-      setPage((state) => state + 1);
-    }
-  };
+  // const fetchNextPage = async () => {
+  //   const nextPageCustomers = await getCustomers({
+  //     pageNumber: page + 1,
+  //     pageSize: PAGE_SIZE,
+  //     filter: filterValue,
+  //     order: orderValue
+  //   });
+  //   if (nextPageCustomers?.data?.length > 0) {
+  //     setCustomers((state) => [...state, ...nextPageCustomers?.data]);
+  //     setPage((state) => state + 1);
+  //   }
+  // };
 
   const clearExistingCustomer = () => {
     setPage(0);
@@ -85,7 +85,7 @@ export const ExistingCustomerContextProvider = ({ children }: { children: React.
         nameFilter,
         setCustomers,
         setNameFilter,
-        fetchNextPage,
+        // fetchNextPage,
         clearExistingCustomer,
         page
       }}>

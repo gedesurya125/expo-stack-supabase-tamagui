@@ -1,9 +1,9 @@
 import React, { createContext, useContext } from 'react';
+import { BcItem } from '~/api/businessCentral/types/item';
 import { ShopifyImageData } from '~/api/shopify/types';
-import { XentralProductData, xentralProductId } from '~/api/xentral/types';
 
 export interface ProductInCartType {
-  xentralProductData: XentralProductData;
+  item: BcItem;
   image?: ShopifyImageData;
   isVariant?: boolean;
   quantity?: number;
@@ -12,10 +12,10 @@ export interface ProductInCartType {
 interface CartContextValue {
   products: ProductInCartType[];
   addProductToCart: (productDetails: ProductInCartType) => void;
-  removeSingleProductFromCart: (xentralId: xentralProductId) => void;
-  increaseSingleProductInCart: (prodcutId: xentralProductId) => void;
-  decreaseSingleProductInCart: (productId: xentralProductId) => void;
-  getProductQuantity: (productId: xentralProductId) => number;
+  removeSingleProductFromCart: (xentralId: string) => void;
+  increaseSingleProductInCart: (prodcutId: string) => void;
+  decreaseSingleProductInCart: (productId: string) => void;
+  getProductQuantity: (productId: string) => number;
   totalProductsQuantity: number;
 }
 
@@ -37,25 +37,20 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const [productInCart, setProductInCart] = React.useState<ProductInCartType[]>([]);
 
   const addProductToCart = (productDetails: ProductInCartType) => {
-    if (
-      productInCart.find(
-        (product) => product.xentralProductData.id === productDetails.xentralProductData.id
-      )
-    )
-      return;
+    if (productInCart.find((product) => product.item.id === productDetails.item.id)) return;
 
     setProductInCart((state) => [...state, { ...productDetails, quantity: 1 }]);
   };
 
-  const removeSingleProductFromCart = (xentralId: xentralProductId) => {
-    const newCart = productInCart.filter((product) => product.xentralProductData.id !== xentralId);
+  const removeSingleProductFromCart = (xentralId: string) => {
+    const newCart = productInCart.filter((product) => product.item.id !== xentralId);
     setProductInCart(newCart);
   };
 
-  const decreaseSingleProductInCart = (productId: xentralProductId) => {
+  const decreaseSingleProductInCart = (productId: string) => {
     const newCart = productInCart
       .map((product) => {
-        if (product.xentralProductData.id !== productId) return product;
+        if (product.item.id !== productId) return product;
         const currentProductQuantity = product?.quantity || 0;
         let newQuantity;
         if (currentProductQuantity - 1 < 0) {
@@ -73,16 +68,16 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     setProductInCart(newCart);
   };
 
-  const increaseSingleProductInCart = (prodcutId: xentralProductId) => {
+  const increaseSingleProductInCart = (prodcutId: string) => {
     const newCart = productInCart.map((product) => {
-      if (product.xentralProductData.id !== prodcutId) return product;
+      if (product.item.id !== prodcutId) return product;
 
       const currentProductQuantity = product?.quantity || 0;
 
       let newQuantity;
 
-      if (currentProductQuantity + 1 > product.xentralProductData.stockCount) {
-        newQuantity = product.xentralProductData.stockCount;
+      if (currentProductQuantity + 1 > product.item.inventory) {
+        newQuantity = product.item.inventory;
       } else {
         newQuantity = currentProductQuantity + 1;
       }
@@ -96,10 +91,8 @@ export const CartContextProvider = ({ children }: CartContextProviderProps) => {
     setProductInCart(newCart);
   };
 
-  const getProductQuantity = (prodcutId: xentralProductId) => {
-    return (
-      productInCart.find((product) => product.xentralProductData.id === prodcutId)?.quantity || 0
-    );
+  const getProductQuantity = (prodcutId: string) => {
+    return productInCart.find((product) => product.item.id === prodcutId)?.quantity || 0;
   };
 
   const totalProductsQuantity = productInCart.reduce((acc, cur) => {

@@ -76,7 +76,10 @@ const ProductDetail = ({
   return (
     <YStack mt="$10">
       <H2>{erpProductData?.displayName}</H2>
-      <Paragraph>${erpProductData?.unitPrice}</Paragraph>
+      <Paragraph>Price per unit : ${erpProductData?.unitPrice}</Paragraph>
+      <Paragraph>
+        Stock available : {erpProductData?.inventory} {erpProductData.baseUnitOfMeasureCode}
+      </Paragraph>
       <ProductDetailTab />
       {!hasVariants && (
         <AddToCartButton

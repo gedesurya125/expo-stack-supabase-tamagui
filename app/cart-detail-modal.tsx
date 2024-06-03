@@ -39,6 +39,7 @@ const CartInfo = () => {
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$4" paddingVertical="$4">
       <Heading>Customer Cart: </Heading>
       <ProductList />
+      <StyledButton colorStyle="primary">Checkout</StyledButton>
     </YStack>
   );
 };

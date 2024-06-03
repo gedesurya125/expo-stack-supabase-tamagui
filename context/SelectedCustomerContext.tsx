@@ -1,7 +1,9 @@
 import React, { useContext, createContext, ReactNode, useState } from 'react';
+import { BcCustomer } from '~/api/businessCentral/types/customer';
+import { CustomerBasicInfo } from '~/components/AddCustomerForm';
 
 interface ContextValue {
-  customerInfo?: any;
+  customerInfo?: BcCustomer | null;
   handleSetCustomerInfo: (customerInfo: any) => void;
   handleClearCustomerInfo: () => void;
 }
@@ -21,7 +23,7 @@ interface SelectedCustomerContextProviderProps {
 export const SelectedCustomerContextProvider = ({
   children
 }: SelectedCustomerContextProviderProps) => {
-  const [customerInfo, setCustomerInfo] = useState(null);
+  const [customerInfo, setCustomerInfo] = useState<BcCustomer | null>(null);
 
   // TODO: notify to change current customer
   const handleSetCustomerInfo = (customerInfo: any) => {
@@ -31,6 +33,8 @@ export const SelectedCustomerContextProvider = ({
   const handleClearCustomerInfo = () => {
     setCustomerInfo(null);
   };
+
+  console.log('this is the customer info', customerInfo);
 
   return (
     <SelectedCustomerContext.Provider

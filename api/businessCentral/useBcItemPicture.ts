@@ -10,7 +10,7 @@ export const useBcItemPicture = ({ itemId, debug }: { itemId: string; debug?: st
   return useFetchBc<PictureBcResponse>({
     queryKey: ['bc-item', 'picture'],
     fetchProps: {
-      endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture/pictureContent`,
+      endPoint: `/items(${itemId})/picture/pictureContent`,
       options: {
         headers: {
           Accept: 'image/*'
@@ -21,7 +21,7 @@ export const useBcItemPicture = ({ itemId, debug }: { itemId: string; debug?: st
 
   // React.useEffect(() => {
   //   const getRawPicture = async () => {
-  //     const endPoint = `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture(${data?.id})/content`;
+  //     const endPoint = `/items(${itemId})/picture(${data?.id})/content`;
 
   //     const picture = await fetch(data['pictureContent@odata.mediaReadLink'], {
   //       method: 'GET',

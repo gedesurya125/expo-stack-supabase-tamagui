@@ -12,7 +12,7 @@ export const useSingleBcCustomers = ({ customerId }: SingleCustomerHooksProps) =
   return useFetchBc<BcCustomer>({
     queryKey: ['bc-customer', customerId],
     fetchProps: {
-      endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/customers(${customerId})`
+      endPoint: `/customers(${customerId})`
     }
   });
 };

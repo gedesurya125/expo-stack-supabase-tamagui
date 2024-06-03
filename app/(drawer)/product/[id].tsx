@@ -27,7 +27,9 @@ export default function ProductDetailPage() {
   const productId = params?.id as string;
 
   // const { xentralProductData, shopifyProductData } = useCombinedSingleProductData(productId);
-  const bcProductData = useBcSingleItem({ itemId: productId });
+  const { data } = useBcSingleItem({ itemId: productId });
+
+  console.log('this is the BC product data', data);
 
   return (
     <YStack backgroundColor="$background" flex={1} padding="$4">
@@ -36,7 +38,7 @@ export default function ProductDetailPage() {
           {/* Tamagui image cannot has content fit, or object fit property */}
           <StyledImage source={imagePlaceholder} contentFit="contain" width="100%" height={400} />
           <ProductDetail
-            erpProductData={bcProductData?.data}
+            erpProductData={data}
             // shopifyImage={shopifyProductData?.featuredImage}
           />
         </View>
@@ -55,8 +57,6 @@ const ProductDetail = ({
   // const hasVariants = erpProductData?.variants && erpProductData.variants?.length > 0;
   const { addProductToCart } = useCartContext();
   if (!erpProductData) return null;
-
-  console.log('this is the erp product data', erpProductData);
 
   return (
     <YStack mt="$10">

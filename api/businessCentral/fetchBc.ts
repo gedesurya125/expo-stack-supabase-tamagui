@@ -8,8 +8,9 @@ export const getBcApiBaseUrl = (endPoint: string) => {
   const BASE_API_URL = process.env.EXPO_PUBLIC_BC_BASE_API_URL;
   const TENANT_ID = process.env.EXPO_PUBLIC_TENANT_ID;
   const ENVIRONMENT = process.env.EXPO_PUBLIC_BUSINESS_CENTRAL_ENVIRONMENT;
+  const COMPANY_ID = process.env.EXPO_PUBLIC_BC_COMPANY_ID;
 
-  const apiUrl = `${BASE_API_URL}/${TENANT_ID}/${ENVIRONMENT}/api/v2.0${endPoint || ''}`;
+  const apiUrl = `${BASE_API_URL}/${TENANT_ID}/${ENVIRONMENT}/api/v2.0/companies(${COMPANY_ID})${endPoint || ''}`;
   return apiUrl;
 };
 export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {

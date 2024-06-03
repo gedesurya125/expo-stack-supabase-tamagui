@@ -8,7 +8,7 @@ export const useBcCustomers = () => {
   return useFetchBc<CustomerFetchResponse>({
     queryKey: ['bc-customers'],
     fetchProps: {
-      endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/customers`
+      endPoint: `/customers`
     }
   });
 };
@@ -24,7 +24,7 @@ export const usePaginatedBcCustomers = (operation?: string) => {
     queryFn: ({ pageParam = initialPage }) =>
       fetchBc<CustomerFetchResponse>({
         token,
-        endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/customers?$top=${pageSize}&$skip=${(Number(pageParam) - 1) * pageSize}${operation || ''}`
+        endPoint: `/customers?$top=${pageSize}&$skip=${(Number(pageParam) - 1) * pageSize}${operation || ''}`
       }),
     getNextPageParam: (lastPage, pages) => {
       if (!lastPage || lastPage?.value?.length < pageSize) return;

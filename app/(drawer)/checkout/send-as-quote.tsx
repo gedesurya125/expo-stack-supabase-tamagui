@@ -1,5 +1,8 @@
-import { Card, Heading, ScrollView, Separator, Text, View, YStack } from 'tamagui';
+import { Card, Heading, ScrollView, Separator, Spinner, Text, View, YStack } from 'tamagui';
+import { BcCustomer } from '~/api/businessCentral/types/customer';
+import { BcPaymentTerm } from '~/api/businessCentral/types/paymentTerm';
 import { useBcSinglePaymentTerms } from '~/api/businessCentral/useBcSinglePaymentTerms';
+import { useCreateBcSalesQuote } from '~/api/businessCentral/useCreateBcSalesQuote';
 import { LabelledDateTimePicker } from '~/components/DateTimePicker';
 import { ProductCartList, ProductItem } from '~/components/ProductInCartList';
 import { StyledButton } from '~/components/StyledButton';
@@ -64,16 +67,20 @@ const Information = ({
 };
 
 const CheckoutInfo = () => {
+  const { customerInfo } = useSelectedCustomerContext();
+
+  const { data: paymentTerm } = useBcSinglePaymentTerms(customerInfo?.paymentTermsId || '');
+
   return (
     <YStack width="50%" backgroundColor="$gray3">
       <ScrollView>
         <YStack padding="$3" gap="$4">
           <ShipmentPreferenceCard />
-          <DeliveryAddress />
-          <BillingDetails />
-          <InvoiceDetails />
+          <DeliveryAddress customerInfo={customerInfo} />
+          <BillingDetails customerInfo={customerInfo} paymentTerm={paymentTerm} />
+          <InvoiceDetails customerInfo={customerInfo} />
           <Separator marginTop="auto" />
-          <ProcessButton />
+          <ProcessButton customerInfo={customerInfo} paymentTerm={paymentTerm} />
         </YStack>
       </ScrollView>
     </YStack>
@@ -109,9 +116,7 @@ const ShipmentPreferenceCard = () => {
     </InformationCard>
   );
 };
-const DeliveryAddress = () => {
-  const { customerInfo } = useSelectedCustomerContext();
-
+const DeliveryAddress = ({ customerInfo }: { customerInfo?: BcCustomer | null }) => {
   return (
     <InformationCard title="Delivery Address">
       <LabelledTextInput
@@ -137,10 +142,13 @@ const DeliveryAddress = () => {
     </InformationCard>
   );
 };
-const BillingDetails = () => {
-  const { customerInfo } = useSelectedCustomerContext();
-  const { data: paymentTerm } = useBcSinglePaymentTerms(customerInfo?.paymentTermsId || '');
-
+const BillingDetails = ({
+  customerInfo,
+  paymentTerm
+}: {
+  customerInfo?: BcCustomer | null;
+  paymentTerm?: BcPaymentTerm | null;
+}) => {
   console.log('this is the payment term data', paymentTerm, customerInfo);
 
   return (
@@ -196,9 +204,7 @@ const BillingDetails = () => {
   );
 };
 //? Invoice detail probably not exist in quote creation, it should probably named as Quotes Details
-const InvoiceDetails = () => {
-  const { customerInfo } = useSelectedCustomerContext();
-
+const InvoiceDetails = ({ customerInfo }: { customerInfo?: BcCustomer | null }) => {
   return (
     <InformationCard title="InvoiceDetails">
       <LabelledTextInput
@@ -218,8 +224,34 @@ const InvoiceDetails = () => {
   );
 };
 
-const ProcessButton = () => {
-  return <StyledButton colorStyle="primary">Send as Quote</StyledButton>;
+const ProcessButton = ({
+  customerInfo,
+  paymentTerm
+}: {
+  customerInfo?: BcCustomer | null;
+  paymentTerm?: BcPaymentTerm | null;
+}) => {
+  const createBcSalesQuote = useCreateBcSalesQuote();
+  // const { customerInfo } = useSelectedCustomerContext();
+
+  const documentDate = new Date().toISOString().slice(0, 10);
+  console.log('this is the documentDate', documentDate);
+
+  if (createBcSalesQuote.isPending) return <Spinner size="large" />;
+  return (
+    <StyledButton
+      colorStyle="primary"
+      onPress={() => {
+        createBcSalesQuote.mutate({
+          customerNumber: customerInfo?.number || '',
+          currencyCode: 'USD',
+          documentDate,
+          paymentTermsId: paymentTerm?.id || ''
+        });
+      }}>
+      Send as Quote
+    </StyledButton>
+  );
 };
 
 // Reused Components

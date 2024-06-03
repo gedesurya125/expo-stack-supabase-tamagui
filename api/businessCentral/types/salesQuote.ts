@@ -50,3 +50,10 @@ export type BcSalesQuote = {
   totalTaxAmount: number;
   validUntilDate: string;
 };
+
+export type CreateBcSalesOrderRequest = {
+  documentDate: string;
+  customerNumber: string;
+  currencyCode: string;
+  paymentTermsId: string;
+};

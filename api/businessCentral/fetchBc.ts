@@ -31,8 +31,13 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
     }
   })
     .then((res) => {
-      // @ts-ignore
-      if (props.options?.headers && props?.options?.headers?.Accept !== 'application/json') {
+      if (
+        props.options?.headers &&
+        // @ts-ignore
+        props?.options?.headers?.Accept &&
+        // @ts-ignore
+        props?.options?.headers?.Accept !== 'application/json'
+      ) {
         return res?.blob();
       }
       return res?.json();

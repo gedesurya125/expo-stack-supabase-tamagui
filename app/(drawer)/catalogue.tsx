@@ -9,11 +9,12 @@ import {
   View,
   H4,
   ScrollView,
-  Image,
+  Image as TamaguiImage,
   Card,
   H3,
   Paragraph,
-  Button
+  Button,
+  Spinner
 } from 'tamagui';
 import { useProductCategories } from '~/api/xentral/useProductCategory';
 import { XentralProjectId } from '~/api/xentral/types';
@@ -115,7 +116,7 @@ const SpecialDeals = () => {
                 borderWidth="$1"
                 ml={index !== 0 ? '$4' : 0}>
                 <Card.Background justifyContent="center" alignItems="center">
-                  <Image
+                  <TamaguiImage
                     resizeMode="contain"
                     source={{
                       width: 400,
@@ -170,7 +171,7 @@ const ProductCategoryCard = ({ data }: { data: any }) => {
       flexDirection="row"
       alignItems="center">
       <View borderColor="$primary" borderWidth="$0.5" borderRadius="$10" overflow="hidden">
-        <Image
+        <TamaguiImage
           height={40}
           width={40}
           $gtSm={{
@@ -200,6 +201,9 @@ const AllProducts = () => {
   // const { data } = useWeClappArticles();
 
   // TODO: the useWeClappArticles is returning paginated infinity lazy load, so latter this should implement lazy load
+
+  if (isLoading) return <Spinner size="large" mt="$16" />;
+
   return <ProductList title="All Products" productsData={allItems?.value} />;
 };
 const ProductsByCategory = ({
@@ -280,5 +284,5 @@ const XentralCardImage = ({
 }) => {
   const { data: shopifyProductData } = useShopifyProduct(shopifyProductNumber);
 
-  return <ImageContainer imageUri={shopifyProductData?.data?.product?.featuredImage.url} />;
+  return <ImageContainer imageUri={shopifyProductData?.data?.product?.featuredImage?.url} />;
 };

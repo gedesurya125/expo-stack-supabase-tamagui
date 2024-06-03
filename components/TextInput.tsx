@@ -11,6 +11,7 @@ export const TextInput = ({ ...props }: React.ComponentProps<typeof Input>) => {
       focusStyle={{
         borderColor: theme.blue6
       }}
+      backgroundColor={props?.disabled ? '$gray5' : '$background'}
     />
   );
 };

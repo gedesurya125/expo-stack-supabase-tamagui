@@ -1,27 +1,11 @@
 import React from 'react';
-import {
-  YStack,
-  Theme,
-  Heading,
-  Card,
-  Text,
-  Separator,
-  Image,
-  H2,
-  H3,
-  H5,
-  XStack,
-  useTheme
-} from 'tamagui';
+import { YStack, Theme, Heading } from 'tamagui';
 
-import { FlatList } from 'react-native-gesture-handler';
-import { imagePlaceholder } from '~/images/placeholder';
 import { StyledButton } from '~/components/StyledButton';
-import { Ionicons } from '@expo/vector-icons';
-import { ProductInCartType, useCartContext } from '~/context/CartContext';
+import { useCartContext } from '~/context/CartContext';
 import { Link } from 'expo-router';
-import { useCustomerContext } from '~/context/CustomersContext';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
+import { ProductCartList } from '~/components/ProductInCartList';
 
 export default function ModalScreen() {
   const status = null;
@@ -41,7 +25,7 @@ const CartInfo = () => {
   return (
     <YStack flex={1} backgroundColor="$background" paddingHorizontal="$4" paddingVertical="$4">
       <Heading>Customer Cart: </Heading>
-      <ProductList />
+      <ProductCartList />
       <CheckoutButton />
     </YStack>
   );
@@ -62,86 +46,5 @@ const CheckoutButton = () => {
       disabled={isDisableButton}>
       <StyledButton colorStyle={isDisableButton ? 'disabled' : 'primary'}>Checkout</StyledButton>
     </Link>
-  );
-};
-
-const ProductList = () => {
-  const { products } = useCartContext();
-
-  return (
-    <FlatList
-      data={products}
-      renderItem={({ item, index }) => {
-        return <ProductItem key={index} data={item} />;
-      }}
-      keyExtractor={(item, index) => `${index}`}
-      ItemSeparatorComponent={Separator}
-      style={{
-        flex: 1
-      }}
-    />
-  );
-};
-
-const ProductItem = ({ data }: { data: ProductInCartType }) => {
-  const {
-    increaseSingleProductInCart,
-    decreaseSingleProductInCart,
-    removeSingleProductFromCart,
-    getProductQuantity
-  } = useCartContext();
-
-  return (
-    <Card
-      width="100%"
-      height="$10"
-      borderRadius="$5"
-      mt="$2"
-      mb="$2"
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      padded>
-      <Image
-        source={{
-          width: 100,
-          height: 100,
-          uri: data?.image?.url || imagePlaceholder
-        }}
-      />
-      <YStack flex={1} marginLeft="$4">
-        <H5>{data?.item.displayName}</H5>
-        <Text>Ammount: {getProductQuantity(data.item.id)}</Text>
-      </YStack>
-      <XStack ml="auto" gap="$2">
-        <StyledButton
-          colorStyle="secondary"
-          paddingVertical="$1"
-          paddingHorizontal="$2"
-          onPress={() => {
-            increaseSingleProductInCart(data.item.id);
-          }}>
-          <Ionicons name="add-outline" size={30} color="white" />
-        </StyledButton>
-        <StyledButton
-          colorStyle="primary"
-          paddingVertical="$1"
-          paddingHorizontal="$2"
-          onPress={() => {
-            decreaseSingleProductInCart(data.item.id);
-          }}>
-          <Ionicons name="remove-outline" size={30} color="white" />
-        </StyledButton>
-        <StyledButton
-          colorStyle="danger"
-          paddingVertical="$1"
-          paddingHorizontal="$3"
-          onPress={() => {
-            removeSingleProductFromCart(data.item.id);
-          }}>
-          <Ionicons name="trash-outline" size={23} color="white" />
-        </StyledButton>
-      </XStack>
-    </Card>
   );
 };

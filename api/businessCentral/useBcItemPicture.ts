@@ -3,48 +3,53 @@ import { fetchBc, getBcApiBaseUrl } from './fetchBc';
 import { useFetchBc } from './useFetchBc';
 import { useBusinessCentralContext } from './context/BusinessCentralContext';
 
-export const useBcItemPicture = ({ itemId, debug }: { itemId: string; debug: string }) => {
-  const { token } = useBusinessCentralContext();
-  const [rawPicture, setRawPicture] = React.useState<any>(null);
+export const useBcItemPicture = ({ itemId, debug }: { itemId: string; debug?: string }) => {
+  // const { token } = useBusinessCentralContext();
+  // const [rawPicture, setRawPicture] = React.useState<any>(null);
 
-  const { data } = useFetchBc<PictureBcResponse>({
+  return useFetchBc<PictureBcResponse>({
     queryKey: ['bc-item', 'picture'],
     fetchProps: {
-      endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture`
+      endPoint: `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture/pictureContent`,
+      options: {
+        headers: {
+          Accept: 'image/*'
+        }
+      }
     }
   });
 
-  React.useEffect(() => {
-    const getRawPicture = async () => {
-      const endPoint = `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture(${data?.id})/content`;
+  // React.useEffect(() => {
+  //   const getRawPicture = async () => {
+  //     const endPoint = `/companies(${process.env.EXPO_PUBLIC_BC_COMPANY_ID})/items(${itemId})/picture(${data?.id})/content`;
 
-      const picture = await fetch(data['pictureContent@odata.mediaReadLink'], {
-        method: 'GET',
-        headers: {
-          Accept: 'image/jpeg',
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then((res) => res.blob())
-        .catch((err: any) => {
-          console.log('error fetching image', err);
-        });
-      if (debug === 'Shopify product 3') {
-        const pictureBlob = URL.createObjectURL(picture);
+  //     const picture = await fetch(data['pictureContent@odata.mediaReadLink'], {
+  //       method: 'GET',
+  //       headers: {
+  //         Accept: 'image/jpeg',
+  //         Authorization: `Bearer ${token}`
+  //       }
+  //     })
+  //       .then((res) => res.blob())
+  //       .catch((err: any) => {
+  //         console.log('error fetching image', err);
+  //       });
+  //     if (debug === 'Shopify product 3') {
+  //       const pictureBlob = URL.createObjectURL(picture);
 
-        console.log('this is the picture', { debug, picture, endPoint, pictureBlob });
-      }
+  //       console.log('this is the picture', { debug, picture, endPoint, pictureBlob });
+  //     }
 
-      // setRawPicture(picture);
-    };
-    if (data?.id) {
-      getRawPicture();
-    }
-  }, [data?.id]);
+  //     // setRawPicture(picture);
+  //   };
+  //   if (data?.id) {
+  //     getRawPicture();
+  //   }
+  // }, [data?.id]);
 
   // console.log('this is raw picture', data, rawPicture);
 
-  return rawPicture;
+  // return rawPicture;
 };
 
 type PictureBcResponse = {

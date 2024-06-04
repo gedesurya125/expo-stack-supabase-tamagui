@@ -31,6 +31,7 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
     }
   })
     .then((res) => {
+      const contentType = res.headers.get('content-type');
       if (
         props.options?.headers &&
         // @ts-ignore
@@ -40,7 +41,9 @@ export const fetchBc = async <T>(props: FetchBcProps): Promise<T | null> => {
       ) {
         return res?.blob();
       }
-      return res?.json();
+
+      if (contentType?.includes('application/json')) return res.json();
+      return res.text();
     })
     .catch((err) => {
       console.log('Error when fetching Business Central', err, props, apiUrl);

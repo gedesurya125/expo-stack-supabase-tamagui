@@ -54,7 +54,7 @@ const SalesQuoteLineList = ({ dataList }: { dataList?: BcSalesQuoteLine[] }) => 
   console.log('this is the data list', dataList);
   const hasList = dataList && dataList?.length > 0;
   return (
-    <View gap="$5">
+    <View gap="$5" flexDirection="row" flexWrap="wrap">
       {hasList ? (
         dataList?.map((data, index) => {
           return <SalesQuoteLineListItem key={index} data={data} />;

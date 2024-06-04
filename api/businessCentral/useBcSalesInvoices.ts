@@ -1,8 +1,8 @@
 import { useFetchBc } from './useFetchBc';
-import { BcItem } from './types/item';
+import { SalesInvoice } from './types/salesInvoice';
 
 export const useBcSalesInvoices = () => {
-  return useFetchBc({
+  return useFetchBc<BcSalesInvoiceResponse>({
     queryKey: ['bc-sales-invoices'],
     fetchProps: {
       endPoint: `/salesInvoices`
@@ -10,6 +10,6 @@ export const useBcSalesInvoices = () => {
   });
 };
 
-// type BcItemHookResponse = {
-//   value: BcItem[];
-// };
+type BcSalesInvoiceResponse = {
+  value: SalesInvoice[];
+};

@@ -4,6 +4,7 @@ import { BcSalesQuoteLine } from '~/api/businessCentral/types/salesQuoteLine';
 import { useBcSingleSalesQuote } from '~/api/businessCentral/useBcSingleSalesQuote';
 import { useBcSingleSalesQuoteLine } from '~/api/businessCentral/useBcSingleSalesQuoteLines';
 import { useMakeInvoiceBcSalesQuote } from '~/api/businessCentral/useMakeInvoiceBcSalesQuote';
+import { useMakeOrderBcSalesQuote } from '~/api/businessCentral/useMakeOrderBcSalesQuote';
 import { SelectedJsonDisplay } from '~/components/SelectedJsonDisplay';
 import { StyledButton } from '~/components/StyledButton';
 
@@ -91,6 +92,7 @@ const SalesQuoteLineListItem = ({ data }: { data: BcSalesQuoteLine }) => {
 
 const ActionButtonGroup = ({ salesQuoteId }: { salesQuoteId?: string }) => {
   const makeInvoice = useMakeInvoiceBcSalesQuote();
+  const makeOrder = useMakeOrderBcSalesQuote();
   return (
     <XStack marginTop="$10" justifyContent="center" gap="$5">
       <StyledButton
@@ -104,7 +106,17 @@ const ActionButtonGroup = ({ salesQuoteId }: { salesQuoteId?: string }) => {
         }}>
         {makeInvoice?.isPending ? <Spinner size="large" /> : 'Make Invoice'}
       </StyledButton>
-      <StyledButton colorStyle="secondary">Make Order</StyledButton>
+      <StyledButton
+        colorStyle="secondary"
+        onPress={() => {
+          if (salesQuoteId) {
+            makeOrder.mutate({
+              salesQuoteId
+            });
+          }
+        }}>
+        {makeOrder?.isPending ? <Spinner size="large" /> : 'Make Order'}
+      </StyledButton>
     </XStack>
   );
 };

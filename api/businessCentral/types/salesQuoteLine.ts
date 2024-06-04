@@ -1,4 +1,4 @@
-export type SalesQuoteLine = {
+export type BcSalesQuoteLine = {
   id: string;
   documentId: string;
   sequence: number;

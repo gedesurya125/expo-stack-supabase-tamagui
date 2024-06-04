@@ -146,6 +146,17 @@ const DrawerLayout = () => {
           headerLeft: BackToCatalogButton
         }}
       />
+      <Drawer.Screen
+        name="salesQuotes/[sales_quote_id]"
+        options={{
+          headerTitle: 'Sales Quote Detail',
+          drawerLabel: 'Sales Quote Detail',
+          drawerItemStyle: {
+            // display: 'none'
+          },
+          headerLeft: BackToSalesQuoteOverviewButton
+        }}
+      />
     </Drawer>
   );
 };
@@ -258,13 +269,16 @@ const NavigationIconLink = ({
 };
 
 const BackToMakeOrderScreen = () => {
-  return <BackLink href={'/(drawer)' as never} />;
+  return <ControlledBackLink href={'/(drawer)' as never} />;
 };
 const BackToCatalogButton = () => {
-  return <BackLink href={'catalogue' as never} />;
+  return <ControlledBackLink href={'catalogue' as never} />;
+};
+const BackToSalesQuoteOverviewButton = () => {
+  return <ControlledBackLink href={'salesQuotes' as never} />;
 };
 
-const BackLink = ({ ...props }: React.ComponentProps<typeof Link>) => {
+const ControlledBackLink = ({ ...props }: React.ComponentProps<typeof Link>) => {
   const theme = useTheme();
   return (
     <Link asChild {...props}>

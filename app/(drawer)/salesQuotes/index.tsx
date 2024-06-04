@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigation } from 'expo-router';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -6,12 +7,11 @@ import { FlatList } from 'react-native-gesture-handler';
 import { YStack, Text, ListItem, useTheme, Spinner, Separator } from 'tamagui';
 import { BcSalesQuote } from '~/api/businessCentral/types/salesQuote';
 import { useBcSalesQuotes } from '~/api/businessCentral/useBcSalesQuotes';
+import { SelectedJsonDisplay } from '~/components/SelectedJsonDisplay';
 import { useSelectedCustomerContext } from '~/context/SelectedCustomerContext';
 
 export default function TabOneScreen() {
   const { data: salesQuotes, isLoading, error } = useBcSalesQuotes();
-
-  console.log('this i the sales quotes', salesQuotes);
 
   return (
     <YStack flex={1} backgroundColor="$background">
@@ -20,7 +20,7 @@ export default function TabOneScreen() {
       ) : (
         <FlatList
           data={salesQuotes?.value}
-          renderItem={({ item }) => <CustomerItem item={item} />}
+          renderItem={({ item }) => <SalesQuoteItem item={item} />}
           keyExtractor={(item, index) => `${index}`}
           ItemSeparatorComponent={Separator}
           // ? how to make the search bar sticky, source: https://stackoverflow.com/questions/44638286/how-do-you-make-the-listheadercomponent-of-a-react-native-flatlist-sticky
@@ -34,11 +34,8 @@ export default function TabOneScreen() {
   );
 }
 
-export const CustomerItem = ({ item }: { item: BcSalesQuote }) => {
-  const navigation = useNavigation();
-  const { handleSetCustomerInfo } = useSelectedCustomerContext();
-
-  const itemToDisplay = ['id', 'dueDate', 'status', 'totalAmountIncludingTax', 'documentDate'];
+export const SalesQuoteItem = ({ item }: { item: BcSalesQuote }) => {
+  const displayedKeys = ['id', 'dueDate', 'status', 'totalAmountIncludingTax', 'documentDate'];
 
   return (
     <ListItem
@@ -46,22 +43,18 @@ export const CustomerItem = ({ item }: { item: BcSalesQuote }) => {
       backgroundColor="$background"
       flexDirection="row"
       alignItems="flex-start">
-      <Pressable
-        style={{ flex: 1 }}
-        onPress={() => {
-          handleSetCustomerInfo(item);
-          navigation.navigate('catalogue' as never);
-        }}>
-        <YStack flex={1}>
-          {itemToDisplay.map((data, index) => {
-            return (
-              <Text color="$color" key={index}>
-                {data}: {item[data as keyof BcSalesQuote]}
-              </Text>
-            );
-          })}
-        </YStack>
-      </Pressable>
+      <Link
+        href={{
+          pathname: '/(drawer)/salesQuotes/[sales_quote_id]',
+          params: {
+            sales_quote_id: item.id
+          }
+        }}
+        asChild>
+        <Pressable style={{ flex: 1 }}>
+          <SelectedJsonDisplay itemsToDisplay={item} displayedKeys={displayedKeys} />
+        </Pressable>
+      </Link>
     </ListItem>
   );
 };

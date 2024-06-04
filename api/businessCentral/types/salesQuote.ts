@@ -56,4 +56,5 @@ export type CreateBcSalesQuoteRequest = {
   customerNumber: string;
   currencyCode: string;
   paymentTermsId: string;
+  salesperson: string;
 };

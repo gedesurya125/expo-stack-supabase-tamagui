@@ -1,9 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Card, Heading, ScrollView, Spinner, Text, View, YStack } from 'tamagui';
+import { Card, Heading, ScrollView, Spinner, Text, View, XStack, YStack } from 'tamagui';
 import { BcSalesQuoteLine } from '~/api/businessCentral/types/salesQuoteLine';
 import { useBcSingleSalesQuote } from '~/api/businessCentral/useBcSingleSalesQuote';
 import { useBcSingleSalesQuoteLine } from '~/api/businessCentral/useBcSingleSalesQuoteLines';
+import { useMakeInvoiceBcSalesQuote } from '~/api/businessCentral/useMakeInvoiceBcSalesQuote';
 import { SelectedJsonDisplay } from '~/components/SelectedJsonDisplay';
+import { StyledButton } from '~/components/StyledButton';
 
 export default function SalesQuoteDetailPage() {
   const params = useLocalSearchParams();
@@ -11,8 +13,6 @@ export default function SalesQuoteDetailPage() {
   const { data, isLoading, error } = useBcSingleSalesQuote(salesQuoteId);
   const { data: salesQuoteLines, isLoading: isSalesQuoteLinesLoading } =
     useBcSingleSalesQuoteLine(salesQuoteId);
-
-  console.log('this is the single sales quote', { salesQuoteLines });
 
   return (
     <YStack backgroundColor="$background" flex={1}>
@@ -44,6 +44,7 @@ export default function SalesQuoteDetailPage() {
           ) : (
             <SalesQuoteLineList dataList={salesQuoteLines?.value} />
           )}
+          <ActionButtonGroup salesQuoteId={data?.id} />
         </YStack>
       </ScrollView>
     </YStack>
@@ -51,7 +52,6 @@ export default function SalesQuoteDetailPage() {
 }
 
 const SalesQuoteLineList = ({ dataList }: { dataList?: BcSalesQuoteLine[] }) => {
-  console.log('this is the data list', dataList);
   const hasList = dataList && dataList?.length > 0;
   return (
     <View gap="$5" flexDirection="row" flexWrap="wrap">
@@ -86,5 +86,25 @@ const SalesQuoteLineListItem = ({ data }: { data: BcSalesQuoteLine }) => {
         ]}
       />
     </Card>
+  );
+};
+
+const ActionButtonGroup = ({ salesQuoteId }: { salesQuoteId?: string }) => {
+  const makeInvoice = useMakeInvoiceBcSalesQuote();
+  return (
+    <XStack marginTop="$10" justifyContent="center" gap="$5">
+      <StyledButton
+        colorStyle="primary"
+        onPress={() => {
+          if (salesQuoteId) {
+            makeInvoice.mutate({
+              salesQuoteId
+            });
+          }
+        }}>
+        {makeInvoice?.isPending ? <Spinner size="large" /> : 'Make Invoice'}
+      </StyledButton>
+      <StyledButton colorStyle="secondary">Make Order</StyledButton>
+    </XStack>
   );
 };

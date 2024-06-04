@@ -35,7 +35,15 @@ export default function TabOneScreen() {
 }
 
 export const SalesQuoteItem = ({ item }: { item: BcSalesQuote }) => {
-  const displayedKeys = ['id', 'dueDate', 'status', 'totalAmountIncludingTax', 'documentDate'];
+  const displayedKeys = [
+    'billToName',
+    'id',
+    'email',
+    'dueDate',
+    'status',
+    'totalAmountIncludingTax',
+    'documentDate'
+  ];
 
   return (
     <ListItem

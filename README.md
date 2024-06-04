@@ -19,3 +19,5 @@
 2. run command `yarn prebuild:clean`
 3. run command `yarn ios`
 4. then select the device that you want
+
+the difference between sales order and sales invoices: https://community.dynamics.com/forums/thread/details/?threadid=d55ba379-cd1e-4510-951b-c26759444354

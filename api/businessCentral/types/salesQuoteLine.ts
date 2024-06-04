@@ -7,7 +7,7 @@ export type BcSalesQuoteLine = {
   lineType: string;
   lineObjectNumber: string;
   description: string;
-  description2: string;
+  descriptionnumber: string;
   unitOfMeasureId: string;
   unitOfMeasureCode: string;
   unitPrice: number;
@@ -25,4 +25,18 @@ export type BcSalesQuoteLine = {
   netAmountIncludingTax: number;
   itemVariantId: string;
   locationId: string;
+};
+
+export type CreateBcSalesQuoteLineRequest = {
+  itemId: string;
+  lineType: 'Item' | string;
+  lineObjectNumber: string;
+  description: string;
+  unitOfMeasureId: string;
+  unitOfMeasureCode: string;
+  unitPrice: number;
+  quantity: number;
+  discountAmount: number;
+  discountPercent: number;
+  itemVariantId?: string;
 };

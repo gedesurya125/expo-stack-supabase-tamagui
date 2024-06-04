@@ -51,7 +51,7 @@ export type BcSalesQuote = {
   validUntilDate: string;
 };
 
-export type CreateBcSalesOrderRequest = {
+export type CreateBcSalesQuoteRequest = {
   documentDate: string;
   customerNumber: string;
   currencyCode: string;

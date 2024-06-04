@@ -1,10 +1,11 @@
 import { Card, Heading, ScrollView, Separator, Spinner, Text, View, YStack } from 'tamagui';
 import { BcCustomer } from '~/api/businessCentral/types/customer';
 import { BcPaymentTerm } from '~/api/businessCentral/types/paymentTerm';
+import { CreateBcSalesQuoteLineRequest } from '~/api/businessCentral/types/salesQuoteLine';
 import { useBcSinglePaymentTerms } from '~/api/businessCentral/useBcSinglePaymentTerms';
 import { useCreateBcSalesQuote } from '~/api/businessCentral/useCreateBcSalesQuote';
 import { LabelledDateTimePicker } from '~/components/DateTimePicker';
-import { ProductCartList, ProductItem } from '~/components/ProductInCartList';
+import { ProductItem } from '~/components/ProductInCartList';
 import { StyledButton } from '~/components/StyledButton';
 import { LabelledTextInput } from '~/components/TextInput';
 import { useCartContext } from '~/context/CartContext';
@@ -36,12 +37,12 @@ const ItemsInfo = () => {
           <Information label="ShippingFee" value={shippingFee ? `€${shippingFee}` : 'Free'} />
           <Information
             label="Total"
-            value={`€${(totalProductPrice + shippingFee + vat).toFixed(2)}`}
+            value={`€${(totalProductPrice + shippingFee).toFixed(2)}`}
             textProps={{
               fontSize: '$9'
             }}
           />
-          <Text>{`Incl. €${vat} VAT`}</Text>
+          <Text>Tax is not included</Text>
           <Separator />
         </YStack>
       </ScrollView>
@@ -149,8 +150,6 @@ const BillingDetails = ({
   customerInfo?: BcCustomer | null;
   paymentTerm?: BcPaymentTerm | null;
 }) => {
-  console.log('this is the payment term data', paymentTerm, customerInfo);
-
   return (
     <InformationCard title="Billing Details">
       <LabelledTextInput
@@ -232,10 +231,27 @@ const ProcessButton = ({
   paymentTerm?: BcPaymentTerm | null;
 }) => {
   const createBcSalesQuote = useCreateBcSalesQuote();
-  // const { customerInfo } = useSelectedCustomerContext();
 
   const documentDate = new Date().toISOString().slice(0, 10);
-  console.log('this is the documentDate', documentDate);
+  const { products } = useCartContext();
+
+  const convertedProductToBeQuoteLineRequest: CreateBcSalesQuoteLineRequest[] = products.map(
+    (data) => {
+      const { item, quantity } = data;
+      return {
+        itemId: item.id,
+        description: item.displayName,
+        discountAmount: 0,
+        discountPercent: 0,
+        lineObjectNumber: item.number,
+        lineType: 'Item',
+        quantity: quantity || 0,
+        unitOfMeasureCode: item?.baseUnitOfMeasureCode,
+        unitOfMeasureId: item?.baseUnitOfMeasureId,
+        unitPrice: item.unitPrice
+      };
+    }
+  );
 
   if (createBcSalesQuote.isPending) return <Spinner size="large" />;
   return (
@@ -243,10 +259,13 @@ const ProcessButton = ({
       colorStyle="primary"
       onPress={() => {
         createBcSalesQuote.mutate({
-          customerNumber: customerInfo?.number || '',
-          currencyCode: 'USD',
-          documentDate,
-          paymentTermsId: paymentTerm?.id || ''
+          newSalesQuote: {
+            customerNumber: customerInfo?.number || '',
+            currencyCode: 'USD',
+            documentDate,
+            paymentTermsId: paymentTerm?.id || ''
+          },
+          newSalesQuoteLines: convertedProductToBeQuoteLineRequest
         });
       }}>
       Send as Quote

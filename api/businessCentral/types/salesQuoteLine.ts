@@ -1,0 +1,28 @@
+export type SalesQuoteLine = {
+  id: string;
+  documentId: string;
+  sequence: number;
+  itemId: string;
+  accountId: string;
+  lineType: string;
+  lineObjectNumber: string;
+  description: string;
+  description2: string;
+  unitOfMeasureId: string;
+  unitOfMeasureCode: string;
+  unitPrice: number;
+  quantity: number;
+  discountAmount: number;
+  discountPercent: number;
+  discountAppliedBeforeTax: false;
+  amountExcludingTax: number;
+  taxCode: string;
+  taxPercent: number;
+  totalTaxAmount: number;
+  amountIncludingTax: number;
+  netAmount: number;
+  netTaxAmount: number;
+  netAmountIncludingTax: number;
+  itemVariantId: string;
+  locationId: string;
+};

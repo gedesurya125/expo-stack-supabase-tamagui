@@ -38,7 +38,7 @@ export const CustomerItem = ({ item }: { item: BcSalesQuote }) => {
   const navigation = useNavigation();
   const { handleSetCustomerInfo } = useSelectedCustomerContext();
 
-  const itemToDisplay = ['id', 'dueDate', 'status', 'totalAmountIncludingTax'];
+  const itemToDisplay = ['id', 'dueDate', 'status', 'totalAmountIncludingTax', 'documentDate'];
 
   return (
     <ListItem

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, Heading, ScrollView, Separator, Spinner, Text, View, YStack } from 'tamagui';
 import { BcCustomer } from '~/api/businessCentral/types/customer';
 import { BcPaymentTerm } from '~/api/businessCentral/types/paymentTerm';
@@ -90,6 +91,8 @@ const CheckoutInfo = () => {
 
 const ShipmentPreferenceCard = () => {
   const datePlaceholder = new Date();
+  //? this state is for test
+  const [selectedShipmentDate, setSelectedShipmentDate] = React.useState(datePlaceholder);
 
   return (
     <InformationCard
@@ -100,8 +103,10 @@ const ShipmentPreferenceCard = () => {
       <LabelledDateTimePicker
         label="Date"
         dateTimePickerProps={{
-          value: datePlaceholder.toISOString(),
-          handleChange: () => {},
+          value: selectedShipmentDate,
+          handleChange: (value) => {
+            setSelectedShipmentDate(value);
+          },
           onBlur: () => {}
         }}
       />
@@ -263,7 +268,8 @@ const ProcessButton = ({
             customerNumber: customerInfo?.number || '',
             currencyCode: 'USD',
             documentDate,
-            paymentTermsId: paymentTerm?.id || ''
+            paymentTermsId: paymentTerm?.id || '',
+            salesperson: '' //? the person who doing sales
           },
           newSalesQuoteLines: convertedProductToBeQuoteLineRequest
         });

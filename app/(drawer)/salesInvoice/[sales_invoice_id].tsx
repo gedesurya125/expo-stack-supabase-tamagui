@@ -42,6 +42,7 @@ export default function SalesQuoteDetailPage() {
       isSalesDocumentDataLoading={isLoading}
       isSalesDocumentLinesDataLoading={isSalesQuoteLinesLoading}
       emptyDocumentLinesMessage="Invoice Lines is empty"
+      hasActionButtons
     />
   );
 }

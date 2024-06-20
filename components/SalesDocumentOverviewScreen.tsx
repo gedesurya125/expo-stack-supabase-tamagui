@@ -18,6 +18,7 @@ interface SalesDocumentOverviewScreenProps {
   onClickMakeInvoice?: () => void;
   onClickMakeOrder?: () => void;
   hasActionButtons?: boolean;
+  actionButtons?: ActionButtonProps[];
 }
 
 export function SalesDocumentOverviewScreen({
@@ -32,7 +33,8 @@ export function SalesDocumentOverviewScreen({
   emptyDocumentLinesMessage,
   onClickMakeInvoice,
   onClickMakeOrder,
-  hasActionButtons
+  hasActionButtons,
+  actionButtons
 }: SalesDocumentOverviewScreenProps) {
   return (
     <YStack backgroundColor="$background" flex={1}>
@@ -58,11 +60,12 @@ export function SalesDocumentOverviewScreen({
               emptyDocumentLinesMessage={emptyDocumentLinesMessage}
             />
           )}
-          {hasActionButtons && (
+          {actionButtons && actionButtons?.length > 0 && (
             <ActionButtonGroup
               salesDocumentId={salesDocumentData?.id}
               onClickMakeInvoice={onClickMakeInvoice}
               onClickMakeOrder={onClickMakeOrder}
+              actionButtons={actionButtons}
             />
           )}
         </YStack>
@@ -114,20 +117,26 @@ const SalesDocumentLinesListItem = ({
   );
 };
 
+// TODO: continue add more functionality make the Action button dynamic
 const ActionButtonGroup = ({
   salesDocumentId,
   onClickMakeInvoice,
-  onClickMakeOrder
+  onClickMakeOrder,
+  actionButtons
 }: {
   salesDocumentId?: string;
   onClickMakeInvoice?: () => void;
   onClickMakeOrder?: () => void;
+  actionButtons?: ActionButtonProps[];
 }) => {
   const makeInvoice = useMakeInvoiceBcSalesQuote();
   const makeOrder = useMakeOrderBcSalesQuote();
   return (
     <XStack marginTop="$10" justifyContent="center" gap="$5">
-      <StyledButton
+      {actionButtons?.map((props, index) => {
+        return <ActionButton key={index} salesDocumentId={salesDocumentId} {...props} />;
+      })}
+      {/* <StyledButton
         colorStyle="primary"
         onPress={() => {
           if (salesDocumentId) {
@@ -144,7 +153,26 @@ const ActionButtonGroup = ({
           }
         }}>
         {makeOrder?.isPending ? <Spinner size="large" /> : 'Make Order'}
-      </StyledButton>
+      </StyledButton> */}
     </XStack>
   );
 };
+
+const ActionButton = ({ onPress, salesDocumentId, isPending }: ActionButtonProps) => {
+  return (
+    <StyledButton
+      colorStyle="secondary"
+      onPress={(e) => {
+        if (salesDocumentId) {
+          onPress && onPress(e);
+        }
+      }}>
+      {isPending ? <Spinner size="large" /> : 'Make Order'}
+    </StyledButton>
+  );
+};
+
+interface ActionButtonProps extends React.ComponentProps<typeof StyledButton> {
+  salesDocumentId?: string;
+  isPending?: boolean;
+}
